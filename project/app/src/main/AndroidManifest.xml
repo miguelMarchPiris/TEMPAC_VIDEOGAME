@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.ub.pis.pis_16.pis_16" >
+    package="edu.ub.pis2019.pis_16.pis_16" >
 
     <application
         android:allowBackup="true"
