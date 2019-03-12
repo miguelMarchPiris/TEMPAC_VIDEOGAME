@@ -1,4 +1,4 @@
-package edu.ub.pis2019.pis_16.pis_16
+package edu.ub.pis2019.pis_16.tempac
 
 import org.junit.Test
 

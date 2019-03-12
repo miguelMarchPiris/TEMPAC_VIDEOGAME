@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "edu.ub.pis2019.pis_16.pis_16"
+        applicationId "edu.ub.pis2019.pis_16.tempac"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1

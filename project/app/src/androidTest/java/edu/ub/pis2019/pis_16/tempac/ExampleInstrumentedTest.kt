@@ -1,4 +1,4 @@
-package edu.ub.pis2019.pis_16.pis_16
+package edu.ub.pis2019.pis_16.tempac
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("edu.ub.pis2019.pis_16.pis_16", appContext.packageName)
+        assertEquals("edu.ub.pis2019.pis_16.tempac", appContext.packageName)
     }
 }
