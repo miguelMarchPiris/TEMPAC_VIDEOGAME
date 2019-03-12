@@ -5,4 +5,12 @@
     <string name="login">Log In</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
+    <string name="madeby">Game made by: </string>
+    <string name="credits">
+        Carles Perez Onielfa \n\t\t(98perezcarles@gmail.com)\n
+        Pau Soler Valadés \n\t\t(pau.soler.valades@gmail.com)\n
+        Gabriel Lluís Luengo \n\t\t(gabriel.lluis3@gmail.com)\n
+        Miguel Augusto March Piris \n\t\t(miguelaugusto179@gmail.com)\n
+        Piotr Piwowarski \n\t\t(piotr95piwowarski@gmail.com)
+    </string>
 </resources>
