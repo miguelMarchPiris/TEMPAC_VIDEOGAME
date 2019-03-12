@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TemPac</string>
+    <string name="googlePlayLogin">Google play games login</string>
+    <string name="signUp">Sign Up</string>
+    <string name="login">Log In</string>
+    <string name="email">E-mail</string>
 </resources>
