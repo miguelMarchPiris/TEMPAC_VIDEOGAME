@@ -34,10 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="@string/email"
                 android:ems="10"
                 android:background="@color/colorPrimaryDark"
                 android:padding="8dp"
+                android:textColorHint="@color/colorPrimary"
                 android:id="@+id/editText_mail" android:layout_weight="1" android:textColor="@color/colorText"
                 android:autofillHints="" android:hint="@string/email"/>
         <View
@@ -48,12 +48,15 @@
         <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="password"
                 android:ems="10"
                 android:background="@color/colorPrimaryDark"
                 android:padding="8dp"
-                android:id="@+id/editText_password" android:layout_weight="1" android:textColor="@color/colorText"
-                android:inputType="textPassword" android:autofillHints="" android:hint="@string/email"/>
+                android:id="@+id/editText_password"
+                android:layout_weight="1"
+                android:textColor="@color/colorText"
+                android:textColorHint="@color/colorPrimary"
+
+                android:inputType="textPassword" android:autofillHints="" android:hint="@string/password"/>
         <View
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
@@ -62,7 +65,7 @@
                 android:text="@string/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/button_login" android:layout_weight="1"
-                android:textColor="@color/colorText"
+                android:textColor="@color/colorAccent"
                 android:background="@color/colorPrimaryDark"/>
     </LinearLayout>
     <Button
