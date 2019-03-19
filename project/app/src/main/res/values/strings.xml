@@ -13,4 +13,12 @@
         Miguel Augusto March Piris \n\t\t(miguelaugusto179@gmail.com)\n
         Piotr Piwowarski \n\t\t(piotr95piwowarski@gmail.com)
     </string>
+    <string name="game_over">Game Over</string>
+    <string name="your_score">your score:</string>
+    <string name="your_high_score">your high score:</string>
+    <string name="overall_high_score">overall high score:</string>
+    <string name="your_name">your name:</string>
+    <string name="menu">Menu</string>
+    <string name="share">Share</string>
+    <string name="tap_the_screen_to_play_again">Tap the screen to play again</string>
 </resources>
