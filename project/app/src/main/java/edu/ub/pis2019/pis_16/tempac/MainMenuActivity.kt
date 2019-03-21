@@ -1,5 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -24,15 +25,34 @@ class MainMenuActivity : AppCompatActivity() {
         }
     }
 
+    //connects with another activity passed by parameter
+    fun changeActivityPlay(){
+        val intent = Intent(this, GameOverActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun changeActivitySettings(){
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun changeActivityHighscores(){
+        //val intent = Intent(this, activityName::class.java)
+        startActivity(intent)
+    }
+
     private fun play(it: View){
-        TODO("not implemented")
+        changeActivityPlay()
+        //TODO("not implemented")
     }
 
     private fun highscores(it: View){
-        TODO("not implemented")
+        //changeActivity("HighscoresActivity")
+        //TODO("not implemented")
     }
 
     private fun settings(it: View){
-        TODO("not implemented")
+        changeActivitySettings()
+        //TODO("not implemented")
     }
 }
