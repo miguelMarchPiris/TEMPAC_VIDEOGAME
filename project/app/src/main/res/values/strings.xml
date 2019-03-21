@@ -35,4 +35,10 @@
         <item>Spanish</item>
         <item>Catalan</item>
     </string-array>
+
+    <!-- MAINMENU STRINGS: -->
+    <string name="main_title">TEMPAC</string>
+    <string name="play">PLAY</string>
+    <string name="highscores">HIGHSCORES</string>
+    <string name="settings">SETTINGS</string>
 </resources>
