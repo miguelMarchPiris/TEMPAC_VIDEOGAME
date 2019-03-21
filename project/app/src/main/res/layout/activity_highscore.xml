@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="@dimen/margin_high_small"
+            android:layout_marginBottom="@dimen/margin_high_small">
+        <TextView
+                android:text="@string/posicion_highscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+        <TextView
+                android:text="@string/usuario_highscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView2" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+        <TextView
+                android:text="@string/puntuacion_highscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView3" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+    </LinearLayout>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="331dp">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="Lolito"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="11.111"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="Lolito2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="10.000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="Lolito3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="9.000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="Lolito4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="8.000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="Lolito5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="7.000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="horizontal">
+                <TextView
+                        android:text="@string/posicion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/usuario_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+                <TextView
+                        android:text="@string/puntuacion_highscore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_high_small"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textView10"
+            android:text="@string/tu_mejor_puntuacion" android:layout_margin="15dp"
+            android:textSize="20dip"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+        <TextView
+                android:text="345"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView6" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+        <TextView
+                android:text="Jesus28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView7" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+        <TextView
+                android:text="3.000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView8" android:layout_weight="1"
+                android:layout_margin="@dimen/margin_high_small"/>
+    </LinearLayout>
+</LinearLayout>

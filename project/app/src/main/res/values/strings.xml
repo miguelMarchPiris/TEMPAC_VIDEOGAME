@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TemPac</string>
+    <string name="posicion_highscore">Posición</string>
+    <string name="usuario_highscore">Usuario</string>
+    <string name="puntuacion_highscore">Puntuación</string>
+    <string name="tu_mejor_puntuacion">!Tu mejor puntuación¡</string>
+    <string name="tu_puntuacion">!Tu mejor puntuación¡</string>
 </resources>
