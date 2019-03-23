@@ -37,7 +37,7 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     fun changeActivityHighscores(){
-        //val intent = Intent(this, activityName::class.java)
+        val intent = Intent(this, HighScore::class.java)
         startActivity(intent)
     }
 
@@ -47,7 +47,7 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     private fun highscores(it: View){
-        //changeActivity("HighscoresActivity")
+        changeActivityHighscores()
         //TODO("not implemented")
     }
 
