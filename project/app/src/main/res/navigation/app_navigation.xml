@@ -2,10 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/app_navigation.xml"
-            app:startDestination="@+id/logInActivity">
-
-    <activity android:id="@+id/logInActivity" android:name="edu.ub.pis2019.pis_16.tempac.LogInActivity"
-              android:label="activity_login" tools:layout="@layout/activity_login"/>
-    <activity android:id="@+id/creditsActivity" android:name="edu.ub.pis2019.pis_16.tempac.CreditsActivity"
-              android:label="activity_credits" tools:layout="@layout/activity_credits"/>
+            app:startDestination="@id/gameActivity">
+    <activity android:id="@+id/gameActivity" android:name="edu.ub.pis2019.pis_16.tempac.GameActivity"
+              android:label="activity_game" tools:layout="@layout/activity_game"/>
+    <fragment android:id="@+id/inGameFragment2" android:name="edu.ub.pis2019.pis_16.tempac.InGameFragment"
+              android:label="fragment_in_game" tools:layout="@layout/fragment_in_game">
+        <action android:id="@+id/action_inGameFragment2_to_gameOverFragment2" app:destination="@id/gameOverFragment"/>
+    </fragment>
+    <fragment android:id="@+id/gameOverFragment" android:name="edu.ub.pis2019.pis_16.tempac.GameOverFragment"
+              android:label="fragment_game_over" tools:layout="@layout/fragment_game_over"/>
 </navigation>

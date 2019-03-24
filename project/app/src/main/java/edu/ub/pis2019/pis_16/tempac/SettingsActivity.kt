@@ -1,5 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,11 +15,10 @@ class SettingsActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        //button to go back to the last/main activity
-        btn_back.setOnClickListener{
-            finish() //back to the menu. later well add a proper function
-        }
 
+        credits_button.setOnClickListener{
+            changeActivityCredits()
+        }
         //spinner to show the languages
         spn_languages.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, resources.getStringArray(R.array.languages))
         spn_languages.onItemSelectedListener= object : AdapterView.OnItemSelectedListener {
@@ -31,6 +31,10 @@ class SettingsActivity : AppCompatActivity(){
             }
         }
 
+    }
+    fun changeActivityCredits(){
+        val intent = Intent(this, CreditsActivity::class.java)
+        startActivity(intent)
     }
 }
 

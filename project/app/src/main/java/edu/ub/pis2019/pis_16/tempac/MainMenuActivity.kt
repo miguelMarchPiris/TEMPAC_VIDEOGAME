@@ -27,7 +27,7 @@ class MainMenuActivity : AppCompatActivity() {
 
     //connects with another activity passed by parameter
     fun changeActivityPlay(){
-        val intent = Intent(this, GameOverActivity::class.java)
+        val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
     }
 
@@ -37,7 +37,7 @@ class MainMenuActivity : AppCompatActivity() {
     }
 
     fun changeActivityHighscores(){
-        val intent = Intent(this, HighScore::class.java)
+        val intent = Intent(this, HighScoreActivity::class.java)
         startActivity(intent)
     }
 

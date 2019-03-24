@@ -3,15 +3,16 @@ package edu.ub.pis2019.pis_16.tempac
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 
-class HighScore : AppCompatActivity() {
+class HighScoreActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +55,9 @@ class HighScore : AppCompatActivity() {
             return nicknameArray.size
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val layoutInflator=LayoutInflater.from(mContext)
-            val rowMain=layoutInflator.inflate(R.layout.highscore_row,parent,false)
+            val rowMain=layoutInflator.inflate(R.layout.row_highscore,parent,false)
 
             val rowRanking=rowMain.findViewById<TextView>(R.id.ranking_textView)
             val rowNickname=rowMain.findViewById<TextView>(R.id.nickname_textView)
@@ -65,6 +66,7 @@ class HighScore : AppCompatActivity() {
             rowRanking.text="${position.plus(1)}"
             rowNickname.text=nicknameArray.get(position)
             rowScore.text=highscoreArray.get(position)
+
 
             return rowMain
         }

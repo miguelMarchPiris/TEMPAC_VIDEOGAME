@@ -8,18 +8,6 @@
         tools:context=".SettingsActivity"
         android:background="@color/colorPrimaryDark">
 
-    <Button
-            android:text="@string/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_back" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintVertical_bias="0.85"
-            android:textColor="@color/colorAccent" android:background="#512DA8"
-            style="@style/Widget.AppCompat.Button"/>
     <SeekBar
             android:layout_width="228dp"
             android:layout_height="42dp"
@@ -27,7 +15,7 @@
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="#512DA8"
+            android:background="@color/colorPrimary"
             app:layout_constraintVertical_bias="0.167"/>
     <SeekBar
             android:layout_width="228dp"
@@ -36,7 +24,7 @@
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="#512DA8"
+            android:background="@color/colorPrimary"
             app:layout_constraintVertical_bias="0.397"/>
     <TextView
             android:text="@string/volume"
@@ -47,7 +35,7 @@
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.218" app:layout_constraintVertical_bias="0.096"
-            android:textColor="@color/colorAccent" android:textSize="18sp" android:textStyle="bold"/>
+            android:textColor="@color/colorText" android:textSize="18sp" android:textStyle="bold"/>
     <TextView
             android:text="@string/sfx"
             android:layout_width="wrap_content"
@@ -58,7 +46,7 @@
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.204"
-            app:layout_constraintVertical_bias="0.31" android:textColor="@color/colorAccent" android:textSize="18sp"
+            app:layout_constraintVertical_bias="0.31" android:textColor="@color/colorText" android:textSize="18sp"
             android:textStyle="bold"/>
     <Spinner
             android:layout_width="229dp"
@@ -68,17 +56,26 @@
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="#512DA8"
+            android:background="@color/colorPrimary"
             app:layout_constraintHorizontal_bias="0.503" app:layout_constraintVertical_bias="0.6"/>
     <TextView
             android:text="@string/language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_languages" android:textColor="@color/colorAccent"
+            android:id="@+id/txt_languages" android:textColor="@color/colorText"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="8dp" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.241"
             app:layout_constraintVertical_bias="0.508" android:textSize="18sp" android:textStyle="bold"/>
+    <Button
+            android:text="@string/credits1"
+            android:layout_width="229dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/credits_button" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginTop="144dp"
+            app:layout_constraintTop_toBottomOf="@+id/spn_languages"
+            style="@style/ButtonLight"/>
 </android.support.constraint.ConstraintLayout>

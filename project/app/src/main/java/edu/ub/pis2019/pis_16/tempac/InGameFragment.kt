@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import kotlinx.android.synthetic.main.fragment_in_game.*
 
 
 /**
@@ -21,7 +22,7 @@ class InGameFragment : Fragment() {
     var progressStatus = 0
     var handler: Handler? = null
     lateinit var temperatureProgress: ProgressBar
-    lateinit var pauseButton: Button
+    lateinit var dieButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +31,10 @@ class InGameFragment : Fragment() {
         // Inflate the layout for this fragment
         var inflatedLayout = inflater.inflate(R.layout.fragment_in_game, container, false)
         temperatureProgress = inflatedLayout.findViewById(R.id.temperatureBar)
-        pauseButton = inflatedLayout.findViewById(R.id.pauseButton)
+        dieButton = inflatedLayout.findViewById(R.id.dieButton)
 
+        //Temperature doesn't increase with time!
+        /*
         handler = Handler(Handler.Callback {
             if (isStarted) {
                 progressStatus++
@@ -43,13 +46,15 @@ class InGameFragment : Fragment() {
         })
 
         handler?.sendEmptyMessage(0)
+        */
+        temperatureProgress.progress = 45;
 
-        pauseButton.setOnClickListener(){
+        dieButton.setOnClickListener(){
             gameOver()
         }
 
         return inflatedLayout
-        }
+    }
 
     fun gameOver(){
         var gameOverFragment = GameOverFragment()
@@ -57,6 +62,6 @@ class InGameFragment : Fragment() {
             .replace(R.id.inGameFragment, gameOverFragment)
             .commit()
     }
-    }
+}
 
 
