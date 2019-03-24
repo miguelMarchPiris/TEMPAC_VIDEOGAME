@@ -1,10 +1,13 @@
 <resources>
+    <!-- LOGIN STRINGS: -->
     <string name="app_name">TemPac</string>
     <string name="googlePlayLogin">Google play games login</string>
     <string name="signUp">Sign Up</string>
     <string name="login">Log In</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
+  
+    <!-- GAME OVER STRINGS: -->
     <string name="madeby">Game made by:</string>
     <string name="credits">
         Carles Perez Onielfa \n\t\t(98perezcarles@gmail.com)\n
@@ -25,4 +28,25 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pause">Pause</string>
+    <!-- SETTINGS STRINGS: -->
+    <string name="volume">Volume:</string>
+    <string name="sfx">SFX:</string>
+    <string name="language">Language:</string>
+    <string name="back">Back</string>
+    <string-array name="languages">
+        <item>English</item>
+        <item>Spanish</item>
+        <item>Catalan</item>
+    </string-array>
+
+    <!-- MAINMENU STRINGS: -->
+    <string name="main_title">TEMPAC</string>
+    <string name="play">PLAY</string>
+    <string name="highscores">HIGHSCORES</string>
+    <string name="settings">SETTINGS</string>
+    <string name="posicion_highscore">Ranking</string>
+    <string name="usuario_highscore">Nickname</string>
+    <string name="puntuacion_highscore">Score</string>
+    <string name="tu_mejor_puntuacion">Your personal highscore!</string>
+    <string name="tu_puntuacion">Your personal highscore!</string>
 </resources>
