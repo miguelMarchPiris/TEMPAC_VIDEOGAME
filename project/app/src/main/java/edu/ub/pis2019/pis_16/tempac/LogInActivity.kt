@@ -33,11 +33,11 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun signup(it: View?) {
-        TODO("not implemented")
+        //TODO("not implemented")
     }
 
     private fun login_google(it: View?) {
-        TODO("not implemented")
+        //TODO("not implemented")
     }
 
     private fun login(it: View?) {
