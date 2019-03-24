@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -36,20 +37,31 @@ class GameOverFragment : Fragment() {
 
         menuButton.setOnClickListener{
             //Menu Button Action
-            Toast.makeText(context,"Menu Button Action", Toast.LENGTH_SHORT).show()
+            changeActivityMenu()
         }
 
         shareButton.setOnClickListener{
             //Menu Button Action
-            Toast.makeText(context,"Share Button Action", Toast.LENGTH_SHORT).show()
+            share()
         }
 
         backgroundLayout.setOnClickListener{
             //Menu Button Action
-            Toast.makeText(context,"Background Layout Action", Toast.LENGTH_SHORT).show()
+            playAgain()
         }
         return inflatedView;
     }
+    fun changeActivityMenu(){
+        activity?.finish()
+    }
+    fun share(){
 
+    }
+    fun playAgain(){
+        var fragment = InGameFragment()
+        fragmentManager!!.beginTransaction()
+            .replace(R.id.inGameFragment, fragment)
+            .commit()
+    }
 
 }
