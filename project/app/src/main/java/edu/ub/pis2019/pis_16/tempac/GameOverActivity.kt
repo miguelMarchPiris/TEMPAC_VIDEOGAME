@@ -11,10 +11,6 @@ import android.widget.Toast
 
 class GameOverActivity : AppCompatActivity() {
 
-    lateinit var menuButton: Button
-    lateinit var shareButton: Button
-    lateinit var backgroundLayout: ConstraintLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_over)
