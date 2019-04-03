@@ -24,16 +24,19 @@ class LogInActivity : AppCompatActivity() {
         button_signup.setOnClickListener {
             signup(it)
         }
+        button_skipLogin.setOnClickListener {
+            skipLogin(it)
+        }
     }
 
     //connects with another activity passed by parameter
-    fun changeActivity(){
-        val intent = Intent(this, MainMenuActivity::class.java)
+    fun changeActivity(activity: AppCompatActivity){
+        val intent = Intent(this, activity::class.java)
         startActivity(intent)
     }
 
     private fun signup(it: View?) {
-        //TODO("not implemented")
+        changeActivity(SignUpActivity())
     }
 
     private fun login_google(it: View?) {
@@ -41,7 +44,10 @@ class LogInActivity : AppCompatActivity() {
     }
 
     private fun login(it: View?) {
-        changeActivity()
+        changeActivity(MainMenuActivity())
         //TODO("not implemented")
+    }
+    private fun skipLogin(it: View?){
+        changeActivity(MainMenuActivity())
     }
 }
