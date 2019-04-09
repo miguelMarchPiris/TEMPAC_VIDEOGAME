@@ -16,7 +16,7 @@
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/colorPrimary"
-            app:layout_constraintVertical_bias="0.167"/>
+            app:layout_constraintVertical_bias="0.22" app:layout_constraintHorizontal_bias="0.471"/>
     <SeekBar
             android:layout_width="228dp"
             android:layout_height="42dp"
@@ -25,7 +25,7 @@
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/colorPrimary"
-            app:layout_constraintVertical_bias="0.397"/>
+            app:layout_constraintVertical_bias="0.467"/>
     <TextView
             android:text="@string/volume"
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.218" app:layout_constraintVertical_bias="0.096"
+            app:layout_constraintHorizontal_bias="0.219" app:layout_constraintVertical_bias="0.108"
             android:textColor="@color/colorText" android:textSize="18sp" android:textStyle="bold"/>
     <TextView
             android:text="@string/sfx"
@@ -45,37 +45,30 @@
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.204"
-            app:layout_constraintVertical_bias="0.31" android:textColor="@color/colorText" android:textSize="18sp"
+            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.211"
+            app:layout_constraintVertical_bias="0.368" android:textColor="@color/colorText" android:textSize="18sp"
             android:textStyle="bold"/>
-    <Spinner
-            android:layout_width="229dp"
-            android:layout_height="42dp"
-            android:id="@+id/spn_languages" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/colorPrimary"
-            app:layout_constraintHorizontal_bias="0.503" app:layout_constraintVertical_bias="0.6"/>
-    <TextView
-            android:text="@string/language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_languages" android:textColor="@color/colorText"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.241"
-            app:layout_constraintVertical_bias="0.508" android:textSize="18sp" android:textStyle="bold"/>
     <Button
             android:text="@string/credits1"
             android:layout_width="229dp"
             android:layout_height="wrap_content"
             android:id="@+id/credits_button" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginTop="144dp"
-            app:layout_constraintTop_toBottomOf="@+id/spn_languages"
-            style="@style/ButtonLight"/>
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            style="@style/ButtonLight" app:layout_constraintHorizontal_bias="0.503"
+            android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.956"/>
+    <Button
+            android:text="@string/replaytutorial"
+            android:layout_width="174dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/replay_tutorial_button" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            style="@style/ButtonLight"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.715"/>
 </android.support.constraint.ConstraintLayout>
