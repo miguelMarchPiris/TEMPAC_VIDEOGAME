@@ -51,4 +51,5 @@
     <string name="tu_puntuacion">Your personal highscore!</string>
     <string name="die">DIE</string>
     <string name="credits1">credits</string>
+    <string name="replaytutorial">Replay tutorial</string>
 </resources>
