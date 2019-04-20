@@ -25,6 +25,11 @@ class MainMenuActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val intent = Intent(this, ConfirmExitActivity::class.java)
+        startActivity(intent)
+    }
+
     //connects with another activity passed by parameter
     fun changeActivityPlay(){
         val intent = Intent(this, GameActivity::class.java)
