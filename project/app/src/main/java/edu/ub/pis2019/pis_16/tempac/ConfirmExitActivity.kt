@@ -3,6 +3,7 @@ package edu.ub.pis2019.pis_16.tempac
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.util.DisplayMetrics
 import kotlinx.android.synthetic.main.activity_confirm_exit.*
 
@@ -11,14 +12,7 @@ class ConfirmExitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        btn_Yes.setOnClickListener {
-            //finishAffinity()  ;TODO ckeck this please
-            System.exit(0)
-        }
 
-        btn_No.setOnClickListener {
-            changeActivityMainMenu()
-        }
 
         setContentView(R.layout.activity_confirm_exit)
 
@@ -29,6 +23,14 @@ class ConfirmExitActivity : AppCompatActivity() {
         var height = dm.heightPixels
 
         window.setLayout((width*.8).toInt(), (height*.6).toInt())
+        btn_Yes.setOnClickListener {
+            //finishAffinity()  ;TODO ckeck this please
+            ActivityCompat.finishAffinity(this)
+        }
+
+        btn_No.setOnClickListener {
+            changeActivityMainMenu()
+        }
     }
 
     fun changeActivityMainMenu(){
