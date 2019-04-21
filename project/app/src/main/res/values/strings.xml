@@ -6,7 +6,7 @@
     <string name="login">Log In</string>
     <string name="email">E-mail</string>
     <string name="password">Password</string>
-  
+
     <!-- GAME OVER STRINGS: -->
     <string name="madeby">Game made by:</string>
     <string name="credits">
@@ -51,4 +51,13 @@
     <string name="tu_puntuacion">Your personal highscore!</string>
     <string name="die">DIE</string>
     <string name="credits1">credits</string>
+    <string name="replaytutorial">Replay tutorial</string>
+    <string name="skipLogin">Continue without logging in</string>
+    <string name="confirmPassword">Confirm password</string>
+    <string name="username">Username</string>
+
+    <!-- CONFIRM EXIT STRINGS: -->
+    <string name="sure_to_exit">Are you sure you want to exit the game?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 </resources>
