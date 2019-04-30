@@ -1,13 +1,13 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
-abstract class Object (x:Float,y: Float): Drawable {
+abstract class Object (): Drawable {
 
-    var posx : Float=x
-    var posy : Float=y
+    var x:Int = 0
+    var y:Int = 0
 
-    fun setPosition(x:Float,y:Float){
-        posx=x
-        posy=y
+    fun setPosition(posx:Int,posy:Int){
+        x=posx
+        y=posy
     }
 
 }
