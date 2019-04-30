@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
 import android.graphics.Canvas
+import android.util.Log
 import android.view.SurfaceHolder
 import java.lang.Exception
 
@@ -14,11 +15,11 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
 
     //GameLoop
     override fun run() {
-        var startTime : Long = 0
-        var timeMilis : Long = 0
-        var waitMilis : Long = 0
+        var startTime : Long
+        var timeMilis : Long
+        var waitMilis : Long
         var totalTime : Long = 0
-        var frameCount : Long = 0
+        var frameCount = 0
         var targetTime = 1/fps
 
         while(isrunning){
@@ -32,7 +33,7 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
                 synchronized(surfaceHolder){
                     gameEngine.update()
                     //drawCanvas?
-                    //gameEngine.draw(canvas)
+                    gameEngine.draw(canvas)
                 }
             }catch (e:Exception){
                 e.printStackTrace()
@@ -56,6 +57,16 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
                 {
                     e.printStackTrace()
                 }
+
+            totalTime += System.nanoTime() - startTime
+            frameCount++
+            if (frameCount == fps)        {
+                avgFps = 1000.0 / ((totalTime / frameCount) / 1000000.0)
+                frameCount = 0
+                totalTime = 0
+                Log.d("FPS",this.avgFps.toString())
+
+            }
         }
     }
     fun setRunning(running: Boolean){
