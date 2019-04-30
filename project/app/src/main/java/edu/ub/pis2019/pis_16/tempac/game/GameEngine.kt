@@ -1,18 +1,31 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
-class GameEngine : Drawable {
-    var temperature : Int = 50
-    var scrollSpeed : Int = 0
+import android.graphics.Canvas
+
+class GameEngine{
+    private var temperature : Int = 50
+    private var scrollSpeed : Int = 0
 
 
-    var gfactory : GhostFactory=GhostFactory()
-    var ghosts : List<Ghost> = mutableListOf<Ghost>()
-    var player : Player= Player(0f,0f)
-    var level : Level= Level()
+    private var gfactory : GhostFactory=GhostFactory()
+    private var ghosts : List<Ghost> = mutableListOf<Ghost>()
+    private var player : Player= Player()
+    private var level : Level= Level()
 
+    fun update(){
+        //Process state of the game
 
-    override fun draw(){
-        TODO()
+        //Process inputs
+
+        //Process AI
+
+        //Process physics
+
+        //Process animations
+
+        //Process sound
+
+        //Process video
     }
 
 }
