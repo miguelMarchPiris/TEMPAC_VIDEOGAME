@@ -9,5 +9,9 @@ abstract class Object (): Drawable {
         x=posx
         y=posy
     }
+    open fun update(scroll: Float){
+        y+=scroll
+    }
+
 
 }

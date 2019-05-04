@@ -2,14 +2,17 @@ package edu.ub.pis2019.pis_16.tempac.game
 
 import android.content.Context
 import android.os.Build
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
 class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
-    private lateinit var thread :GameThread
+    private var thread :GameThread
+    private var engine :GameEngine
     init {
         holder.addCallback(this)
-        thread = GameThread(holder,this)
+        engine = GameEngine()
+        thread = GameThread(holder,this, engine)
         isFocusable = true
     }
 
@@ -34,6 +37,12 @@ class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
     }
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
 
+    }
+
+    //INPUTS
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        engine.processInput(event)
+        return true
     }
 
 }
