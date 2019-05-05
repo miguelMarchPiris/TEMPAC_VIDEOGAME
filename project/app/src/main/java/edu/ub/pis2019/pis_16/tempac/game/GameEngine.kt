@@ -17,6 +17,10 @@ class GameEngine:Drawable{
     private var player : Player = Player()
     private var level : Level= Level()
 
+    /*TEMPORALY TO TEST BEGIN*/
+    private var orb : Orb = Orb(530f, 800f, "add", 4)
+    /*TEMPORALY TO TEST ENDS*/
+
     private var touchStartX = 0f
     private var touchStartY = 0f
     private var touchEndX = 0f
@@ -36,6 +40,8 @@ class GameEngine:Drawable{
         //Process sound
 
         //Process video
+
+        //temporaly:
 
     }
     override fun draw(canvas: Canvas?){
