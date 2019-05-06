@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 
 //operand is what the orb is going to do (add, multiply, divide or substract) and _number is the value that is gonna act.
-class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Object() {
+class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Actor() {
 
     private var paint = Paint()
 

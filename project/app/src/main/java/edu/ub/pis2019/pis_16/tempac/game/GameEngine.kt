@@ -4,13 +4,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.util.Log
 import android.view.MotionEvent
-import android.widget.Toast
 
 
 class GameEngine:Drawable{
-    private var temperature = 50f
-    private var scrollSpeed = 1.5f
 
+    private var scrollSpeed = 1.5f
+    private var temperatureBar = TemperatureBar()
 
     private var gfactory : GhostFactory=GhostFactory()
     private var ghosts : List<Ghost> = mutableListOf<Ghost>()
@@ -26,9 +25,15 @@ class GameEngine:Drawable{
     private var touchEndX = 0f
     private var touchEndY = 0f
     private val MIN_DISTANCE = 105f
+
+    init {
+        temperatureBar.x = 100f
+        temperatureBar.y = 100f
+        temperatureBar.temperature = 0f
+    }
     fun update(){
         //Process state of the game
-
+        temperatureBar.temperature+=0.1f //Just to test the temperature bar
         //Process inputs
         player.update(scrollSpeed)
         //Process AI
@@ -47,7 +52,9 @@ class GameEngine:Drawable{
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
             canvas.drawColor(Color.BLACK)
+
             player.draw(canvas)
+            temperatureBar.draw(canvas)
         }
     }
     fun processInput(event: MotionEvent){
