@@ -3,16 +3,18 @@ package edu.ub.pis2019.pis_16.tempac.game
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 
 //operand is what the orb is going to do (add, multiply, divide or substract) and _number is the value that is gonna act.
 class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Object() {
 
     private var paint = Paint()
 
+    //COlisions related
+    val position = RectF(x-30,y+30,x+30,y-30)
+
     init{
         paint.color = Color.YELLOW
-        x=50f
-        y=1000f
         super.setPosition(posx, posy)
     }
 
@@ -26,6 +28,7 @@ class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Object
     var number : Int=_number
 
     override fun update(scroll: Float) {
+
         super.update(scroll)
 
     }

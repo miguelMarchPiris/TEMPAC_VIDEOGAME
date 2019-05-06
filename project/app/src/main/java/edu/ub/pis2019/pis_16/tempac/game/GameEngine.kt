@@ -2,6 +2,7 @@ package edu.ub.pis2019.pis_16.tempac.game
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
@@ -18,7 +19,7 @@ class GameEngine:Drawable{
     private var level : Level= Level()
 
     /*TEMPORALY TO TEST BEGIN*/
-    private var orb : Orb = Orb(530f, 800f, "add", 4)
+    private var orb : Orb = Orb(500f, 800f, "add", 4)
     /*TEMPORALY TO TEST ENDS*/
 
     private var touchStartX = 0f
@@ -42,12 +43,15 @@ class GameEngine:Drawable{
         //Process video
 
         //temporaly:
+        orb.update(scrollSpeed)
+        checkColisions()
 
     }
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
             canvas.drawColor(Color.BLACK)
             player.draw(canvas)
+            if(orbVisible == true) {orb.draw(canvas)}
         }
     }
     fun processInput(event: MotionEvent){
@@ -81,6 +85,12 @@ class GameEngine:Drawable{
                     player.direction = Player.Direction.STATIC
 
             }
+        }
+    }
+
+    fun checkColisions(){
+        if(RectF.intersects(orb.position, player.position)){
+            print("tres i tres i tres i tres i tres")
         }
     }
 }

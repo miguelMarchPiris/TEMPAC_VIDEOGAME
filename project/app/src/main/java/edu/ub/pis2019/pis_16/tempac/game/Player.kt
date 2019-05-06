@@ -3,6 +3,7 @@ package edu.ub.pis2019.pis_16.tempac.game
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 
 class Player : Actor() {
     enum class Direction {
@@ -11,6 +12,7 @@ class Player : Actor() {
     private var paint = Paint()
     var direction = Direction.STATIC
     private var speed = 5f
+    val position = RectF(x-20,y+20,x+20,y-20)
     init {
         paint.color = Color.RED
         x = 500f
