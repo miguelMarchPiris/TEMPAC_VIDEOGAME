@@ -2,6 +2,7 @@ package edu.ub.pis2019.pis_16.tempac.game
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
 
@@ -17,7 +18,7 @@ class GameEngine:Drawable{
     private var level : Level= Level()
 
     /*TEMPORALY TO TEST BEGIN*/
-    private var orb : Orb = Orb(530f, 800f, "add", 4)
+    private var orb : Orb = Orb(500f, 800f, "add", 4)
     /*TEMPORALY TO TEST ENDS*/
 
     private var touchStartX = 0f
@@ -38,7 +39,10 @@ class GameEngine:Drawable{
         player.update(scrollSpeed)
         //Process AI
 
+        checkColisions()
+
         //Process physics
+
 
         //Process animations
 
@@ -47,6 +51,8 @@ class GameEngine:Drawable{
         //Process video
 
         //temporaly:
+        orb.update(scrollSpeed)
+
 
     }
     override fun draw(canvas: Canvas?){
@@ -54,7 +60,9 @@ class GameEngine:Drawable{
             canvas.drawColor(Color.BLACK)
 
             player.draw(canvas)
+            orb.draw(canvas)
             temperatureBar.draw(canvas)
+
         }
     }
     fun processInput(event: MotionEvent){
@@ -75,6 +83,8 @@ class GameEngine:Drawable{
                 {
                     if(deltaY < 0)//UP
                         player.direction = Player.Direction.UP
+                    else
+                        player.direction = Player.Direction.DOWN //down
 
                 }
                 else if(Math.abs(deltaX) > MIN_DISTANCE){ //swipe left-right
@@ -88,6 +98,15 @@ class GameEngine:Drawable{
                     player.direction = Player.Direction.STATIC
 
             }
+        }
+    }
+
+    fun checkColisions(){
+        if(RectF.intersects(orb.rectangle,player.rectangle)){
+            player.direction = Player.Direction.STATIC
+            //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
+            player.rectangle.bottom = player.rectangle.bottom+5
+
         }
     }
 }
