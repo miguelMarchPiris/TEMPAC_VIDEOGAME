@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.RectF
 import android.util.Log
 import android.view.MotionEvent
-import android.widget.Toast
 
 
 class GameEngine:Drawable{
@@ -34,7 +33,10 @@ class GameEngine:Drawable{
         player.update(scrollSpeed)
         //Process AI
 
+        checkColisions()
+
         //Process physics
+
 
         //Process animations
 
@@ -44,14 +46,14 @@ class GameEngine:Drawable{
 
         //temporaly:
         orb.update(scrollSpeed)
-        checkColisions()
+
 
     }
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
             canvas.drawColor(Color.BLACK)
             player.draw(canvas)
-            if(orbVisible == true) {orb.draw(canvas)}
+            orb.draw(canvas)
         }
     }
     fun processInput(event: MotionEvent){
@@ -72,6 +74,8 @@ class GameEngine:Drawable{
                 {
                     if(deltaY < 0)//UP
                         player.direction = Player.Direction.UP
+                    else
+                        player.direction = Player.Direction.DOWN //down
 
                 }
                 else if(Math.abs(deltaX) > MIN_DISTANCE){ //swipe left-right
@@ -89,8 +93,11 @@ class GameEngine:Drawable{
     }
 
     fun checkColisions(){
-        if(RectF.intersects(orb.position, player.position)){
-            print("tres i tres i tres i tres i tres")
+        if(RectF.intersects(orb.rectangle,player.rectangle)){
+            player.direction = Player.Direction.STATIC
+            //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
+            player.rectangle.bottom = player.rectangle.bottom+5
+
         }
     }
 }
