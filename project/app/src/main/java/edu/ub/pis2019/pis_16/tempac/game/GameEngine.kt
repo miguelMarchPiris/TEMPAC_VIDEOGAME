@@ -38,7 +38,7 @@ class GameEngine:Drawable{
         //checks if the playes collides with a block
         checkCollisionsBlock()
         checkCollisionsOrb()
-        breakableState() //This function should check when the temperature is appropiate to change the Breakable to true: Problem? WhichBlocks?
+        //breakableState() //This function should check when the temperature is appropiate to change the Breakable to true: Problem? WhichBlocks?
 
         //Process physics
 
@@ -150,6 +150,6 @@ class GameEngine:Drawable{
     }
 
     fun breakableState(){
-        TODO() //probably we should add a list in level that marks the possible changeable blocks (Ask Miguel)
+        //TODO() //probably we should add a list in level that marks the possible changeable blocks (Ask Miguel)
     }
 }
