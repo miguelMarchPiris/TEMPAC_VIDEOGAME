@@ -39,8 +39,8 @@ class GameEngine:Drawable{
         player.update(scrollSpeed)
         level.update(scrollSpeed)
         //Process AI
-
-        checkColisions()
+        //checks if the playes collides with a block
+        checkColisionsBlock()
 
         //Process physics
 
@@ -105,12 +105,19 @@ class GameEngine:Drawable{
         }
     }
 
-    fun checkColisions(){
-        if(RectF.intersects(orb.rectangle,player.rectangle)){
-            player.direction = Player.Direction.STATIC
-            //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
-            player.rectangle.bottom = player.rectangle.bottom+5
+    fun checkColisionsBlock(){
+        for(block in level.blocks) {
+            if (RectF.intersects(block.rectangle, player.rectangle)) {
+                //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
+                when (player.direction) {
+                    Player.Direction.UP -> player.setPosition(player.x, player.y + 6)
+                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - 6)
+                    Player.Direction.LEFT -> player.setPosition(player.x + 6, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - 6, player.y)
+                }
+                player.direction = Player.Direction.STATIC
 
+            }
         }
     }
 }

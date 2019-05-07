@@ -21,4 +21,10 @@ class Block(posx : Float, posy : Float) : Actor(){
     override fun draw(canvas: Canvas?){
         canvas?.drawRect(rectangle,paint)
     }
+
+    override fun update(scroll: Float) {
+        super.update(scroll)
+        rectangle.set(x-width/2f,y-height/2f,x+width/2f,y+height/2f)
+
+    }
 }
