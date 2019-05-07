@@ -11,7 +11,7 @@ class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
     private var engine :GameEngine
     init {
         holder.addCallback(this) //Llamar a level i en level crea un game engine. Game engine deberia ser un singeltone
-        engine = GameEngine()
+        engine = GameEngine(context)
         thread = GameThread(holder,this, engine)
         isFocusable = true
     }

@@ -1,9 +1,15 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 
-class GhostG (): Ghost() {
+class GhostG : Ghost() {
+    private var paint = Paint()
+    init {
+        paint.color = Color.GREEN
+    }
     override fun draw(canvas: Canvas?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        canvas?.drawRect(rectangle, paint)
     }
 }

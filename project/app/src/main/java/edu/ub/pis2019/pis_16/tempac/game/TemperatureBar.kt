@@ -76,6 +76,16 @@ class TemperatureBar():Object() {
 
         canvas?.drawText(temperature.toInt().toString()+" ºC",x+width+150f,y+height/2f+20f, paintCenter)
     }
+
+    fun changeTemperature(orb : Orb){
+        when(orb.operand) {
+            Orb.Operand.ADD -> temperature += orb.number
+            Orb.Operand.MUL -> temperature *= orb.number
+            Orb.Operand.SUB -> temperature -= orb.number
+            Orb.Operand.DIV -> temperature /= orb.number
+
+        }
+    }
     /*fun colorGradient(color1:Int, color2:Int, percentage: Float):Int{
         val A = 255
         val R = (Color.red(color2)-Color.red(color1))*percentage +Color.red(color1)

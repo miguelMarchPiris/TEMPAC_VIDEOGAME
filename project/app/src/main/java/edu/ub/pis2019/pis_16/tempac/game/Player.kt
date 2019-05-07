@@ -6,14 +6,13 @@ import android.graphics.Paint
 import android.graphics.RectF
 
 class Player : Actor() {
-    enum class Direction {
-        STATIC, UP, LEFT, RIGHT, DOWN
-    }
+    enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     private var paint = Paint()
     var direction = Direction.STATIC
     private var speed = 5f
-    val rectangle : RectF = RectF(x-20,y-20,x+20,y+20)
+
     init {
+        rectangle = RectF(x-20,y-20,x+20,y+20)
         paint.color = Color.RED
         x = 500f
         y = 1000f
