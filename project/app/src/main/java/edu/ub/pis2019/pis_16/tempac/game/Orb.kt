@@ -4,7 +4,7 @@ import android.graphics.*
 import android.support.constraint.solver.widgets.Rectangle
 
 //operand is what the orb is going to do (add, multiply, divide or substract) and _number is the value that is gonna act.
-class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Actor() {
+class Orb (posx : Float, posy : Float,_operand : String, _number : Int) : Actor(), Colisionable {
 
     var rectangle = RectF(x-30,y-30,x+30,y+30)
     private var paint = Paint()
