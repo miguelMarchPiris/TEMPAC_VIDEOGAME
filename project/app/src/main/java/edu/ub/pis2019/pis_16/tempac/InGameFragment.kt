@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
+import edu.ub.pis2019.pis_16.tempac.game.GameView
 import kotlinx.android.synthetic.main.fragment_in_game.*
 
 
@@ -28,6 +29,8 @@ class InGameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         // Inflate the layout for this fragment
         var inflatedLayout = inflater.inflate(R.layout.fragment_in_game, container, false)
         temperatureProgress = inflatedLayout.findViewById(R.id.temperatureBar)
@@ -39,7 +42,7 @@ class InGameFragment : Fragment() {
             if (isStarted) {
                 progressStatus++
             }
-            temperatureProgress.progress = progressStatus
+            temperatureProgress.temperature = progressStatus
             handler?.sendEmptyMessageDelayed(0, 100)
 
             true
@@ -52,7 +55,9 @@ class InGameFragment : Fragment() {
         dieButton.setOnClickListener(){
             gameOver()
         }
-
+        if(activity!=null) {
+            return GameView(activity!!.applicationContext)
+        }
         return inflatedLayout
     }
 
