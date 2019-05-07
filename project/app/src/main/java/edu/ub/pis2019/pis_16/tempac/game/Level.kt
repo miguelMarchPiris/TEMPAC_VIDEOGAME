@@ -10,13 +10,13 @@ class Level : Drawable {
     init{
         //Instanciamos bloques para hacer pruebas
         //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
-        blocks.add(Block(300f,300f))
-        blocks.add(Block(380f,300f))
+        blocks.add(Block(300f,300f, breakable = false))
+        blocks.add(Block(380f,300f, breakable = true))
         orbs.add(Orb(500f,800f,Orb.Operand.ADD,4))
         orbs.add(Orb(500f,700f,Orb.Operand.MUL,4))
-        //orbs.add(Orb(500f,500f,Orb.Operand.DIV,2))
+        orbs.add(Orb(500f,500f,Orb.Operand.DIV,2))
+        orbs.add(Orb(500f,600f,Orb.Operand.SUB,4))
 
-        //orbs.add(Orb(500f,600f,Orb.Operand.SUB,4))
 
 
     }
