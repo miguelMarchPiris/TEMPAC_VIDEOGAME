@@ -1,10 +1,9 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.RectF
+import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
+import android.view.Display
 
 
 class GameEngine:Drawable{
@@ -16,7 +15,8 @@ class GameEngine:Drawable{
     private var ghosts : List<Ghost> = mutableListOf<Ghost>()
     private var player : Player = Player()
     private var level : Level= Level()
-
+    private val playingField = RectF(0f, 300f,1080f,1700f)
+    private val fieldPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     /*TEMPORALY TO TEST BEGIN*/
     private var orb : Orb = Orb(500f, 800f, "add", 4)
     /*TEMPORALY TO TEST ENDS*/
@@ -31,6 +31,9 @@ class GameEngine:Drawable{
         temperatureBar.x = 100f
         temperatureBar.y = 100f
         temperatureBar.temperature = 0f
+
+        //fieldPaint.style = Paint.Style.STROKE
+        fieldPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
     }
     fun update(){
         //Process state of the game
@@ -59,15 +62,14 @@ class GameEngine:Drawable{
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
             canvas.drawColor(Color.BLACK)
-
-            player.draw(canvas)
             temperatureBar.draw(canvas)
+            player.draw(canvas)
             level.draw(canvas)
-
             orb.draw(canvas)
-
-
+            //canvas.drawColor(Color.BLACK)
+            canvas.drawRect(playingField,fieldPaint)
         }
+
     }
     fun processInput(event: MotionEvent){
         val action = event.action
@@ -110,7 +112,7 @@ class GameEngine:Drawable{
             if (RectF.intersects(block.rectangle, player.rectangle)) {
                 //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
                 when (player.direction) {
-                    Player.Direction.UP -> player.setPosition(player.x, player.y + 6)
+                    Player.Direction.UP -> player.setPosition(player.x, player.y+6)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - 6)
                     Player.Direction.LEFT -> player.setPosition(player.x + 6, player.y)
                     Player.Direction.RIGHT -> player.setPosition(player.x - 6, player.y)
