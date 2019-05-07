@@ -1,67 +1,134 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.RectF
+import android.content.Context
+import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
+import android.view.Display
+import android.util.DisplayMetrics
 
 
-class GameEngine:Drawable{
 
+
+class GameEngine(val context: Context):Drawable{
+
+    //Game variables
     private var scrollSpeed = 1.5f
+    private var dead = false
+    //Objects
     private var temperatureBar = TemperatureBar()
 
+    //Actors
     private var gfactory : GhostFactory=GhostFactory()
-    private var ghosts : List<Ghost> = mutableListOf<Ghost>()
+    private var ghosts : MutableList<Ghost> = mutableListOf<Ghost>()
     private var player : Player = Player()
     private var level : Level= Level()
 
+    //Play zone rects
+    private val playingField = RectF(0f, 300f,1080f,1700f)
+    private val fieldPaint = Paint()
+    private val overlay : List<RectF>
+    private val overlayPaint = Paint()
+
+    /*TEMPORALY TO TEST BEGIN*/
+
+    /*TEMPORALY TO TEST ENDS*/
+
+    //Input variables
     private var touchStartX = 0f
     private var touchStartY = 0f
     private var touchEndX = 0f
     private var touchEndY = 0f
     private val MIN_DISTANCE = 105f
 
+    //Screen variables
+    var metrics = context.resources.displayMetrics
+    var w = metrics.widthPixels
+    var h = metrics.heightPixels
+
     init {
         temperatureBar.x = 100f
         temperatureBar.y = 100f
         temperatureBar.temperature = 0f
+        fieldPaint.style = Paint.Style.STROKE
+        fieldPaint.strokeWidth = 5f
+        fieldPaint.color = Color.WHITE
+
+
+        val overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom)
+        val overlayRect1 = RectF(0f,0f,playingField.right,playingField.top)
+        val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom)
+        val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)
+        overlay = listOf<RectF>(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
+        overlayPaint.color = Color.BLACK
+        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
     }
     fun update(){
         //Process state of the game
-        //temperatureBar.temperature+=0.1f //Just to test the temperature bar
+        if(dead){
+            //Player died we should make the game end
+        }
         //Process inputs
         player.update(scrollSpeed)
         level.update(scrollSpeed)
         //Process AI
-        //checks if the playes collides with a block
-        checkCollisionsBlock()
-        checkCollisionsOrb()
-        //breakableState() //This function should check when the temperature is appropiate to change the Breakable to true: Problem? WhichBlocks?
+
 
         //Process physics
-
-
+        processPhysics()
         //Process animations
 
         //Process sound
 
         //Process video
-
-        //temporaly:
-
-
-
     }
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
+            //Draw background
             canvas.drawColor(Color.BLACK)
 
+            //Draw Actors
             player.draw(canvas)
-            temperatureBar.draw(canvas)
             level.draw(canvas)
 
+            //Draw Overlay & Playzone
+            for(rect in overlay)
+                canvas.drawRect(rect,overlayPaint)
+            canvas.drawRect(playingField,fieldPaint)
+
+
+            //Draw Objects
+            temperatureBar.draw(canvas)
+            //>>posar aqui el draw de pause i score<<
+
+        }
+
+    }
+    fun processPhysics(){
+        //check if player is out of the game
+        if(isOutOfPlayzone(player))
+            dead = true
+
+        for(block in level.blocks){
+            //check collisions
+            checkCollisionsBlock(block)
+            //check out of playzone
+            if(isOutOfPlayzone(block))
+                level.blocks.remove(block)
+        }
+        for(orb in level.orbs){
+            //check collisions
+            checkCollisionsOrb(orb)
+            //check out of playzone
+            if(isOutOfPlayzone(orb))
+                level.orbs.remove(orb)
+        }
+        for(ghost in ghosts){
+            //check collisions
+
+            //check out of playzone
+            if(isOutOfPlayzone(ghost))
+                ghosts.remove(ghost)
         }
     }
     fun processInput(event: MotionEvent){
@@ -100,24 +167,23 @@ class GameEngine:Drawable{
         }
     }
 
-    fun checkCollisionsBlock(){
-        for(block in level.blocks) {
-            //if they collide and is not breakable
-            if (RectF.intersects(block.rectangle, player.rectangle) && !block.breakable) {
-                //If we change the player image we may change the numbers for the collisions
-                when (player.direction) {
-                    Player.Direction.UP -> player.setPosition(player.x, player.y + 5 + scrollSpeed)
-                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - 5 - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + 5, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - 5, player.y)
-                    Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
-                }
-                player.direction = Player.Direction.STATIC
-
-            }else if(RectF.intersects(block.rectangle, player.rectangle) && block.breakable){
-                level.blocks.remove(block)
+    fun checkCollisionsBlock(block: Block){
+        //if they collide and is not breakable
+        if (RectF.intersects(block.rectangle, player.rectangle) && !block.breakable) {
+            //If we change the player image we may change the numbers for the collisions
+            when (player.direction) {
+                Player.Direction.UP -> player.setPosition(player.x, player.y + 5 + scrollSpeed)
+                Player.Direction.DOWN -> player.setPosition(player.x, player.y - 5 - scrollSpeed)
+                Player.Direction.LEFT -> player.setPosition(player.x + 5, player.y)
+                Player.Direction.RIGHT -> player.setPosition(player.x - 5, player.y)
+                Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
             }
+            player.direction = Player.Direction.STATIC
+
+        }else if(RectF.intersects(block.rectangle, player.rectangle) && block.breakable){
+            level.blocks.remove(block)
         }
+
 
         /* Maybe this is faster? idk
         if(block.breakable){
@@ -138,18 +204,20 @@ class GameEngine:Drawable{
         */
     }
 
-    fun checkCollisionsOrb(){
+    fun checkCollisionsOrb(orb: Orb){
         //Maybe the deleting is the lag (i dont think so) but i really suspect the problem is the thermometer
         //var orbsChecked : MutableList<Int> = mutableListOf<Int>()
-        for(orb in level.orbs){
-            if(RectF.intersects(orb.rectangle,player.rectangle)){
-                temperatureBar.changeTemperature(orb)
-                level.orbs.remove(orb)
-            }
+        if(RectF.intersects(orb.rectangle,player.rectangle)){
+            temperatureBar.changeTemperature(orb)
+            level.orbs.remove(orb)
         }
     }
 
     fun breakableState(){
         //TODO() //probably we should add a list in level that marks the possible changeable blocks (Ask Miguel)
+    }
+
+    fun isOutOfPlayzone(actor: Actor):Boolean{
+        return !RectF.intersects(actor.rectangle,playingField)
     }
 }

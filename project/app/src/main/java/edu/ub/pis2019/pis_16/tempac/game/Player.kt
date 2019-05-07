@@ -10,8 +10,9 @@ class Player : Actor() {
     private var paint = Paint()
     var direction = Direction.STATIC
     private var speed = 5f
-    val rectangle : RectF = RectF(x-20,y-20,x+20,y+20)
+
     init {
+        rectangle = RectF(x-20,y-20,x+20,y+20)
         paint.color = Color.RED
         x = 500f
         y = 1000f
