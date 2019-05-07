@@ -1,7 +1,9 @@
 package edu.ub.pis2019.pis_16.tempac.game
 
-class GhostG (x : Float, y : Float, _colour : Char): Ghost(x,y,_colour) {
-    override fun draw() {
+import android.graphics.Canvas
+
+class GhostG (): Ghost() {
+    override fun draw(canvas: Canvas?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
