@@ -17,10 +17,6 @@ class GameEngine:Drawable{
     private var player : Player = Player()
     private var level : Level= Level()
 
-    /*TEMPORALY TO TEST BEGIN*/
-    private var orb : Orb = Orb(500f, 800f, "add", 4)
-    /*TEMPORALY TO TEST ENDS*/
-
     private var touchStartX = 0f
     private var touchStartY = 0f
     private var touchEndX = 0f
@@ -34,13 +30,14 @@ class GameEngine:Drawable{
     }
     fun update(){
         //Process state of the game
-        temperatureBar.temperature+=0.1f //Just to test the temperature bar
+        //temperatureBar.temperature+=0.1f //Just to test the temperature bar
         //Process inputs
         player.update(scrollSpeed)
         level.update(scrollSpeed)
         //Process AI
         //checks if the playes collides with a block
-        checkColisionsBlock()
+        checkCollisionsBlock()
+        checkCollisionsOrb()
 
         //Process physics
 
@@ -52,7 +49,7 @@ class GameEngine:Drawable{
         //Process video
 
         //temporaly:
-        orb.update(scrollSpeed)
+
 
 
     }
@@ -63,9 +60,6 @@ class GameEngine:Drawable{
             player.draw(canvas)
             temperatureBar.draw(canvas)
             level.draw(canvas)
-
-            orb.draw(canvas)
-
 
         }
     }
@@ -105,18 +99,28 @@ class GameEngine:Drawable{
         }
     }
 
-    fun checkColisionsBlock(){
+    fun checkCollisionsBlock(){
         for(block in level.blocks) {
             if (RectF.intersects(block.rectangle, player.rectangle)) {
-                //When we use images we'll increase the rectangle hitbox to prevent the orb clipping the player.
+                //If we change the player image we may change the numbers for the collisions
                 when (player.direction) {
-                    Player.Direction.UP -> player.setPosition(player.x, player.y + 6)
-                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - 6)
-                    Player.Direction.LEFT -> player.setPosition(player.x + 6, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - 6, player.y)
+                    Player.Direction.UP -> player.setPosition(player.x, player.y + 5 + scrollSpeed)
+                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - 5 - scrollSpeed)
+                    Player.Direction.LEFT -> player.setPosition(player.x + 5, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - 5, player.y)
                 }
                 player.direction = Player.Direction.STATIC
 
+            }
+        }
+    }
+
+    fun checkCollisionsOrb(){
+        var orbsChecked : MutableList<Int> = mutableListOf<Int>()
+        for(orb in level.orbs){
+            if(RectF.intersects(orb.rectangle,player.rectangle)){
+                temperatureBar.changeTemperature(orb)
+                level.orbs.remove(orb)
             }
         }
     }
