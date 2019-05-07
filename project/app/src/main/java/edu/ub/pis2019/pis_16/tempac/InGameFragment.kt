@@ -42,7 +42,7 @@ class InGameFragment : Fragment() {
             if (isStarted) {
                 progressStatus++
             }
-            temperatureProgress.progress = progressStatus
+            temperatureProgress.temperature = progressStatus
             handler?.sendEmptyMessageDelayed(0, 100)
 
             true
