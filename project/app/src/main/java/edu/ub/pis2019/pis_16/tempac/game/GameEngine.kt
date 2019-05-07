@@ -37,6 +37,7 @@ class GameEngine:Drawable{
         temperatureBar.temperature+=0.1f //Just to test the temperature bar
         //Process inputs
         player.update(scrollSpeed)
+        level.update(scrollSpeed)
         //Process AI
 
         checkColisions()
@@ -60,8 +61,11 @@ class GameEngine:Drawable{
             canvas.drawColor(Color.BLACK)
 
             player.draw(canvas)
-            orb.draw(canvas)
             temperatureBar.draw(canvas)
+            level.draw(canvas)
+
+            orb.draw(canvas)
+
 
         }
     }
