@@ -6,9 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 
 class Player : Actor() {
-    enum class Direction {
-        STATIC, UP, LEFT, RIGHT, DOWN
-    }
+    enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     private var paint = Paint()
     var direction = Direction.STATIC
     private var speed = 5f
