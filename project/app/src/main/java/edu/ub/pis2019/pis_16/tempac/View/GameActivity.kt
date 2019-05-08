@@ -15,8 +15,6 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        btnPause.visibility = View.GONE
-
         //This Part crashes the activity
         /*var animBounce = AnimationUtils.loadAnimation(this, R.anim.bounce)
         var text : TextView = findViewById(R.id.playAgainText)

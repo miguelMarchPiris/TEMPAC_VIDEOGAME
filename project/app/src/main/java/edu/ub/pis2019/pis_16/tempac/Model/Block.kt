@@ -1,16 +1,17 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 
-class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
+class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
     private var paint = Paint()
     private var paintInside = Paint()
     private val width = 80f
     private val height  = 80f
+    private var w = 0f
+    private var h = 0f
     private var rectangleInside = RectF(x-width/2f+5,y-height/2f+5f,x+width/2f-5,y+height/2f-5)
+    //private var image = imageBlockList[0] //when we have block images this will have to be activated
+
     var breakable : Boolean = breakable
     init{
         if(breakable)
@@ -24,6 +25,8 @@ class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
             paintInside.color = Color.BLACK
         super.setPosition(posx, posy)
         rectangle = RectF(x-width/2f,y-height/2f,x+width/2f,y+height/2f)
+        //h = image.height.toFloat()
+        //w = image.width.toFloat()
     }
 
     override fun draw(canvas: Canvas?){
@@ -32,10 +35,11 @@ class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
 
         /*
         if(breakable){
-            canvas?.draw("BreakableBlock")
+            image=imageBlockList[0]
         }else{
-            canvas?.draw("Block")
+            image=imageBlockList[1]
         }
+        canvas?.draw(image,rectangle.left,rectangle.top,null)
         */
     }
 
@@ -43,6 +47,8 @@ class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
         super.update(scroll)
         rectangle.set(x-width/2f,y-height/2f,x+width/2f,y+height/2f)
         rectangleInside = RectF(x-width/2f+5,y-height/2f+5f,x+width/2f-5,y+height/2f-5)
+
+        //will be missing to actualize the rectangle to match the image if it changes.
 
     }
 }

@@ -1,25 +1,48 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 
-class Player : Actor() {
+/*IMPORTANT COMMENTS
+* PacMan hitbox is rectangular and varies depending the image that is insered
+* */
+
+class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageList) {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
-    private var paint = Paint()
     var direction = Direction.STATIC
-    var speed = 5f
+    private var speed = 5f
+    private var h : Float = 0f
+    private var w : Float = 0f
+    private var image = imageList[0] //default: we put the first image because yes.
+
+    //private var paint = Paint()
+
+
 
     init {
-        rectangle = RectF(x-20,y-20,x+20,y+20)
-        paint.color = Color.RED
-        x = 500f
-        y = 1000f
+        x=posx
+        y=posy
+        h = image.height.toFloat()
+        w = image.width.toFloat()
+        rectangle = RectF(x-w,y-h,x,y)
+
+        //paint.color = Color.RED
+
     }
+
     override fun draw(canvas: Canvas?) {
-        canvas?.drawRect(rectangle, paint)
+        //canvas?.drawRect(rectangle, paint)
+
+        //depending the direction pacman will face one way or another
+        when(direction){
+            Direction.UP -> image=super.imageList[0]
+            Direction.RIGHT -> image=super.imageList[1]
+            Direction.DOWN -> image=super.imageList[2]
+            Direction.LEFT -> image=super.imageList[3]
+        }
+        canvas?.drawBitmap(image,rectangle.left,rectangle.top,null)
+
     }
+
     override fun update(scroll: Float){
         super.update(scroll)
         when(direction){
@@ -28,6 +51,9 @@ class Player : Actor() {
             Direction.RIGHT -> x+=speed
             Direction.DOWN -> y+=scroll+speed
         }
-        rectangle.set(x-20,y-20,x+20,y+20)
+        //these two lines are used if the image change his size. Are just a way to prevent random things to happen (the hitbox goes acord the image size)
+        h = image.height.toFloat()
+        w = image.width.toFloat()
+        rectangle.set(x-w,y-h,x,y)
     }
 }

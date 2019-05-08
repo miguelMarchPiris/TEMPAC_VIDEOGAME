@@ -6,6 +6,7 @@ import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.*
+import edu.ub.pis2019.pis_16.tempac.R
 
 /*GameEngine singelton????
 * Usar la classe collisionable per a algo, lol.
@@ -21,9 +22,9 @@ class GameEngine(var context: Context) : Drawable {
 
     //Actors
     private var gfactory : GhostFactory = GhostFactory()
+    private var player : Player = Player(500f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf<Ghost>()
-    private var player : Player = Player()
-    private var level : Level = Level()
+    private var level : Level = Level(initBlockImages())
 
     //Play zone rects
     private val playingField = RectF(0f, 225f,1080f,1625f)
@@ -46,6 +47,7 @@ class GameEngine(var context: Context) : Drawable {
     var h = metrics.heightPixels
 
     init {
+
         temperatureBar.x = 100f
         temperatureBar.y = 100f
         temperatureBar.temperature = 0f
@@ -61,7 +63,24 @@ class GameEngine(var context: Context) : Drawable {
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+
     }
+
+    fun initPacmanImages() : List<Bitmap>{
+        val pacman_open_up : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_up)
+        val pacman_open_rigth : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_right)
+        val pacman_open_down : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_down)
+        val pacman_open_left : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_left)
+        val pacmanImages : List<Bitmap> = listOf(pacman_open_up, pacman_open_rigth, pacman_open_down,pacman_open_left)
+        return pacmanImages
+    }
+
+    fun initBlockImages() : List<Bitmap>{
+
+        val blockImages : List<Bitmap> = listOf()
+        return blockImages
+    }
+
     fun update(){
         //Process state of the game
         score.update(bonus = 0)
