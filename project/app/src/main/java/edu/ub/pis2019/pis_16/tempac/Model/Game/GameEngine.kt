@@ -84,9 +84,9 @@ class GameEngine(var context: Context) : Drawable {
     }
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
+            canvas.scale(w/1080f,w/1080f)
             //Draw background
             canvas.drawColor(Color.BLACK)
-
             //Draw Actors
             player.draw(canvas)
             level.draw(canvas)
@@ -100,6 +100,8 @@ class GameEngine(var context: Context) : Drawable {
             //Draw Objects
             temperatureBar.draw(canvas)
             //>>posar aqui el draw de pause i score<<
+
+
 
         }
 
@@ -132,7 +134,7 @@ class GameEngine(var context: Context) : Drawable {
         }
     }
     fun processInput(event: MotionEvent){
-        
+
         val action = event.action
         when (action) {
             MotionEvent.ACTION_DOWN ->{
