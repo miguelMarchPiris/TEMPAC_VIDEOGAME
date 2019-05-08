@@ -3,12 +3,12 @@
              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".InGameFragment" android:id="@+id/frameLayout">
+             tools:context=".View.InGameFragment" android:id="@+id/frameLayout">
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".GameActivity"
+            tools:context=".View.GameActivity"
             android:background="@color/colorPrimaryDark"
             android:id="@+id/backgroundLayout">
         <Button

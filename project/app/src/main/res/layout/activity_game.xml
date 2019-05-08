@@ -5,12 +5,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".GameActivity"
+        tools:context=".View.GameActivity"
         android:background="#6448E0"
         android:id="@+id/backgroundLayout">
         <fragment android:layout_width="match_parent" android:layout_height="match_parent"
                   android:id="@+id/inGameFragment"
-                  android:name="edu.ub.pis2019.pis_16.tempac.InGameFragment">
+                  android:name="edu.ub.pis2019.pis_16.tempac.View.InGameFragment">
 
         </fragment>
 </android.support.constraint.ConstraintLayout>
