@@ -1,9 +1,3 @@
-package edu.ub.pis2019.pis_16.tempac.game
-
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
 
 class Block(posx : Float, posy : Float) : Actor(){
     private var paint = Paint()
@@ -26,8 +20,5 @@ class Block(posx : Float, posy : Float) : Actor(){
     override fun draw(canvas: Canvas?){
         canvas?.drawRect(rectangle,paint)
         rectangle.set(RectF(x-width/2f,y-height/2f,x+width/2f,y+height/2f))
-    }
-    fun dime(){
-
     }
 }

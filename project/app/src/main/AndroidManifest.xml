@@ -11,18 +11,18 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ConfirmExitActivity">
+        <activity android:name=".View.ConfirmExitActivity">
             android:theme="@style/AppTheme.PopUpTheme"
         </activity>
-        <activity android:name=".SignUpActivity">
+        <activity android:name=".View.SignUpActivity">
         </activity>
         <activity
-                android:name=".GameActivity"
+                android:name=".View.GameActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
                 tools:ignore="ExtraText">
         </activity>
         <activity
-                android:name=".LogInActivity"
+                android:name=".View.LogInActivity"
                 tools:ignore="ExtraText">
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -36,13 +36,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CreditsActivity">
+        <activity android:name=".View.CreditsActivity">
         </activity>
-        <activity android:name=".SettingsActivity">
+        <activity android:name=".View.SettingsActivity">
         </activity>
-        <activity android:name=".MainMenuActivity">
+        <activity android:name=".View.MainMenuActivity">
         </activity>
-        <activity android:name=".HighScoreActivity">
+        <activity android:name=".View.HighScoreActivity">
         </activity>
     </application>
 
