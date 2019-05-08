@@ -9,7 +9,7 @@ class Player : Actor() {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     private var paint = Paint()
     var direction = Direction.STATIC
-    private var speed = 5f
+    var speed = 5f
 
     init {
         rectangle = RectF(x-20,y-20,x+20,y+20)
