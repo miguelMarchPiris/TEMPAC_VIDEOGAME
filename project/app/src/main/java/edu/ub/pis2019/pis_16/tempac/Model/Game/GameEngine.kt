@@ -25,7 +25,7 @@ class GameEngine(var context: Context) : Drawable {
     private var level : Level = Level()
 
     //Play zone rects
-    private val playingField = RectF(0f, 300f,1080f,1700f)
+    private val playingField = RectF(0f, 225f,1080f,1625f)
     private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
     private val fieldLinePaint = Paint()
     private val fieldPaint = Paint()
@@ -57,7 +57,7 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
         val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
-        overlay = listOf<RectF>(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
+        overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
     }
