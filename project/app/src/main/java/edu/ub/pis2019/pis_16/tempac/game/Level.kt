@@ -15,7 +15,7 @@ class Level : Drawable {
         //Block size can be changed in companion object in Block class.
 
         var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
-        var nLinesToDraw : Int = 50
+        var nLinesToDraw : Int = 25
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
     override fun draw(canvas: Canvas?) {
@@ -79,7 +79,7 @@ class Level : Drawable {
         //Probability that each place in the first line has a block
         var probPrimeros : Float=0.3F
         //Probability that one block is created afterwards the obligatory blocks are created
-        var probRandomHole : Float=0.7F
+        var probRandomHole : Float=0.3F
         //Probability that once one line is created it reapeats itselve just after
         var probRepetLine : Float=0.7F
 
@@ -116,9 +116,9 @@ class Level : Drawable {
             }
 
             //Ponemos huecos aleatoriamente
-            /*for (i in 0 until ancho){
+            for (i in 0 until ancho){
                 if (r.nextFloat()<=probRandomHole){ nueva.set(i,false)}
-            }*/
+            }
 
         }
 
