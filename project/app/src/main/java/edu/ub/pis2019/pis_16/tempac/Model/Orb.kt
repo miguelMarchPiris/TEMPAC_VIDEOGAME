@@ -16,10 +16,10 @@ class Orb (posx : Float, posy : Float, operand : Operand, number : Int) : Actor(
         super.setPosition(posx, posy)
         rectangle = RectF(x-25,y-25,x+25,y+25)
         android.graphics.RectF()
-        paint.color = Color.YELLOW
+        paint.color = Color.WHITE
         textPaint.color = Color.BLACK
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.textSize = 20f
+        textPaint.textSize = 22f
         textPaint.style = Paint.Style.FILL_AND_STROKE
         textPaint.strokeWidth = 2f
         //textPaint.isFakeBoldText = true
