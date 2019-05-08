@@ -16,27 +16,13 @@
                             <entry key="actionbar">
                               <value>
                                 <PersistentState>
-                                  <option name="children">
-                                    <map>
-                                      <entry key="image">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="trimmed" value="true" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
-                                    </map>
-                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\PauSoler\Desktop\Projecte Integrat de Software\Pac2man.png" />
+                                      <entry key="imageAsset" value="C:\Users\PauSoler\Desktop\Projecte Integrat de Software\Pacman Sprites\Ghost\ghost_green.png" />
+                                      <entry key="outputName" value="ghost_green" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffff00" />
+                                      <entry key="themeColor" value="00ff00" />
                                     </map>
                                   </option>
                                 </PersistentState>
