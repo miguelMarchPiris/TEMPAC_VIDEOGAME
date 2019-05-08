@@ -15,8 +15,9 @@ abstract class Actor() : Object()  {
         imageList  = list
     }
 
-
+    //process inputs
     open fun update(scroll: Float){
         y+=scroll
+        
     }
 }

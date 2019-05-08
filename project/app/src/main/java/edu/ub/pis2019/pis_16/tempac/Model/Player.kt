@@ -17,6 +17,7 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
     //private var paint = Paint()
 
 
+
     init {
         x=posx
         y=posy

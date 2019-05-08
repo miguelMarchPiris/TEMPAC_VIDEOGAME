@@ -18,7 +18,7 @@ class Level(blockImages : List<Bitmap>) : Drawable {
                 500f,
                 800f,
                 Orb.Operand.ADD,
-                4
+                20
             )
         )
         orbs.add(
