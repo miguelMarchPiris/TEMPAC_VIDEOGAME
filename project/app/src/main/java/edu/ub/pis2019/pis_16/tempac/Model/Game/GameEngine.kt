@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
@@ -131,6 +132,7 @@ class GameEngine(var context: Context) : Drawable {
         }
     }
     fun processInput(event: MotionEvent){
+        
         val action = event.action
         when (action) {
             MotionEvent.ACTION_DOWN ->{
