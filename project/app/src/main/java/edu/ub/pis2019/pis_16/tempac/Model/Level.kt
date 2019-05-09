@@ -12,6 +12,8 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
+    var filasA : MutableList<Array<Block?>>
+
     var lines : MutableList <MutableList<Block?>> = mutableListOf<MutableList<Block?>>()
     var blocks : MutableList<Block> = mutableListOf<Block>()
     var breakableBlocks : MutableList<Block?> = mutableListOf<Block?>()
@@ -19,47 +21,35 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var blockImages : List<Bitmap>
 
     init{
+        filasA= mutableListOf<Array<Block?>>()
+
+
+
         blockImages=blockImg
         var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
         var nLinesToDraw : Int = 10
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
+
+
+
+
+
+
+
+
         //Instanciamos bloques para hacer pruebas
         //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
 
         //blocks.add(Block(300f, 300f, false, blockImages))
         //blocks.add(Block(380f, 300f, true, blockImages))
         orbs.add(
-            Orb(
-                500f,
-                800f,
-                Orb.Operand.ADD,
-                200
-            )
-        )
+            Orb(500f, 800f, Orb.Operand.ADD, 200))
         orbs.add(
-            Orb(
-                500f,
-                700f,
-                Orb.Operand.MUL,
-                4
-            )
-        )
+            Orb(500f, 700f, Orb.Operand.MUL, 4))
         orbs.add(
-            Orb(
-                500f,
-                500f,
-                Orb.Operand.DIV,
-                2
-            )
-        )
+            Orb(500f, 500f, Orb.Operand.DIV, 2))
         orbs.add(
-            Orb(
-                500f,
-                600f,
-                Orb.Operand.SUB,
-                4
-            )
-        )
+            Orb(500f, 600f, Orb.Operand.SUB, 4))
 
         //Block size can be changed in companion object in Block class.
 
@@ -87,9 +77,27 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     fun createLevelBlocks(ancho : Int, alto: Int){
-        createTrivialLevelBlocks(ancho,alto)
+        //createTrivialLevelBlocks(ancho,alto)
         //generateNewLevel(ancho,alto)
+        createArrayLevel(ancho,alto) }
+
+
+
+    fun createArrayLevel(ancho: Int,alto: Int){
+        //todo mirar esta cosa maravillosa
+        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
+        var arrayVacio = arrayOfNulls<Boolean>(ancho)
+
+        for(i in 0 until arrayIntermitenteBool.size){
+            arrayIntermitenteBool.set(i,i%2==0)
+        }
+
+        for(i in 0 until alto){
+            createNewBlockLine(arrayIntermitenteBool, i)
+        }
+
     }
+
     fun createTrivialLevelBlocks(ancho: Int, alto: Int) {
         var listaintermitente : MutableList<Boolean> = mutableListOf<Boolean>()
         var listavacia : MutableList<Boolean> = mutableListOf<Boolean>()
@@ -108,9 +116,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             createNewBlockLine(newList,i)
         }
     }
-
-
-
     fun generateNewLevel(ancho: Int, alto: Int){
         var fila: MutableList<Boolean>? = null
         for (i in 0 until alto) {
@@ -171,7 +176,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         return nueva
     }
-
     fun getHoles(line: MutableList<Boolean>): MutableList<Pair<Int, Int>> {
         var holeList : MutableList<Pair<Int,Int>> = mutableListOf<Pair<Int,Int>>()
         var prev : Boolean = false
@@ -215,6 +219,21 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 blocks.add(b)
             }
         }
+    }
+    fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
+        var anchoBloque : Float= Block.blockSide
+        var desplazamiento : Float
+        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
+        for (k in 0 until arrayBooleanos.size){
+            if(arrayBooleanos.get(k)){
+                //Calcular la posición que hay que pasarle al bloque
+                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
+                //Todo, see how we choose breakable blocks
+                var b =Block(desplazamiento,anchoBloque.times(indexLine.times(-1)), true, blockImages)
+                arrayBlocks.set(k,b)
+            }
+        }
+        filasA.add(0,arrayBlocks)
     }
 }
 

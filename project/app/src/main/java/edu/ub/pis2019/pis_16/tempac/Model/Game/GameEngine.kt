@@ -236,23 +236,30 @@ class GameEngine(var context: Context) : Drawable {
         }
 
 
-        /* Maybe this is faster? idk
-        if(block.breakable){
-            if (RectF.intersects(block.rectangle, player.rectangle)) {
-                //If we change the player image we may change the numbers for the collisions
-                when (player.direction) {
-                    Player.Direction.UP -> player.setPosition(player.x, player.y + 5 + scrollSpeed)
-                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - 5 - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + 5, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - 5, player.y)
-                }
-                player.direction = Player.Direction.STATIC
-
-        }else{
+        //si esta colisiionando,          se puede romper y la temperatura es la correcta nos lo cargamos
+        /*
+        if( block.breakable){
             if(RectF.intersects(block.rectangle, player.rectangle)) level.blocks.remove(block)
         }
-
         */
+
+        if(RectF.intersects(block.rectangle, player.rectangle)) {
+
+            if(block.breakable && (temperatureBar.temperature>=breakableTempeature)){
+                //Destroy block and return
+                //
+            }else{
+                //If we change the player image we may change the numbers for the collisions
+                when (player.direction) {
+                    Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
+                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
+                    Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
+                }
+                player.direction = Player.Direction.STATIC
+            }
+        }
     }
 
     private fun checkCollisionsOrb(orb: Orb):Boolean{
