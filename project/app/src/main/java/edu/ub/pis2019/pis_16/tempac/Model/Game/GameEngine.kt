@@ -60,7 +60,7 @@ class GameEngine(var context: Context) : Drawable {
         //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 0f
+        temperatureBar.temperature = 35f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
@@ -149,6 +149,7 @@ class GameEngine(var context: Context) : Drawable {
                 canvas.drawRect(rect,overlayPaint)
             canvas.drawRect(playingFieldLine,fieldLinePaint)
 
+
             //Draw Objects
             temperatureBar.draw(canvas)
             //>>posar aqui el draw de pause i score<<
@@ -156,6 +157,7 @@ class GameEngine(var context: Context) : Drawable {
 
 
         }
+
     }
 
     private fun processPhysics(){
@@ -163,27 +165,22 @@ class GameEngine(var context: Context) : Drawable {
         if(isOutOfPlayzone(player))
             dead = true
 
+        //check out of playzone
+        //this is like a list comprehension in python, super fast and is the only clean way to delete elements
+        //we also check breakable blocks that need to be deleted
+        level.blocks = (level.blocks.filter { block ->
+            !isOutOfPlayzone(block) &&
+            !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature))
+        }).toMutableList()
+        level.orbs = (level.orbs.filter { element ->
+            !isOutOfPlayzone(element) &&
+            !checkCollisionsOrb(element)
+        }).toMutableList()
+        ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
+
         for(block in level.blocks){
             //check collisions
             checkCollisionsBlock(block)
-            //check out of playzone
-            if(isOutOfPlayzone(block))
-                level.blocks.remove(block)
-        }
-        for(orb in level.orbs){
-            //check collisions
-            checkCollisionsOrb(orb)
-            //check out of playzone
-            if(isOutOfPlayzone(orb))
-                level.orbs.remove(orb)
-        }
-        for(ghost in ghosts){
-            //check collisions
-            checkCollisionsGhost(ghost)
-
-            //check out of playzone
-            if(isOutOfPlayzone(ghost))
-                ghosts.remove(ghost)
         }
     }
 
@@ -225,11 +222,8 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun checkCollisionsBlock(block: Block){
-        //if they collide and is not breakable
 
-        //Todo: I tried this but pacman gets automatically to the bottom ????
-        //if (RectF.intersects(block.rectangle, player.rectangle) && !block.breakable || (temperatureBar.temperature>=breakableTempeature)) {
-        if (RectF.intersects(block.rectangle, player.rectangle) && (!block.breakable || (temperatureBar.temperature<breakableTempeature))) {
+        if (RectF.intersects(block.rectangle, player.rectangle)) {
             //If we change the player image we may change the numbers for the collisions
             when (player.direction) {
                 Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
@@ -239,10 +233,6 @@ class GameEngine(var context: Context) : Drawable {
                 Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
             }
             player.direction = Player.Direction.STATIC
-
-        }else if(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature)){
-            //Todo, write somewhere the variable that contains the limit temperature to break blocks
-            level.blocks.remove(block)
         }
 
 
@@ -265,13 +255,11 @@ class GameEngine(var context: Context) : Drawable {
         */
     }
 
-    private fun checkCollisionsOrb(orb: Orb){
-        //Maybe the deleting is the lag (i dont think so) but i really suspect the problem is the thermometer
-        //var orbsChecked : MutableList<Int> = mutableListOf<Int>()
-        if(RectF.intersects(orb.rectangle,player.rectangle)){
+    private fun checkCollisionsOrb(orb: Orb):Boolean{
+        val collides = RectF.intersects(orb.rectangle,player.rectangle)
+        if(collides)
             temperatureBar.changeTemperature(orb)
-            level.orbs.remove(orb)
-        }
+        return collides
     }
 
     private fun checkCollisionsGhost(ghost : Ghost){
