@@ -13,10 +13,17 @@ import edu.ub.pis2019.pis_16.tempac.R
 * */
 class GameEngine(var context: Context) : Drawable {
 
+    //Const values
+    companion object {
+        const val MAX_GHOSTS = 6
+        const val MIN_DISTANCE = 105f
+    }
+
     //Game variables
     private var scrollSpeed = 1.5f
     private var dead = false
-    //Secundary Game Variables
+
+    //Secondary Game Variables
     private var breakableTempeature=90f
 
     //Objects
@@ -24,7 +31,7 @@ class GameEngine(var context: Context) : Drawable {
     private var score = Score()
 
     //Actors
-    private var gfactory : GhostFactory = GhostFactory()
+    private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     private var player : Player = Player(500f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf<Ghost>()
     private var level : Level = Level(initBlockImages())
@@ -42,7 +49,6 @@ class GameEngine(var context: Context) : Drawable {
     private var touchStartY = 0f
     private var touchEndX = 0f
     private var touchEndY = 0f
-    private val MIN_DISTANCE = 105f
 
     //Screen variables
     var metrics = context.resources.displayMetrics
@@ -51,6 +57,7 @@ class GameEngine(var context: Context) : Drawable {
 
     init {
 
+        //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
         temperatureBar.temperature = 0f
@@ -58,7 +65,7 @@ class GameEngine(var context: Context) : Drawable {
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
 
-
+        //playfield
         val overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom) //Left
         val overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
         val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
@@ -66,6 +73,9 @@ class GameEngine(var context: Context) : Drawable {
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+
+        //Factory (maybe this is not necesesary?)
+        ghosts.add(gfactory.create(temperatureBar.temperature))
 
     }
 
@@ -84,6 +94,15 @@ class GameEngine(var context: Context) : Drawable {
         return blockImages
     }
 
+    fun initGhostImages() : List<Bitmap>{
+        val ghost_red : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_red)
+        val ghost_blue : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_blue)
+        val ghost_green : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_green)
+        val ghost_yellow : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_yellow)
+        val ghostsImages : List<Bitmap> = listOf(ghost_red,ghost_blue,ghost_green,ghost_yellow)
+        return ghostsImages
+    }
+
     fun update(){
         //Process state of the game
         score.update(bonus = 0)
@@ -92,9 +111,11 @@ class GameEngine(var context: Context) : Drawable {
         }
         //Process inputs
         player.update(scrollSpeed)
-        level.update(scrollSpeed)
-        //Process AI
 
+        //Process AI
+        generateGhost()
+        level.update(scrollSpeed)
+        for(ghost in ghosts) ghost.update(scrollSpeed)
 
         //Process physics
         processPhysics()
@@ -104,20 +125,29 @@ class GameEngine(var context: Context) : Drawable {
 
         //Process video
     }
+
+    fun generateGhost(){
+        if(ghosts.size <= MAX_GHOSTS){
+            ghosts.add(gfactory.create(temperatureBar.temperature))
+        }
+    }
     override fun draw(canvas: Canvas?){
         if (canvas != null) {
+
             canvas.scale(w/1080f,w/1080f)
+
             //Draw background
             canvas.drawColor(Color.BLACK)
+
             //Draw Actors
             player.draw(canvas)
+            for(ghost in ghosts) ghost.draw(canvas)
             level.draw(canvas)
 
             //Draw Overlay & Playzone
             for(rect in overlay)
                 canvas.drawRect(rect,overlayPaint)
             canvas.drawRect(playingFieldLine,fieldLinePaint)
-
 
             //Draw Objects
             temperatureBar.draw(canvas)
@@ -126,8 +156,8 @@ class GameEngine(var context: Context) : Drawable {
 
 
         }
-
     }
+    
     private fun processPhysics(){
         //check if player is out of the game
         if(isOutOfPlayzone(player))
@@ -149,12 +179,14 @@ class GameEngine(var context: Context) : Drawable {
         }
         for(ghost in ghosts){
             //check collisions
+            checkCollisionsGhost(ghost)
 
             //check out of playzone
             if(isOutOfPlayzone(ghost))
                 ghosts.remove(ghost)
         }
     }
+
     fun processInput(event: MotionEvent){
 
         val action = event.action
@@ -242,6 +274,13 @@ class GameEngine(var context: Context) : Drawable {
         }
     }
 
+    private fun checkCollisionsGhost(ghost : Ghost){
+        if(RectF.intersects(ghost.rectangle,player.rectangle)){
+            player.direction = Player.Direction.STATIC
+            dead = true
+        }
+    }
+
     private fun breakableState(){
         //TODO() //probably we should add a list in level that marks the possible changeable blocks (Ask Miguel)
     }
@@ -249,6 +288,7 @@ class GameEngine(var context: Context) : Drawable {
     private fun isOutOfPlayzone(actor: Actor):Boolean{
         return RectF.intersects(actor.rectangle,overlay[3]) && !RectF.intersects(actor.rectangle,playingField)
     }
+
     private fun isOutOfPlayzone(player: Player): Boolean{
         //Si toca  a l'esquerra col·lisio
         if(RectF.intersects(overlay[0], player.rectangle)){

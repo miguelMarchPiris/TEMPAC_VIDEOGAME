@@ -26,8 +26,8 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //Instanciamos bloques para hacer pruebas
         //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
 
-        blocks.add(Block(300f, 300f, false, blockImages))
-        blocks.add(Block(380f, 300f, true, blockImages))
+        //blocks.add(Block(300f, 300f, false, blockImages))
+        //blocks.add(Block(380f, 300f, true, blockImages))
         orbs.add(
             Orb(
                 500f,

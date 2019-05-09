@@ -1,21 +1,23 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-class GhostFactory : Factory {
-    override fun create(temperature: Int): Ghost {
+import android.graphics.Bitmap
+
+class GhostFactory(var ghostImages : List<Bitmap>) : Factory {
+    override fun create(temperature: Float): Ghost {
 
         var randomType: GhostType = GhostType.BLUE
         while (true) {
             val tempLimits = GhostType.tempLimits[randomType]
-            if (temperature > tempLimits!!.first && temperature <= tempLimits!!.third)
+            if ((temperature > tempLimits!!.first || temperature.equals(tempLimits!!.first)) && (temperature < tempLimits!!.third || temperature.equals(tempLimits!!.third)))
                 break
             randomType = GhostType.getRandomType()
         }
 
         return when(randomType){
-            GhostType.RED -> GhostR()
-            GhostType.BLUE -> GhostB()
-            GhostType.GREEN -> GhostG()
-            GhostType.YELLOW -> GhostY()
+            GhostType.RED -> GhostR(ghostImages[0])
+            GhostType.BLUE -> GhostB(ghostImages[1])
+            GhostType.GREEN -> GhostG(ghostImages[2])
+            GhostType.YELLOW -> GhostY(ghostImages[3])
         }
     }
 }

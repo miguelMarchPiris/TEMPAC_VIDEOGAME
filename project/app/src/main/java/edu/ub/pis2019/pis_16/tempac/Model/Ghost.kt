@@ -1,10 +1,16 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
+import android.graphics.Bitmap
 import android.graphics.RectF
 
-abstract class Ghost : Actor(){
+abstract class Ghost(image : Bitmap) : Actor(){
+    private var w : Float = 0f
+    private var h : Float = 0f
+    var im = image
     init {
-        rectangle = RectF(x-20,y-20,x+20,y+20)
+        w = im.width.toFloat()
+        h = im.height.toFloat()
+        rectangle = RectF(x-w,y-h,x,y)
     }
 
     fun follow(){
@@ -13,6 +19,6 @@ abstract class Ghost : Actor(){
 
     override fun update(scroll: Float){
         super.update(scroll)
-        rectangle.set(x-20,y-20,x+20,y+20)
+        rectangle.set(x-w,y-h,x,y)
     }
 }

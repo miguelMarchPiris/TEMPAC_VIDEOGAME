@@ -9,11 +9,11 @@ enum class GhostType {
     RED;
 
     companion object {
-        val tempLimits: HashMap<GhostType, Triple<Int,Int,Int>> = hashMapOf(
-            BLUE to Triple(0,20, 35),
-            GREEN to Triple(20,35, 40),
-            YELLOW to Triple(35,40,50),
-            RED to Triple(40,50, 100))
+        val tempLimits: HashMap<GhostType, Triple<Float,Float,Float>> = hashMapOf(
+            BLUE to Triple(0f,20f, 35f),
+            GREEN to Triple(20f,35f, 40f),
+            YELLOW to Triple(35f,40f,50f),
+            RED to Triple(40f,50f, 100f))
 
         fun getRandomType() : GhostType {
             return values()[Random().nextInt(values().size)]
