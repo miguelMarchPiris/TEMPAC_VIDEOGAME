@@ -9,7 +9,8 @@ import android.graphics.*
 class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageList) {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     var direction = Direction.STATIC
-    private var speed = 5f
+    var speed = 5f
+    //private var speed = 5f
     private var h : Float = 0f
     private var w : Float = 0f
     private var image = imageList[0] //default: we put the first image because yes.

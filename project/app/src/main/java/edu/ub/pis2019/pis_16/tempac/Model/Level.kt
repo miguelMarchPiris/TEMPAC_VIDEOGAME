@@ -2,19 +2,30 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import edu.ub.pis2019.pis_16.tempac.Model.Block
+import edu.ub.pis2019.pis_16.tempac.Model.Drawable
+import edu.ub.pis2019.pis_16.tempac.Model.Orb
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-class Level(blockImages : List<Bitmap>) : Drawable {
+class Level(blockImg : List<Bitmap>) : Drawable {
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
     var lines : MutableList <MutableList<Block?>> = mutableListOf<MutableList<Block?>>()
+    var blocks : MutableList<Block> = mutableListOf<Block>()
+    var breakableBlocks : MutableList<Block?> = mutableListOf<Block?>()
     var r : Random=Random()
+    var blockImages : List<Bitmap>
 
     init{
+        blockImages=blockImg
+        var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
+        var nLinesToDraw : Int = 10
+        createLevelBlocks(nBlocksInLine,nLinesToDraw)
         //Instanciamos bloques para hacer pruebas
         //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
+
         blocks.add(Block(300f, 300f, false, blockImages))
         blocks.add(Block(380f, 300f, true, blockImages))
         orbs.add(
@@ -22,7 +33,7 @@ class Level(blockImages : List<Bitmap>) : Drawable {
                 500f,
                 800f,
                 Orb.Operand.ADD,
-                20
+                200
             )
         )
         orbs.add(
@@ -52,33 +63,27 @@ class Level(blockImages : List<Bitmap>) : Drawable {
 
         //Block size can be changed in companion object in Block class.
 
-        var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
-        var nLinesToDraw : Int = 25
-        createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
+
     override fun draw(canvas: Canvas?) {
         for (orb in orbs) {
             orb.draw(canvas)
         }
-        for (line in lines) {
-            for (block in line) {
-                if(block!=null){
-                    block.draw(canvas)
-                }
-            }
+        for (block in blocks){
+            block.draw(canvas)
         }
     }
     fun update(scroll : Float){
         for(orb in orbs){
             orb.update(scroll)
         }
-        for (line in lines) {
-            for (block in line) {
-                if(block!=null){
-                    block.update(scroll)
-                }
-            }
+        for (block in blocks){
+            block.update(scroll)
         }
+    }
+
+    fun removeBreakableBlock(b : Block){
+        breakableBlocks.remove(b)
     }
 
     fun createLevelBlocks(ancho : Int, alto: Int){
@@ -97,12 +102,15 @@ class Level(blockImages : List<Bitmap>) : Drawable {
             val newList: MutableList<Boolean>
             if (i % 6 == 0) {
                 newList = listavacia.toMutableList()
-            } else {
+            }else {
                 newList = listaintermitente.toMutableList()
             }
             createNewBlockLine(newList,i)
         }
     }
+
+
+
     fun generateNewLevel(ancho: Int, alto: Int){
         var fila: MutableList<Boolean>? = null
         for (i in 0 until alto) {
@@ -120,6 +128,7 @@ class Level(blockImages : List<Bitmap>) : Drawable {
         var probRandomHole : Float=0.3F
         //Probability that once one line is created it reapeats itselve just after
         var probRepetLine : Float=0.7F
+
 
         var prob : Float
 
@@ -195,158 +204,17 @@ class Level(blockImages : List<Bitmap>) : Drawable {
     }
 
     fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
-        var newLine : MutableList <Block?> = mutableListOf<Block?>()
         var anchoBloque : Float= Block.blockSide
-        var desplazamiento : Float = anchoBloque.div(2)
+        var desplazamiento : Float
         for (k in 0 until listaBooleanos.size){
             if(listaBooleanos.get(k)){
-                //Todo calcular la posición que hay que pasarle al bloque
+                //Calcular la posición que hay que pasarle al bloque
                 desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                var b : Block=Block(desplazamiento,anchoBloque.times(indexLine.times(-1)))
-                newLine.add(k,b)
-            }
-            else{
-                newLine.add(k, null)
+                //Todo, see how we choose breakable blocks
+                var b =Block(desplazamiento,anchoBloque.times(indexLine.times(-1)), true, blockImages)
+                blocks.add(b)
             }
         }
-        lines.add(newLine)
     }
 }
 
-
-/*class MapGenerator {
-    private val filas: ArrayList<ArrayList<*>>
-    private val filaActual: ArrayList<Boolean>
-    private val filaAnterior: ArrayList<Boolean>
-
-    init {
-        filas = ArrayList<ArrayList<*>>()
-        filaActual = ArrayList()
-        filaAnterior = ArrayList()
-    }
-
-    fun generaNivelTrivial(ancho: Int, alto: Int) {
-        for (k in 0 until ancho) {
-            filaAnterior.add(k % 2 == 0)
-            filaActual.add(false)
-        }
-
-
-        for (i in 0 until alto) {
-            val newList: ArrayList<Boolean>
-            if (i % 6 == 0) {
-                newList = ArrayList(filaActual)
-            } else {
-                newList = ArrayList(filaAnterior)
-            }
-            drawLine(newList)
-        }
-    }
-
-    companion object {
-
-        internal fun generaNuevaLinea(anterior: ArrayList<*>?, ancho: Int): ArrayList<*>? {
-            var nueva: ArrayList<*>? = null
-            val vacios: ArrayList<*>
-            var n: Int
-            val prob: Int
-            val total: Int
-            prob = 4
-            total = 10
-
-            if (anterior == null) {
-                nueva = ArrayList(ancho)
-                for (i in 0 until ancho) {
-                    n = (Math.random() * total).toInt()
-                    if (n <= prob) {
-                        nueva!!.add(i, true)
-                    } else {
-                        nueva!!.add(i, false)
-                    }
-                }
-                for (i in nueva!!.indices) {
-                    print(drawBlock(nueva[i] as Boolean))
-                }
-            } else {
-                vacios = recorreFila(anterior)
-
-                for (i in 0 until ancho) {
-                    nueva!!.add(i, true)
-                }
-
-                val it = vacios.iterator()
-                var tupla: IntArray
-                var totalhuecos: Int
-                while (it.hasNext()) {
-                    tupla = it.next() as IntArray
-                    totalhuecos = tupla[0] + tupla[1]
-
-                    if (totalhuecos == 3) {
-                        nueva!!.add(tupla[0], false)
-                        nueva.add(tupla[0] + tupla[1], false)
-                        println("metemos un hueco en las posiciones " + tupla[0] + "   " + tupla[0] + tupla[1])
-                    } else {
-                        n = (Math.random() * tupla[1]).toInt()
-                        nueva!!.add(tupla[0] + n, false)
-                    }
-
-                }
-
-
-            }
-
-            return nueva
-        }
-
-        fun drawLine(fila: ArrayList<Boolean>) {
-            val it = fila.iterator()
-            while (it.hasNext()) {
-                print(drawBlock(it.next()))
-            }
-            println("\n")
-        }
-
-        fun drawBlock(j: Boolean): String {
-            return if (j) {
-                "X"
-            } else "_"
-        }
-
-        fun recorreFila(fila: ArrayList<*>): ArrayList<*> {
-            val vacios = ArrayList()
-            var anterior = false
-            var actual: Boolean
-            val cont = 0
-            var posicion = 0
-            var huecos = 0
-            for (i in fila.indices) {
-                actual = fila[i] as Boolean
-                if (anterior) {
-                    // XX
-                    if (actual) {
-                        //Nada
-                    } else {
-                        //Empezamos a contar
-                        posicion = i
-                        huecos = 0
-                    }// X_
-
-                } else {
-                    //_X
-                    if (actual) {
-                        //Acabamos de contar
-                        val tupla = intArrayOf(posicion, huecos)
-                        vacios.add(tupla)
-                    } else {
-                        //Sumamos 1
-                        huecos++
-
-                    }//__
-
-                }// _
-                anterior = actual
-            }
-            return vacios
-        }
-    }
-}*/

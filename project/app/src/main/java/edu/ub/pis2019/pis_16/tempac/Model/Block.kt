@@ -5,14 +5,18 @@ import android.graphics.*
 class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
     private var paint = Paint()
     private var paintInside = Paint()
-    private val width = 80f
-    private val height  = 80f
+    private val width = blockSide
+    private val height  = blockSide
     private var w = 0f
     private var h = 0f
     private var rectangleInside = RectF(x-width/2f+5,y-height/2f+5f,x+width/2f-5,y+height/2f-5)
     //private var image = imageBlockList[0] //when we have block images this will have to be activated
 
     var breakable : Boolean = breakable
+    companion object {
+        //Here to change block size
+        val blockSide:Float=120f;
+    }
     init{
         if(breakable)
             paint.color = Color.CYAN

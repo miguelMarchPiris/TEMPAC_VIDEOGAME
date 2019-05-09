@@ -6,7 +6,14 @@ import android.support.v4.graphics.ColorUtils
 class TemperatureBar(): Object() {
     var temperature = 0f
         set(value) {
-            if (value in 0.0..100.1) field = value
+            if (value in 0.0..100.1){
+                field = value
+            }
+            else if(value<0f){
+                field=0f
+            }else{
+                field=100f
+            }
         }
 
     var height = 50

@@ -16,6 +16,9 @@ class GameEngine(var context: Context) : Drawable {
     //Game variables
     private var scrollSpeed = 1.5f
     private var dead = false
+    //Secundary Game Variables
+    private var breakableTempeature=90f
+
     //Objects
     private var temperatureBar = TemperatureBar()
     private var score = Score()
@@ -191,7 +194,10 @@ class GameEngine(var context: Context) : Drawable {
 
     private fun checkCollisionsBlock(block: Block){
         //if they collide and is not breakable
-        if (RectF.intersects(block.rectangle, player.rectangle) && !block.breakable) {
+
+        //Todo: I tried this but pacman gets automatically to the bottom ????
+        //if (RectF.intersects(block.rectangle, player.rectangle) && !block.breakable || (temperatureBar.temperature>=breakableTempeature)) {
+        if (RectF.intersects(block.rectangle, player.rectangle) && (!block.breakable || (temperatureBar.temperature<breakableTempeature))) {
             //If we change the player image we may change the numbers for the collisions
             when (player.direction) {
                 Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
@@ -202,7 +208,8 @@ class GameEngine(var context: Context) : Drawable {
             }
             player.direction = Player.Direction.STATIC
 
-        }else if(RectF.intersects(block.rectangle, player.rectangle) && block.breakable){
+        }else if(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature)){
+            //Todo, write somewhere the variable that contains the limit temperature to break blocks
             level.blocks.remove(block)
         }
 
