@@ -157,7 +157,7 @@ class GameEngine(var context: Context) : Drawable {
 
         }
     }
-    
+
     private fun processPhysics(){
         //check if player is out of the game
         if(isOutOfPlayzone(player))
