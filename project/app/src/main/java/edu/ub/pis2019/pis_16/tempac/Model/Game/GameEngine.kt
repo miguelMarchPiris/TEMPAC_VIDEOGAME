@@ -168,10 +168,29 @@ class GameEngine(var context: Context) : Drawable {
         //check out of playzone
         //this is like a list comprehension in python, super fast and is the only clean way to delete elements
         //we also check breakable blocks that need to be deleted
+
+        /*
         level.blocks = (level.blocks.filter { block ->
             !isOutOfPlayzone(block) &&
             !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature))
         }).toMutableList()
+        */
+
+        //todo check best way to check is lastArray is out
+        //Last array of the matrix
+        val lastArray:Array<Block?> =level.getLastArray()
+        //This returns the positionY of every block on the line(even if there are no blocks
+        var positionYLastArray : Float?=level.positionYArray.get(lastArray)
+        if (positionYLastArray!=null){
+            if (positionYLastArray>1625f){
+                level.deleteLine(lastArray)
+            }
+        }
+
+
+
+
+
         level.orbs = (level.orbs.filter { element ->
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
@@ -248,7 +267,8 @@ class GameEngine(var context: Context) : Drawable {
             if(block.breakable && (temperatureBar.temperature>=breakableTempeature)){
                 //Destroy block and return
                 //
-            }else{
+            }
+            else{
                 //If we change the player image we may change the numbers for the collisions
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)

@@ -2,9 +2,6 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import edu.ub.pis2019.pis_16.tempac.Model.Block
-import edu.ub.pis2019.pis_16.tempac.Model.Drawable
-import edu.ub.pis2019.pis_16.tempac.Model.Orb
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
@@ -12,7 +9,11 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
+    //hay que hacer el update de cada fila para saber cuando los bloques estÁN FUERA
     var filasA : MutableList<Array<Block?>>
+
+    //El hashmap está para relacionar cada fila con la posición Y de los bloques de la fila
+    val positionYArray= hashMapOf<Array<Block?>,Float>()
 
     var lines : MutableList <MutableList<Block?>> = mutableListOf<MutableList<Block?>>()
     var blocks : MutableList<Block> = mutableListOf<Block>()
@@ -59,27 +60,78 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         for (orb in orbs) {
             orb.draw(canvas)
         }
+        for (array in filasA){
+            for (block in array){
+                if (block!=null){
+                    block.draw(canvas)
+                }
+            }
+        }
+
+
+
+        /*
         for (block in blocks){
             block.draw(canvas)
         }
+        */
+
     }
+
     fun update(scroll : Float){
-        for(orb in orbs){
-            orb.update(scroll)
+        for(orb in orbs){orb.update(scroll)}
+
+        for (array in filasA){
+            //update the float position Y of array
+            updateArrayPositionY(scroll,array)
+            for (block in array){
+                if (block!=null){
+                    block.update(scroll)
+                }
+            }
         }
-        for (block in blocks){
-            block.update(scroll)
-        }
+    }
+
+    fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
+        //This is the equivalent to the method update, but for the array positionY
+        positionYArray.set(array,positionYArray.getValue(array)+scroll)
+    }
+
+    fun getLastArray(): Array<Block?> {
+        return filasA.get(-1)
     }
 
     fun removeBreakableBlock(b : Block){
         breakableBlocks.remove(b)
     }
 
+    fun deleteLine(array : Array<Block?>){
+        var block: Block?
+        for(i in 0 until array.size){
+            block = array.get(i)
+            if (block!=null){
+                if (block.breakable){
+                    deleteBreakable(block)
+                }
+                array.set(i,null)
+            }
+        }
+        //We remove it from the hasmap positionY
+        positionYArray.remove(array)
+        //We remove the whole array from filasA
+        filasA.remove(array)
+    }
+    fun deleteBreakable(block : Block){
+        //todo mirar la manera más eficiente(con array)
+        //por ahora un remove cutrillo
+        breakableBlocks.remove(block)
+    }
+
     fun createLevelBlocks(ancho : Int, alto: Int){
         //createTrivialLevelBlocks(ancho,alto)
         //generateNewLevel(ancho,alto)
-        createArrayLevel(ancho,alto) }
+        createArrayLevel(ancho,alto)
+    }
 
 
 
@@ -116,6 +168,30 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             createNewBlockLine(newList,i)
         }
     }
+
+
+    fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
+        var anchoBloque : Float= Block.blockSide
+        var desplazamiento : Float
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))
+        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
+        
+        for (k in 0 until arrayBooleanos.size){
+            if(arrayBooleanos.get(k)){
+                //Calcular la posición que hay que pasarle al bloque
+                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
+                //Todo, see how we choose breakable blocks
+                var b =Block(desplazamiento,positionY, true, blockImages)
+                arrayBlocks.set(k,b)
+            }
+        }
+        //We add the array in the fist position of FilasA
+        filasA.add(0,arrayBlocks)
+        //We introduce the value of the positionY of the array 
+        positionYArray.put(arrayBlocks,positionY)
+    }
+
+
     fun generateNewLevel(ancho: Int, alto: Int){
         var fila: MutableList<Boolean>? = null
         for (i in 0 until alto) {
@@ -206,7 +282,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         return holeList
     }
-
     fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
@@ -219,21 +294,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 blocks.add(b)
             }
         }
-    }
-    fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
-        var anchoBloque : Float= Block.blockSide
-        var desplazamiento : Float
-        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
-        for (k in 0 until arrayBooleanos.size){
-            if(arrayBooleanos.get(k)){
-                //Calcular la posición que hay que pasarle al bloque
-                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                var b =Block(desplazamiento,anchoBloque.times(indexLine.times(-1)), true, blockImages)
-                arrayBlocks.set(k,b)
-            }
-        }
-        filasA.add(0,arrayBlocks)
     }
 }
 
