@@ -10,19 +10,24 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
+import kotlinx.android.synthetic.main.fragment_game_over.*
+import org.w3c.dom.Text
 
 
 class GameOverFragment : Fragment() {
 
-    lateinit var menuButton: Button
-    lateinit var shareButton: Button
-    lateinit var backgroundLayout: ConstraintLayout
+    private lateinit var menuButton: Button
+    private lateinit var shareButton: Button
+    private lateinit var backgroundLayout: ConstraintLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         var inflatedView =  inflater.inflate(R.layout.fragment_game_over, container, false)
 
@@ -48,7 +53,13 @@ class GameOverFragment : Fragment() {
             //Menu Button Action
             playAgain()
         }
-        return inflatedView;
+
+        //Score setup
+        val score = arguments?.getFloat("score")
+        val scoreText = inflatedView.findViewById<TextView>(R.id.yourScoreResultText)
+        scoreText?.text = score.toString()
+
+        return inflatedView
     }
     fun changeActivityMenu(){
         activity?.finish()
@@ -57,10 +68,8 @@ class GameOverFragment : Fragment() {
 
     }
     fun playAgain(){
-        var fragment = InGameFragment()
-        fragmentManager!!.beginTransaction()
-            .replace(R.id.inGameFragment, fragment)
-            .commit()
+        var nav = Navigation.findNavController(this.view!!)
+        nav.navigate(R.id.inGameFragment)
     }
 
 }
