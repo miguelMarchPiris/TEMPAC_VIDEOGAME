@@ -28,7 +28,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         blockImages=blockImg
         var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
-        var nLinesToDraw : Int = 10
+        var nLinesToDraw : Int = 100
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
 
 
