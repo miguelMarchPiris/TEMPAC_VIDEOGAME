@@ -2,6 +2,7 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.util.Log
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
@@ -28,7 +29,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         blockImages=blockImg
         var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
-        var nLinesToDraw : Int = 100
+        var nLinesToDraw : Int = 10
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
 
 
@@ -98,7 +99,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     fun getLastArray(): Array<Block?> {
-        return filasA.get(-1)
+        return filasA.get(filasA.lastIndex)
     }
 
     fun removeBreakableBlock(b : Block){
@@ -111,7 +112,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             block = array.get(i)
             if (block!=null){
                 if (block.breakable){
-                    deleteBreakable(block)
+                    deleteBreakableBlock(block)
                 }
                 array.set(i,null)
             }
@@ -121,10 +122,26 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //We remove the whole array from filasA
         filasA.remove(array)
     }
-    fun deleteBreakable(block : Block){
+    fun deleteBreakableBlock(b : Block){
         //todo mirar la manera más eficiente(con array)
+        //if breakable block is a son class of block, we can make that it saves its array
+        //and the position it has in the array, so that way it goes directly to delete itself
+        //instead of running over the whole matrix
+
         //por ahora un remove cutrillo
-        breakableBlocks.remove(block)
+        breakableBlocks.remove(b)
+        var block : Block?
+        for( array in filasA){
+            for (i in 0 until array.size){
+                block=array.get(i)
+                if(block !=null){
+                    if (block.equals(b)){
+                        array.set(i,null)
+                        return
+                    }
+                }
+            }
+        }
     }
 
     fun createLevelBlocks(ancho : Int, alto: Int){
@@ -138,14 +155,20 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun createArrayLevel(ancho: Int,alto: Int){
         //todo mirar esta cosa maravillosa
         var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
-        var arrayVacio = arrayOfNulls<Boolean>(ancho)
+        var arrayVacio = BooleanArray(ancho)
 
         for(i in 0 until arrayIntermitenteBool.size){
             arrayIntermitenteBool.set(i,i%2==0)
+            arrayVacio.set(i,false)
         }
 
         for(i in 0 until alto){
-            createNewBlockLine(arrayIntermitenteBool, i)
+            if(i%6==0){
+                createNewBlockLine(arrayVacio.copyOf(), i)
+            }
+            else{
+                createNewBlockLine(arrayIntermitenteBool.copyOf(),i)
+            }
         }
 
     }
@@ -191,7 +214,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         positionYArray.put(arrayBlocks,positionY)
     }
 
-
+    //todo adaptar a array
     fun generateNewLevel(ancho: Int, alto: Int){
         var fila: MutableList<Boolean>? = null
         for (i in 0 until alto) {
@@ -282,7 +305,8 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         return holeList
     }
-    fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
+
+     fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
         for (k in 0 until listaBooleanos.size){
