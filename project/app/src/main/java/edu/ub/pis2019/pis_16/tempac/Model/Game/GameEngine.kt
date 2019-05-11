@@ -185,10 +185,10 @@ class GameEngine(var context: Context) : Drawable {
 
         //todo check best way to check is lastArray is out
         //Last array of the matrix
-        val lastArray:Array<Block?> =level.getLastArray()
+        val lastArray:Array<Block?>? =level.getLastArray()
         //This returns the positionY of every block on the line(even if there are no blocks
         var positionYLastArray : Float?=level.positionYArray.get(lastArray)
-        if (positionYLastArray!=null){
+        if (positionYLastArray!=null && lastArray!=null){
             if (positionYLastArray>(playingField.bottom+Block.blockSide)){
                 level.deleteLine(lastArray)
             }

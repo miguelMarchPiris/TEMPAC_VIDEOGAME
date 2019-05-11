@@ -82,8 +82,11 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         positionYArray.set(array,positionYArray.getValue(array)+scroll)
     }
 
-    fun getLastArray(): Array<Block?> {
-        return filasA.get(filasA.lastIndex)
+    fun getLastArray(): Array<Block?>? {
+        if(filasA.lastIndex!=-1)
+            return filasA.get(filasA.lastIndex)
+        else
+            return null
     }
     fun getFirstArray(): Array<Block?>? {
         return filasA.get(0)
