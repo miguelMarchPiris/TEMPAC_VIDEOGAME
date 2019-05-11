@@ -175,24 +175,42 @@ class GameEngine(var context: Context) : Drawable {
         //check out of playzone
         //this is like a list comprehension in python, super fast and is the only clean way to delete elements
         //we also check breakable blocks that need to be deleted
+
+        /*
         level.blocks = (level.blocks.filter { block ->
             !isOutOfPlayzone(block) &&
             !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature))
         }).toMutableList()
+        */
+
+        //todo check best way to check is lastArray is out
+        //Last array of the matrix
+        val lastArray:Array<Block?> =level.getLastArray()
+        //This returns the positionY of every block on the line(even if there are no blocks
+        var positionYLastArray : Float?=level.positionYArray.get(lastArray)
+        if (positionYLastArray!=null){
+            if (positionYLastArray>(playingField.bottom+Block.blockSide)){
+                level.deleteLine(lastArray)
+            }
+        }
         level.orbs = (level.orbs.filter { element ->
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
         }).toMutableList()
         ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
-
-        for(block in level.blocks){
-            //check collisions
-            checkCollisionsBlock(block)
+        for(array in level.filasA){
+            for(block in array){
+                //check collisions
+                if(block!=null){
+                    checkCollisionsBlock(block)
+                }
+            }
         }
 
         for(ghost in ghosts){
             checkCollisionsGhost(ghost)
         }
+
     }
 
     fun processInput(event: MotionEvent){
@@ -234,16 +252,24 @@ class GameEngine(var context: Context) : Drawable {
 
     private fun checkCollisionsBlock(block: Block){
 
-        if (RectF.intersects(block.rectangle, player.rectangle)) {
-            //If we change the player image we may change the numbers for the collisions
-            when (player.direction) {
-                Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
-                Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
-                Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
-                Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
+
+        if(RectF.intersects(block.rectangle, player.rectangle)) {
+
+            if(block.breakable && (temperatureBar.temperature>=breakableTempeature)){
+                //Destroy block and return
+                level.deleteBreakableBlock(block)
             }
-            player.direction = Player.Direction.STATIC
+            else{
+                //If we change the player image we may change the numbers for the collisions
+                when (player.direction) {
+                    Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
+                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
+                    Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
+                }
+                player.direction = Player.Direction.STATIC
+            }
         }
     }
 

@@ -15,7 +15,7 @@ class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : Li
     var breakable : Boolean = breakable
     companion object {
         //Here to change block size
-        val blockSide:Float=120f;
+        const val blockSide:Float=120f;
     }
     init{
         if(breakable)
