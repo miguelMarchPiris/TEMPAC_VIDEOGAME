@@ -46,16 +46,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         //blocks.add(Block(300f, 300f, false, blockImages))
         //blocks.add(Block(380f, 300f, true, blockImages))
-        orbs.add(
-            Orb(500f, 800f, Orb.Operand.ADD, 200))
-        orbs.add(
-            Orb(500f, 700f, Orb.Operand.MUL, 4))
-        orbs.add(
-            Orb(500f, 500f, Orb.Operand.DIV, 2))
-        orbs.add(
-            Orb(500f, 600f, Orb.Operand.SUB, 4))
-
-        //Block size can be changed in companion object in Block class.
 
 
     }
@@ -104,8 +94,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         for (block in blocks){
             block.update(scroll)
         }
-    }      
-      
     }
 
     fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
