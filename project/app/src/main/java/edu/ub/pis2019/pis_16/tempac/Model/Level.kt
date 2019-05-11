@@ -9,6 +9,12 @@ import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
+    companion object{
+        const val MAX_ORBS = 4
+        const val MAX_BLOCKS = 50
+        const val MAX_LINES = 0
+    }
+    var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
@@ -23,45 +29,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
         var nLinesToDraw : Int = 10
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
-        //Instanciamos bloques para hacer pruebas
-        //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
-
-        //blocks.add(Block(300f, 300f, false, blockImages))
-        //blocks.add(Block(380f, 300f, true, blockImages))
-        orbs.add(
-            Orb(
-                500f,
-                800f,
-                Orb.Operand.ADD,
-                200
-            )
-        )
-        orbs.add(
-            Orb(
-                500f,
-                700f,
-                Orb.Operand.MUL,
-                4
-            )
-        )
-        orbs.add(
-            Orb(
-                500f,
-                500f,
-                Orb.Operand.DIV,
-                2
-            )
-        )
-        orbs.add(
-            Orb(
-                500f,
-                600f,
-                Orb.Operand.SUB,
-                4
-            )
-        )
-
-        //Block size can be changed in companion object in Block class.
 
     }
 
@@ -74,12 +41,18 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
     }
     fun update(scroll : Float){
+        generateOrbs()
         for(orb in orbs){
             orb.update(scroll)
         }
         for (block in blocks){
             block.update(scroll)
         }
+    }
+
+    fun generateOrbs(){
+        if(orbs.size <= MAX_ORBS)
+            orbs.add(ofactory.create(40f))
     }
 
     fun removeBreakableBlock(b : Block){

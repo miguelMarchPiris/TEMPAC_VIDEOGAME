@@ -1,5 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
+import android.util.Log
 import java.util.*
 
 enum class OrbType {
@@ -9,18 +10,34 @@ enum class OrbType {
     DIV;
 
     companion object {
-        val tempLimits: HashMap<OrbType, Triple<Float,Float,Float>> = hashMapOf(
-            ADD to Triple(0f,20f, 50f),
-            SUB to Triple(20f,35f, 40f),
-            MUL to Triple(35f,40f,50f),
-            DIV to Triple(50f,50f, 100f))
+        var r = Random()
+        var addBound = 0
+        var subBound = 0
+        var mulBound = 0
+        var divBound = 0
 
-        fun setRandomChances(sum : Int, sub : Int, mul : Int, div :Int){
-            
+        fun setChances(add: Int, sub: Int, mul: Int, div: Int){
+            addBound = add
+            subBound = sub
+            mulBound = mul
+            divBound = div
         }
 
         fun getRandomType() : OrbType {
-            return values()[Random().nextInt(values().size)]
+
+            var ran = r.nextInt(100)
+
+            val secondBound = addBound+subBound
+            val thirdBound = secondBound+mulBound
+            val fourthBound = thirdBound+divBound
+
+            return when(ran){
+                in 0..addBound -> values()[0]
+                in addBound..secondBound -> values()[1]
+                in secondBound..thirdBound -> values()[2]
+                in thirdBound..fourthBound -> values()[3]
+                else -> values()[0] //in case with a problem with the random generates a sum.
+            }
         }
 
 

@@ -17,6 +17,7 @@ class GameEngine(var context: Context) : Drawable {
     companion object {
         const val MAX_GHOSTS = 6
         const val MIN_DISTANCE = 105f
+        const val MAX_ORBS = 12
     }
 
     //Game variables
@@ -181,6 +182,10 @@ class GameEngine(var context: Context) : Drawable {
         for(block in level.blocks){
             //check collisions
             checkCollisionsBlock(block)
+        }
+
+        for(ghost in ghosts){
+            checkCollisionsGhost(ghost)
         }
     }
 
