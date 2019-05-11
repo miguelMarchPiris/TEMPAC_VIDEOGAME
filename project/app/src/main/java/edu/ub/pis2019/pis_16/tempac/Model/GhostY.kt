@@ -13,7 +13,4 @@ class GhostY(yellow : Bitmap) : Ghost(yellow) {
         setPosition(920f, 620f)
 
     }
-    override fun draw(canvas: Canvas?) {
-        canvas?.drawBitmap(im, rectangle.left, rectangle.top, null)
-    }
 }

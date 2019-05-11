@@ -33,7 +33,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     override fun draw(canvas: Canvas?) {
-        for (orb in orbs) {
+        for (orb:Orb in orbs) {
             orb.draw(canvas)
         }
         for (block in blocks){

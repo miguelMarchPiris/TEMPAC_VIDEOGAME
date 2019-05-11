@@ -11,7 +11,4 @@ class GhostG(image : Bitmap) : Ghost(image) {
         //paint.color = Color.GREEN
         setPosition(460f, 620f)
     }
-    override fun draw(canvas: Canvas?) {
-        canvas?.drawBitmap(im, rectangle.left, rectangle.top, null)
-    }
 }
