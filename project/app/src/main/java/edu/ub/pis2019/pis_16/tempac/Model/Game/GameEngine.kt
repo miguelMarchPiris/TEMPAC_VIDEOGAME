@@ -23,7 +23,7 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     //Game variables
-    private var scrollSpeed = 1.5f
+    private var scrollSpeed = 3f
     var dead = false
 
     //Secondary Game Variables
@@ -36,7 +36,7 @@ class GameEngine(var context: Context) : Drawable {
     //Actors
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     private var player : Player = Player(500f,1000f, initPacmanImages())
-    private var ghosts : MutableList<Ghost> = mutableListOf<Ghost>()
+    private var ghosts : MutableList<Ghost> = mutableListOf<>()
     private var level : Level = Level(initBlockImages())
 
     //Play zone rects
@@ -112,6 +112,7 @@ class GameEngine(var context: Context) : Drawable {
         //Increment scroll speed
         score.update(1f)    //To test the score in game over screen works fine
         level.update(scrollSpeed)
+        deleteGhosts(temperatureBar.temperature)
         spawnGhost()
         //Process inputs
         player.update(scrollSpeed)
@@ -128,6 +129,20 @@ class GameEngine(var context: Context) : Drawable {
         //Process video
     }
 
+    fun deleteGhosts(temperature : Float){
+        var blues : MutableList<Ghost> = (ghosts.filterIsInstance<GhostB>()).toMutableList()
+        var greens : MutableList<Ghost> = (ghosts.filterIsInstance<GhostG>()).toMutableList()
+        var yellows : MutableList<Ghost> = (ghosts.filterIsInstance<GhostY>()).toMutableList()
+        var reds : MutableList<Ghost> = (ghosts.filterIsInstance<GhostR>()).toMutableList()
+
+        when(temperature){
+            in 0f..20f -> ghosts = blues
+            in 20f..40f -> ghosts = blues.union(greens).toMutableList()
+            in 40f..60f -> ghosts = greens.union(yellows).toMutableList()
+            in 60f..80f -> ghosts = yellows.union(reds).toMutableList()
+            in 80f..100f -> ghosts = reds
+        }
+    }
     fun spawnGhost(){
         if(ghosts.size <= MAX_GHOSTS){
             ghosts.add(gfactory.create(temperatureBar.temperature))
