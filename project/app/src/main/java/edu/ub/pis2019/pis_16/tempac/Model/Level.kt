@@ -328,5 +328,36 @@ class Level(blockImg : List<Bitmap>) : Drawable {
      fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
 
     }
+
+    //Method to give the ghost info about where he can move next
+    //With the ghost's Y we return the row above, below and in the middle
+    fun get3RowsAtY(ghostY: Float):Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>{
+        var aboveRow : Array<Block?>? = null
+        var middleRow : Array<Block?>? = null
+        var downRow : Array<Block?>? = null
+        val lastArrayPosition = positionYArray.get(getLastArray())
+        if(lastArrayPosition!=null){
+            var rowPosition : Float
+            //Si lo haces con el índice es muuuucho más facil luego sacar las otras dos
+            val halfBlock=Block.blockSide/2
+            for (i in 0 .. filasA.size){
+                rowPosition=lastArrayPosition-Block.blockSide.times(i)
+                if (ghostY in rowPosition-halfBlock .. rowPosition+halfBlock){
+                    //el filasA.get(índice) es el del medio
+
+                    //Cuidado, revisa los casos en los extremos
+                    aboveRow=filasA.get(i-1)
+                    middleRow=filasA.get(i)
+                    downRow=filasA.get(i+1)
+                }
+            }
+        }
+        return Triple(
+            downRow,
+            middleRow,
+            aboveRow
+        )
+
+    }
 }
 

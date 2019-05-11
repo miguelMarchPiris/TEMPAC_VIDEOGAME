@@ -4,30 +4,119 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import edu.ub.pis2019.pis_16.tempac.Model.OrbType.Companion.r
+import java.text.FieldPosition
 import java.util.*
 
 abstract class Ghost(image : Bitmap) : Actor(){
     private var w : Float = 0f
     private var h : Float = 0f
-    var speed : Float
+    var speed = 7f
     var im = image
     init {
         w = im.width.toFloat()
         h = im.height.toFloat()
         rectangle = RectF(x-w,y-h,x,y)
         r= Random()
-        speed=r.nextFloat().minus(0.5f)
     }
 
-    fun follow(){
-        TODO("Chasing algorithm")
+    fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>){
+        super.update(scroll)
+
+        //Chasing algorithm:
+        //Based on calculating the distance to the player with every valid movement and then performing the move that gets
+        //the ghost closer to the player
+        var row: Array<Block?>
+        //distancia al jugador en funcion del movimiento 0-up, 1-left, 2-right, 3-down
+        var distances = arrayOf(Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE)
+
+        //miramos si podemos ir hacia arriba
+        if(rows.third !=null){
+            row = rows.third!!
+            //presuponemos que nos podemos mover
+            moveUp(scroll)
+            updateRect()
+            //If the movement is valid, we calculate distance to the player
+            if(!collidesWithBlock(row)){
+                distances[0] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
+            }
+            //Deshacemos el movimiento
+            moveDown(scroll)
+        }
+        //Miramos si podemos ir a derecha/izquierda
+        if(rows.second !=null){
+            row = rows.second!!
+            //presuponemos que nos podemos mover izq
+            moveLeft()
+            updateRect()
+            //If the movement is valid, we calculate distance to the player
+            if(!collidesWithBlock(row)){
+                distances[1] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
+            }
+            //deshacemos movement
+            moveRight()
+            //Presuponemos que nos podemos mover derecha
+            moveRight()
+            updateRect()
+            //If the movement is valid, we calculate distance to the player
+            if(!collidesWithBlock(row)){
+                distances[2] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
+            }
+            //deshacemos el movimiento
+            moveLeft()
+        }
+        //Miramos si podemos ir hacia abajo
+        if(rows.first !=null){
+            row = rows.first!!
+            //presuponemos que nos podemos mover
+            moveDown(scroll)
+            updateRect()
+            //If the movement is valid, we calculate distance to the player
+            if(!collidesWithBlock(row)){
+                distances[3] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
+            }
+            //deshacemos el movimiento
+            moveUp(scroll)
+        }
+        //Buscamos la distancia mas pequeña y en funcion de eso nos movemos
+        var min = Float.MAX_VALUE
+        var minIndex = 0
+        for((index,distance) in distances.withIndex()){
+            if(distance < min) {
+                min = distance
+                minIndex = index
+            }
+        }
+        when(minIndex){
+            0 -> moveUp(scroll)
+            1 -> moveLeft()
+            2 -> moveRight()
+            3 -> moveDown(scroll)
+        }
+        updateRect()
     }
-
-    override fun update(scroll: Float){
-        //todo
-        //super.update(scroll)
-
-        super.update(speed)
+    private fun moveUp(scroll: Float){
+        y-=speed+scroll
+    }
+    private fun moveLeft(){
+        x-=speed
+    }
+    private fun moveRight(){
+        x+=speed
+    }
+    private fun moveDown(scroll: Float){
+        y+=speed+scroll
+    }
+    private fun collidesWithBlock(row:Array<Block?>):Boolean{
+        var collides = false
+        for (block in row) {
+            if(block!= null && RectF.intersects(rectangle,block.rectangle)){
+                collides = true
+                break
+            }
+        }
+        return collides
+    }
+    private fun updateRect(){
         rectangle.set(x-w,y-h,x,y)
     }
     override fun draw(canvas: Canvas?) {

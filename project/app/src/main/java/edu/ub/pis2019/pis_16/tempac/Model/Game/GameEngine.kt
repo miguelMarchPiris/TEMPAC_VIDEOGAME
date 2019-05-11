@@ -8,14 +8,12 @@ import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.*
 import edu.ub.pis2019.pis_16.tempac.R
 
-/*GameEngine singelton????
-* Usar la classe collisionable per a algo, lol.
-* */
+
 class GameEngine(var context: Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 6
+        const val MAX_GHOSTS = 1    //1 ghost para probar ai
         const val MIN_DISTANCE = 105f
         const val MAX_ORBS = 12
         const val PLAYFIELD_HEIGTH = 1400
@@ -118,7 +116,7 @@ class GameEngine(var context: Context) : Drawable {
         player.update(scrollSpeed)
 
         //Process AI
-        for(ghost in ghosts) ghost.update(scrollSpeed)
+        for(ghost in ghosts) ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed))
 
         //Process physics
         processPhysics()
