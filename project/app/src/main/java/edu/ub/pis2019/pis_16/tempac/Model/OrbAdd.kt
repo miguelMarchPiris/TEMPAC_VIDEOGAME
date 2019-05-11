@@ -9,7 +9,7 @@ class OrbAdd(number: Int) : Orb(number) {
 
 
     init{
-        setPosition(100f,250f)
+        //setPosition(100f,250f)
         operand = Orb.Operand.ADD
     }
 

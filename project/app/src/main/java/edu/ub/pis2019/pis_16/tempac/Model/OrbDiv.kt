@@ -8,7 +8,7 @@ import android.graphics.RectF
 class OrbDiv(number : Int) : Orb(number) {
 
     init{
-        setPosition(800f,250f)
+        //setPosition(800f,250f)
         operand = Orb.Operand.DIV
     }
 }

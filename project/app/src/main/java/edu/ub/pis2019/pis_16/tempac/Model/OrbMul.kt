@@ -8,7 +8,7 @@ import android.graphics.RectF
 class OrbMul(number: Int) : Orb(number){
 
     init{
-        setPosition(500f,250f)
+        //setPosition(500f,250f)
         operand = Orb.Operand.MUL
     }
 }

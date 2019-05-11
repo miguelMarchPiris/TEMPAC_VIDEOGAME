@@ -3,8 +3,7 @@ package edu.ub.pis2019.pis_16.tempac.Model
 import android.graphics.*
 
 //operand is what the orb is going to do (add, multiply, divide or substract) and _number is the value that is gonna act.
-abstract class Orb(var number: Int): Actor(),
-    Colisionable {
+abstract class Orb(var number: Int): Actor() {
 
     protected var paint = Paint()
     protected var textPaint = Paint()

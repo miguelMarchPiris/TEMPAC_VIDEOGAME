@@ -9,7 +9,7 @@ class GhostR(red : Bitmap) : Ghost(red) {
     //private var paint = Paint()
     init {
         //paint.color = Color.RED
-        setPosition(460f, 820f)
+        //setPosition(460f, 820f)
 
     }
 }

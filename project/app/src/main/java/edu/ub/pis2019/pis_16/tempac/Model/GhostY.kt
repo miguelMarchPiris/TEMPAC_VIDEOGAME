@@ -10,7 +10,7 @@ class GhostY(yellow : Bitmap) : Ghost(yellow) {
 
     init {
         //paint.color = Color.YELLOW
-        setPosition(920f, 620f)
+        //setPosition(920f, 620f)
 
     }
 }

@@ -17,6 +17,8 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
+    var temperature = 0f
+
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
     var lines : MutableList <MutableList<Block?>> = mutableListOf<MutableList<Block?>>()
     var blocks : MutableList<Block> = mutableListOf<Block>()
@@ -40,19 +42,27 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             block.draw(canvas)
         }
     }
+
     fun update(scroll : Float){
-        generateOrbs()
+        spawnOrbs()
+
         for(orb in orbs){
             orb.update(scroll)
         }
+
         for (block in blocks){
             block.update(scroll)
         }
     }
 
-    fun generateOrbs(){
-        if(orbs.size <= MAX_ORBS)
-            orbs.add(ofactory.create(40f))
+    fun spawnOrbs(){
+        if(orbs.size <= MAX_ORBS) {
+            orbs.add(ofactory.create(temperature))
+
+            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
+            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+            orbs[(orbs.size - 1)].setPosition(250f, 250f)
+        }
     }
 
     fun removeBreakableBlock(b : Block){

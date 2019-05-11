@@ -11,7 +11,7 @@ class GhostB(image : Bitmap) : Ghost(image) {
 
     init {
         //paint.color = Color.BLUE
-        setPosition(230f, 620f)
+        //setPosition(230f, 620f)
     }
 
 

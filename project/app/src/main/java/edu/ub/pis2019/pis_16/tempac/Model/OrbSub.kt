@@ -8,7 +8,7 @@ import android.graphics.RectF
 class OrbSub(number: Int) : Orb(number) {
 
     init{
-        setPosition(300f,250f)
+        //setPosition(300f,250f)
         operand = Orb.Operand.SUB
     }
 }
