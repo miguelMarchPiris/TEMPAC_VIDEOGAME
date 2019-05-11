@@ -173,24 +173,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
     }
 
-    fun createTrivialLevelBlocks(ancho: Int, alto: Int) {
-        var listaintermitente : MutableList<Boolean> = mutableListOf<Boolean>()
-        var listavacia : MutableList<Boolean> = mutableListOf<Boolean>()
-
-        for (k in 0 until ancho) {
-            listaintermitente.add(k,k % 2 == 0)
-            listavacia.add(k, false)
-        }
-        for (i in 0 until alto) {
-            val newList: MutableList<Boolean>
-            if (i % 6 == 0) {
-                newList = listavacia.toMutableList()
-            }else {
-                newList = listaintermitente.toMutableList()
-            }
-            createNewBlockLine(newList,i)
-        }
-    }
 
 
     fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
@@ -307,17 +289,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
      fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
-        var anchoBloque : Float= Block.blockSide
-        var desplazamiento : Float
-        for (k in 0 until listaBooleanos.size){
-            if(listaBooleanos.get(k)){
-                //Calcular la posición que hay que pasarle al bloque
-                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                var b =Block(desplazamiento,anchoBloque.times(indexLine.times(-1)), true, blockImages)
-                blocks.add(b)
-            }
-        }
+
     }
 }
 
