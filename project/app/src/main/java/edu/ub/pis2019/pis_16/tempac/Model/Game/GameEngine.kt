@@ -22,7 +22,7 @@ class GameEngine(var context: Context) : Drawable {
 
     //Game variables
     private var scrollSpeed = 1.5f
-    private var dead = false
+    var dead = false
 
     //Secondary Game Variables
     private var breakableTempeature=90f
@@ -52,9 +52,9 @@ class GameEngine(var context: Context) : Drawable {
     private var touchEndY = 0f
 
     //Screen variables
-    var metrics = context.resources.displayMetrics
-    var w = metrics.widthPixels
-    var h = metrics.heightPixels
+    private var metrics = context.resources.displayMetrics
+    private var w = metrics.widthPixels
+    private var h = metrics.heightPixels
 
     init {
 
@@ -106,16 +106,14 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
-        score.update(bonus = 0)
-        if(dead){
-            //Player died we should make the game end
-        }
+        //Increment scroll speed
+        score.update(1f)    //To test the score in game over screen works fine
+        level.update(scrollSpeed)
+        generateGhost()
         //Process inputs
         player.update(scrollSpeed)
 
         //Process AI
-        generateGhost()
-        level.update(scrollSpeed)
         for(ghost in ghosts) ghost.update(scrollSpeed)
 
         //Process physics
@@ -268,6 +266,7 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun checkCollisionsGhost(ghost : Ghost){
+
         if(RectF.intersects(ghost.rectangle,player.rectangle)){
             player.direction = Player.Direction.STATIC
             dead = true
@@ -303,5 +302,8 @@ class GameEngine(var context: Context) : Drawable {
             return true
         }
         return false
+    }
+    fun getScore():Float{
+        return score.score
     }
 }

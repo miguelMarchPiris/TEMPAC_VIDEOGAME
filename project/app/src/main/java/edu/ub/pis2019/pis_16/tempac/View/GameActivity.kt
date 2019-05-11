@@ -14,19 +14,6 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
-        //This Part crashes the activity
-        /*var animBounce = AnimationUtils.loadAnimation(this, R.anim.bounce)
-        var text : TextView = findViewById(R.id.playAgainText)
-        text.startAnimation(animBounce)*/
-
     }
-
-    //connects with another activity passed by parameter
-    fun changeActivityMenu(){
-        val intent = Intent(this,  MainMenuActivity::class.java)
-        startActivity(intent)
-    }
-
 
 }
