@@ -1,12 +1,12 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.*
 import edu.ub.pis2019.pis_16.tempac.R
+import java.util.*
 
 /*GameEngine singelton????
 * Usar la classe collisionable per a algo, lol.
@@ -133,13 +133,19 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     fun spawnGhost(){
-        if(ghosts.size <= MAX_GHOSTS){
-            ghosts.add(gfactory.create(temperatureBar.temperature))
+        if(ghosts.size < MAX_GHOSTS){
+            var g=gfactory.create(temperatureBar.temperature)
+
 
             //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+            val lastArray=level.getLastArray()
+            val pair=level.getPositionHoles(lastArray)
+            val listOfHoles=pair.second
+            var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
+            g.setPosition(positionInTheLine.times(Block.blockSide),(pair.first as Float)-300)
 
-            ghosts[ghosts.size-1].setPosition(500f,500f)
+            ghosts.add(g)
         }
     }
     override fun draw(canvas: Canvas?){
@@ -152,9 +158,9 @@ class GameEngine(var context: Context) : Drawable {
 
             //Draw Actors
             player.draw(canvas)
-            for(ghost in ghosts) ghost.draw(canvas)
-            level.draw(canvas)
 
+            level.draw(canvas)
+            for(ghost in ghosts) ghost.draw(canvas)
             //Draw Overlay & Playzone
             for(rect in overlay)
                 canvas.drawRect(rect,overlayPaint)

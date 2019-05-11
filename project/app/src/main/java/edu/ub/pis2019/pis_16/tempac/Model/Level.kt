@@ -73,6 +73,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
         spawnOrbs()
+
     }
     fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
         //This is the equivalent to the method update, but for the array positionY
