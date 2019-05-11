@@ -10,7 +10,7 @@ import java.util.*
 abstract class Ghost(image : Bitmap) : Actor(){
     private var w : Float = 0f
     private var h : Float = 0f
-    var speed = 7f
+    var speed = 2f
     var im = image
     init {
         w = im.width.toFloat()
@@ -25,58 +25,66 @@ abstract class Ghost(image : Bitmap) : Actor(){
         //Chasing algorithm:
         //Based on calculating the distance to the player with every valid movement and then performing the move that gets
         //the ghost closer to the player
-        var row: Array<Block?>
+        var row: Array<Block?>?
         //distancia al jugador en funcion del movimiento 0-up, 1-left, 2-right, 3-down
         var distances = arrayOf(Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE)
 
-        //miramos si podemos ir hacia arriba
-        if(rows.third !=null){
-            row = rows.third!!
-            //presuponemos que nos podemos mover
-            moveUp(scroll)
-            updateRect()
-            //If the movement is valid, we calculate distance to the player
-            if(!collidesWithBlock(row)){
-                distances[0] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
-            }
-            //Deshacemos el movimiento
-            moveDown(scroll)
+        /***************************************
+         *           CHECK UP
+         **************************************/
+        row = rows.third
+        //presuponemos que nos podemos mover
+        moveUp(scroll)
+        updateRect()
+        //If the movement is valid, we calculate distance to the player
+        if(row==null || !collidesWithBlock(row)){
+            distances[0] = calculateDistanceToPlayer(playerPosition)
         }
-        //Miramos si podemos ir a derecha/izquierda
-        if(rows.second !=null){
-            row = rows.second!!
-            //presuponemos que nos podemos mover izq
-            moveLeft()
-            updateRect()
-            //If the movement is valid, we calculate distance to the player
-            if(!collidesWithBlock(row)){
-                distances[1] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
-            }
-            //deshacemos movement
-            moveRight()
-            //Presuponemos que nos podemos mover derecha
-            moveRight()
-            updateRect()
-            //If the movement is valid, we calculate distance to the player
-            if(!collidesWithBlock(row)){
-                distances[2] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
-            }
-            //deshacemos el movimiento
-            moveLeft()
+        //Deshacemos el movimiento
+        moveDown(scroll)
+
+        /***************************************
+         *           CHECK LEFT
+         **************************************/
+        row = rows.second
+        //presuponemos que nos podemos mover izq
+        moveLeft()
+        updateRect()
+        //If the movement is valid, we calculate distance to the player
+        if(row==null || !collidesWithBlock(row)){
+            distances[1] = calculateDistanceToPlayer(playerPosition)
         }
-        //Miramos si podemos ir hacia abajo
-        if(rows.first !=null){
-            row = rows.first!!
-            //presuponemos que nos podemos mover
-            moveDown(scroll)
-            updateRect()
-            //If the movement is valid, we calculate distance to the player
-            if(!collidesWithBlock(row)){
-                distances[3] = Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
-            }
-            //deshacemos el movimiento
-            moveUp(scroll)
+        //deshacemos movement
+        moveRight()
+        /***************************************
+         *           CHECK RIGHT
+         **************************************/
+        moveRight()
+        updateRect()
+        //If the movement is valid, we calculate distance to the player
+        if(row==null || !collidesWithBlock(row)){
+            distances[2] = calculateDistanceToPlayer(playerPosition)
         }
+        //deshacemos el movimiento
+        moveLeft()
+
+        /***************************************
+         *           CHECK DOWN
+         **************************************/
+        row = rows.first
+        //presuponemos que nos podemos mover
+        moveDown(scroll)
+        updateRect()
+        //If the movement is valid, we calculate distance to the player
+        if(row == null || !collidesWithBlock(row)){
+            distances[3] = calculateDistanceToPlayer(playerPosition)
+        }
+        //deshacemos el movimiento
+        moveUp(scroll)
+
+        /***************************************
+         *        SEARCH MIN DISTANCE
+         **************************************/
         //Buscamos la distancia mas pequeña y en funcion de eso nos movemos
         var min = Float.MAX_VALUE
         var minIndex = 0
@@ -93,6 +101,9 @@ abstract class Ghost(image : Bitmap) : Actor(){
             3 -> moveDown(scroll)
         }
         updateRect()
+    }
+    private fun calculateDistanceToPlayer(playerPosition: Pair<Float, Float>):Float{
+        return Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
     }
     private fun moveUp(scroll: Float){
         y-=speed+scroll

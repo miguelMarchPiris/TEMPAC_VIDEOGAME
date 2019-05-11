@@ -161,9 +161,8 @@ class GameEngine(var context: Context) : Drawable {
 
             //Draw Actors
             player.draw(canvas)
-            for(ghost in ghosts) ghost.draw(canvas)
             level.draw(canvas)
-
+            for(ghost in ghosts) ghost.draw(canvas)
             //Draw Overlay & Playzone
             for(rect in overlay)
                 canvas.drawRect(rect,overlayPaint)
