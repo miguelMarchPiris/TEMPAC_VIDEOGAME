@@ -25,9 +25,18 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var filasA : MutableList<Array<Block?>>
     //This hashmap relates every array (line of blocks) with the positionY of the blocks
     val positionYArray= hashMapOf<Array<Block?>,Float>()
-
     var nBlocksInLine: Int = 0
     var nLinesToDraw : Int=0
+
+    //PROBABILITIES OF THE BLOCK GENERATION ALGORITHM
+    //Probability that each place in the first line has a block
+    var probPrimeros : Float=0.3F
+    //Probability that one HOLE is created afterwards the obligatory HOLES are created
+    var probRandomHole : Float=0.3F
+    //Probability that ONE line is repeated
+    var probRepeatLine : Float=0.5F
+    //Probability that one block is breakable
+    var probBreakable : Float= 0.3F
 
     var r : Random=Random()
     var blockImages : List<Bitmap>
@@ -38,7 +47,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         blockImages=blockImg
         nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
         //nLinesToDraw = GameEngine.PLAYFIELD_HEIGTH.div(Block.blockSide).toInt().plus(3)
-        nLinesToDraw = 1920.div(Block.blockSide).toInt()
+        nLinesToDraw = (GameEngine.bottomPlayingField-GameEngine.topPlayingField).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
 
@@ -153,9 +162,13 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         if(first==null){
             Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks")
         }
-        val firstBArray= createBooleanArray(first as Array<Block?>)
-        val newBooleanArray = getNewBooleanArray(firstBArray)
-        createNewBlockLine(newBooleanArray,positionY.minus(Block.blockSide))
+        var firstBArray= createBooleanArray(first as Array<Block?>)
+        //Here we decide if the last line of blocks gets repeted
+        if(!(r.nextFloat()<probRepeatLine)){
+            //getNewBooleanArray is the method that creates new lines(now is trivial)
+            firstBArray = getNewBooleanArray(firstBArray)
+        }
+        createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
     }
 
     fun getNewBooleanArray(booleanArray: BooleanArray): BooleanArray{
@@ -204,28 +217,25 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun createLevelBlocks(ancho : Int, alto: Int){
         //createTrivialLevelBlocks(ancho,alto)
         //generateNewLevel(ancho,alto)
+        //createArrayLevel(ancho,alto)
         createArrayLevel(ancho,alto)
     }
     fun createArrayLevel(ancho: Int,alto: Int){
-        //todo mirar esta cosa maravillosa
-        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
         var arrayVacio = BooleanArray(ancho)
-
-        for(i in 0 until arrayIntermitenteBool.size){
-            arrayIntermitenteBool.set(i,i%2==0)
+        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
+        for(i in 0 until ancho){
             arrayVacio.set(i,false)
+            arrayIntermitenteBool.set(i,i%2==0)
         }
-
         for(i in 0 until alto){
-            if(i%6==5){
+            if(i!=alto-1){
                 createNewBlockLine(arrayVacio.copyOf(), i)
-            }
-            else{
-                createNewBlockLine(arrayIntermitenteBool.copyOf(),i)
+            }else{
+                createNewBlockLine(arrayIntermitenteBool,i)
             }
         }
-
     }
+
     fun createNewBlockLine(arrayBooleanos : BooleanArray,posY : Float){
         //first we add this so only one orb spawns in one line
         orbInLastLine=false
@@ -239,7 +249,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 //Calcular la posición que hay que pasarle al bloque
                 desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
                 //Todo, see how we choose breakable blocks
-                var b =Block(desplazamiento,posY, true, blockImages)
+                var b =Block(desplazamiento,posY, r.nextFloat()<probBreakable, blockImages)
                 arrayBlocks.set(k,b)
             }
         }
@@ -254,7 +264,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide)
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
         
         for (k in 0 until arrayBooleanos.size){
@@ -282,13 +292,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun generateNewLine(filaAnterior : MutableList<Boolean>?, ancho : Int): MutableList<Boolean>? {
         var nueva : MutableList<Boolean> = mutableListOf()
         var holes : MutableList<Pair<Int,Int>>
-
-        //Probability that each place in the first line has a block
-        var probPrimeros : Float=0.3F
-        //Probability that one block is created afterwards the obligatory blocks are created
-        var probRandomHole : Float=0.3F
-        //Probability that once one line is created it reapeats itselve just after
-        var probRepetLine : Float=0.7F
 
         var prob : Float
 
@@ -365,5 +368,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
      fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
 
     }
+
 }
 

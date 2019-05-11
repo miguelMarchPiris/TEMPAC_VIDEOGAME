@@ -20,6 +20,10 @@ class GameEngine(var context: Context) : Drawable {
         const val MAX_ORBS = 12
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
+        const val bottomPlayingField : Float = 1625F
+        const val leftPlayingField : Float = 0F
+        const val rightPlayingField : Float = 1080F
+        const val topPlayingField : Float = 225F
     }
 
     //Game variables
@@ -40,7 +44,7 @@ class GameEngine(var context: Context) : Drawable {
     private var level : Level = Level(initBlockImages())
 
     //Play zone rects
-    private val playingField = RectF(0f, 225f,1080f,1625f)
+    private val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
     private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
     private val fieldLinePaint = Paint()
     private val fieldPaint = Paint()
