@@ -18,8 +18,8 @@ class GameEngine(var context: Context) : Drawable {
         const val MAX_GHOSTS = 6
         const val MIN_DISTANCE = 105f
         const val MAX_ORBS = 12
-        const val PLAYFIELD_WIDTH = 1400
-        const val PLAYFIELD_HEIGTH = 1080
+        const val PLAYFIELD_HEIGTH = 1400
+        const val PLAYFIELD_WIDTH = 1080
     }
 
     //Game variables
@@ -75,7 +75,7 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
-        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         //Factory (maybe this is not necesesary?)
         ghosts.add(gfactory.create(temperatureBar.temperature))

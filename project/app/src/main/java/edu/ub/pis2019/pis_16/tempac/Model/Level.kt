@@ -2,7 +2,10 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.RectF
 import android.util.Log
+import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
@@ -12,32 +15,31 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         const val MAX_BLOCKS = 50
         const val MAX_LINES = 0
     }
+    //ORBS
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
 
     var temperature = 0f
 
-    //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
-    //hay que hacer el update de cada fila para saber cuando los bloques estÁN FUERA
+    //MATRIX
+    //This is tha matrix of all the blocks
     var filasA : MutableList<Array<Block?>>
-
-    //El hashmap está para relacionar cada fila con la posición Y de los bloques de la fila
+    //This hashmap relates every array (line of blocks) with the positionY of the blocks
     val positionYArray= hashMapOf<Array<Block?>,Float>()
 
-    var lines : MutableList <MutableList<Block?>> = mutableListOf<MutableList<Block?>>()
-    var blocks : MutableList<Block> = mutableListOf<Block>()
-    var breakableBlocks : MutableList<Block?> = mutableListOf<Block?>()
+    var nBlocksInLine: Int = 0
+    var nLinesToDraw : Int=0
+
     var r : Random=Random()
     var blockImages : List<Bitmap>
 
     init{
         filasA= mutableListOf<Array<Block?>>()
 
-
-
         blockImages=blockImg
-        var nBlocksInLine: Int= 1080.div(Block.blockSide).toInt()
-        var nLinesToDraw : Int = 10
+        nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
+        //nLinesToDraw = GameEngine.PLAYFIELD_HEIGTH.div(Block.blockSide).toInt().plus(1)
+        nLinesToDraw=30
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
 
 
@@ -51,9 +53,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     override fun draw(canvas: Canvas?) {
-        for (orb:Orb in orbs) {
-            orb.draw(canvas)
-        }
         for (array in filasA){
             for (block in array){
                 if (block!=null){
@@ -61,21 +60,11 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 }
             }
         }
-
-
-
-        /*
-        for (block in blocks){
-            block.draw(canvas)
-        }
-        */
-
+        for (orb:Orb in orbs) { orb.draw(canvas) }
     }
 
     fun update(scroll : Float){
-
         for(orb in orbs){orb.update(scroll)}
-
         for (array in filasA){
             //update the float position Y of array
             updateArrayPositionY(scroll,array)
@@ -86,14 +75,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
         spawnOrbs()
-
-        for(orb in orbs){
-            orb.update(scroll)
-        }
-
-        for (block in blocks){
-            block.update(scroll)
-        }
     }
 
     fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
@@ -104,19 +85,58 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun getLastArray(): Array<Block?> {
         return filasA.get(filasA.lastIndex)
     }
-
-    fun spawnOrbs(){
-        if(orbs.size <= MAX_ORBS) {
-            orbs.add(ofactory.create(temperature))
-
-            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
-            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
-            orbs[(orbs.size - 1)].setPosition(250f, 250f)
+    fun getFirstArray(): Array<Block?>? {
+        return filasA.get(0)
+    }
+    fun getFirstPositiveArray(): Array<Block?>? {
+        for (array in filasA){
+            if (positionYArray.get(array)!! >=0){
+                return array
+            }
         }
+        return null
+    }
+    //Given an array of blocks, returns the positionY of that array
+    //and the index of the holes in it
+
+    fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
+        val positionY:Float?=positionYArray.get(array)
+        val indexList= mutableListOf<Int>()
+        for (i in 0 until array.size){
+            if (array.get(i)==null){
+                indexList.add(i)
+            }
+        }
+        return Pair(positionY,indexList)
     }
 
-    fun removeBreakableBlock(b : Block){
-        breakableBlocks.remove(b)
+
+    fun spawnOrbs(){
+        val arrayBlocks=getFirstPositiveArray()
+        if(arrayBlocks==null){
+            return
+        }
+        val par=getPositionHoles(arrayBlocks)
+        val positionY=par.first as Float
+        val indexOfHoles=par.second
+        //We get any hole of the line.
+        var indiceDeLaLista=r.nextInt(indexOfHoles.size)
+        var indice=indexOfHoles.get(indiceDeLaLista)
+        if(orbs.size < MAX_ORBS) {
+            var newOrb : Orb=ofactory.create(temperature)
+            newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+            for (o in orbs){
+                if(RectF.intersects(o.rectangle,newOrb.rectangle)){
+                    if (indiceDeLaLista==0){ indiceDeLaLista++ }
+                    else{ indiceDeLaLista-- }
+                    indice=indexOfHoles.get(indiceDeLaLista)
+                    newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+                }
+            }
+            orbs.add(newOrb)
+            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
+            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+        }
     }
 
     fun deleteLine(array : Array<Block?>){
@@ -142,7 +162,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //instead of running over the whole matrix
 
         //por ahora un remove cutrillo
-        breakableBlocks.remove(b)
         var block : Block?
         for( array in filasA){
             for (i in 0 until array.size){
@@ -176,7 +195,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
 
         for(i in 0 until alto){
-            if(i%6==0){
+            if(i%6==5){
                 createNewBlockLine(arrayVacio.copyOf(), i)
             }
             else{
