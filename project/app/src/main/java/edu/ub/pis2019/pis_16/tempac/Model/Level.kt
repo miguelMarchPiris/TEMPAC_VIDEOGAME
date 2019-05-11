@@ -113,7 +113,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
     fun spawnOrbs(){
         val arrayBlocks=getFirstPositiveArray()
-        if(arrayBlocks==null){
+        if(arrayBlocks==null || orbs.size == MAX_ORBS){
             return
         }
         val par=getPositionHoles(arrayBlocks)
@@ -122,21 +122,25 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //We get any hole of the line.
         var indiceDeLaLista=r.nextInt(indexOfHoles.size)
         var indice=indexOfHoles.get(indiceDeLaLista)
-        if(orbs.size < MAX_ORBS) {
-            var newOrb : Orb=ofactory.create(temperature)
-            newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
-            for (o in orbs){
-                if(RectF.intersects(o.rectangle,newOrb.rectangle)){
-                    if (indiceDeLaLista==0){ indiceDeLaLista++ }
-                    else{ indiceDeLaLista-- }
-                    indice=indexOfHoles.get(indiceDeLaLista)
-                    newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
-                }
+
+        var newOrb : Orb=ofactory.create(temperature)
+        newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+        for (o in orbs){
+            if(RectF.intersects(o.rectangle,newOrb.rectangle)){
+                if (indiceDeLaLista==0){ indiceDeLaLista++ }
+                else{ indiceDeLaLista-- }
+                indice=indexOfHoles.get(indiceDeLaLista)
+                newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
             }
-            orbs.add(newOrb)
-            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
-            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
         }
+        orbs.add(newOrb)
+        //TODO FUNCTION TO DECIDE WHERE THE orbs SHOULD SPAWN
+        //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+
+    }
+    fun getIndexOfHole(){
+        //Todo implemet this so you cant have 2 orbs spawning in the same place
+
     }
 
     fun deleteLine(array : Array<Block?>){
