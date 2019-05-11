@@ -11,7 +11,7 @@ import java.util.*
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
-        const val MAX_ORBS = 4
+        const val MAX_ORBS = 12
         const val MAX_BLOCKS = 50
         const val MAX_LINES = 0
     }
@@ -137,6 +137,8 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 }
             }
             orbs.add(newOrb)
+
+            print("Pepo")
             //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
         }
