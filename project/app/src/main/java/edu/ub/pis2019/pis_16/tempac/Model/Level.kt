@@ -2,7 +2,6 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
@@ -18,7 +17,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     //ORBS
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
-
+    var orbInLastLine : Boolean = false
     var temperature = 0f
 
     //MATRIX
@@ -38,18 +37,9 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         blockImages=blockImg
         nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        //nLinesToDraw = GameEngine.PLAYFIELD_HEIGTH.div(Block.blockSide).toInt().plus(1)
-        nLinesToDraw=30
+        //nLinesToDraw = GameEngine.PLAYFIELD_HEIGTH.div(Block.blockSide).toInt().plus(3)
+        nLinesToDraw = 1920.div(Block.blockSide).toInt()
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
-
-
-        //Instanciamos bloques para hacer pruebas
-        //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
-
-        //blocks.add(Block(300f, 300f, false, blockImages))
-        //blocks.add(Block(380f, 300f, true, blockImages))
-
-
     }
 
     override fun draw(canvas: Canvas?) {
@@ -62,7 +52,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         for (orb:Orb in orbs) { orb.draw(canvas) }
     }
-
     fun update(scroll : Float){
         for(orb in orbs){orb.update(scroll)}
         for (array in filasA){
@@ -76,12 +65,10 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         spawnOrbs()
     }
-
     fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
         //This is the equivalent to the method update, but for the array positionY
         positionYArray.set(array,positionYArray.getValue(array)+scroll)
     }
-
     fun getLastArray(): Array<Block?> {
         return filasA.get(filasA.lastIndex)
     }
@@ -113,7 +100,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
     fun spawnOrbs(){
         val arrayBlocks=getFirstPositiveArray()
-        if(arrayBlocks==null || orbs.size == MAX_ORBS){
+        if(arrayBlocks==null || orbs.size == MAX_ORBS || orbInLastLine){
             return
         }
         val par=getPositionHoles(arrayBlocks)
@@ -134,16 +121,14 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
         orbs.add(newOrb)
+        orbInLastLine=true
         //TODO FUNCTION TO DECIDE WHERE THE orbs SHOULD SPAWN
         //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
 
     }
-    fun getIndexOfHole(){
-        //Todo implemet this so you cant have 2 orbs spawning in the same place
-
-    }
 
     fun deleteLine(array : Array<Block?>){
+        //First we delete the line
         var block: Block?
         for(i in 0 until array.size){
             block = array.get(i)
@@ -158,7 +143,44 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         positionYArray.remove(array)
         //We remove the whole array from filasA
         filasA.remove(array)
+
+        //Then we create a new line on top
+        newLineOnTop()
     }
+    fun newLineOnTop() {
+        val first=getFirstArray()
+        val positionY=positionYArray.get(first)as Float
+        if(first==null){
+            Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks")
+        }
+        val firstBArray= createBooleanArray(first as Array<Block?>)
+        val newBooleanArray = getNewBooleanArray(firstBArray)
+        createNewBlockLine(newBooleanArray,positionY.minus(Block.blockSide))
+    }
+
+    fun getNewBooleanArray(booleanArray: BooleanArray): BooleanArray{
+        //todo AQUÍ puedo poder el algoritmo para crear lineas y caminos
+        val diffLines= mutableListOf<BooleanArray>()
+        diffLines.add(0,BooleanArray(booleanArray.size))
+        diffLines.add(1,BooleanArray(booleanArray.size))
+        for (i in 0 until booleanArray.size){
+            diffLines.get(0).set(i,i%2==0)
+            diffLines.get(1).set(i,false)
+        }
+        //return diffLines.get(r.nextInt(2))
+        if(r.nextFloat()<0.18f){
+            return diffLines.get(1)
+        }
+        return diffLines.get(0)
+    }
+    fun createBooleanArray(array: Array<Block?>):BooleanArray{
+        val booleanArray : BooleanArray= BooleanArray(array.size)
+        for (i in 0 until array.size){
+            booleanArray.set(i,!(array.get(i)==null))
+        }
+        return booleanArray
+    }
+
     fun deleteBreakableBlock(b : Block){
         //todo mirar la manera más eficiente(con array)
         //if breakable block is a son class of block, we can make that it saves its array
@@ -179,15 +201,11 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
     }
-
     fun createLevelBlocks(ancho : Int, alto: Int){
         //createTrivialLevelBlocks(ancho,alto)
         //generateNewLevel(ancho,alto)
         createArrayLevel(ancho,alto)
     }
-
-
-
     fun createArrayLevel(ancho: Int,alto: Int){
         //todo mirar esta cosa maravillosa
         var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
@@ -208,10 +226,32 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
 
     }
+    fun createNewBlockLine(arrayBooleanos : BooleanArray,posY : Float){
+        //first we add this so only one orb spawns in one line
+        orbInLastLine=false
 
+        var anchoBloque : Float= Block.blockSide
+        var desplazamiento : Float
+        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
-
+        for (k in 0 until arrayBooleanos.size){
+            if(arrayBooleanos.get(k)){
+                //Calcular la posición que hay que pasarle al bloque
+                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
+                //Todo, see how we choose breakable blocks
+                var b =Block(desplazamiento,posY, true, blockImages)
+                arrayBlocks.set(k,b)
+            }
+        }
+        //We add the array in the fist position of FilasA
+        filasA.add(0,arrayBlocks)
+        //We introduce the value of the positionY of the array
+        positionYArray.put(arrayBlocks,posY)
+    }
     fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
+        //first we add this so only one orb spawns in one line
+        orbInLastLine=false
+
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
         val positionY : Float=anchoBloque.times(indexLine.times(-1))
@@ -231,7 +271,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //We introduce the value of the positionY of the array 
         positionYArray.put(arrayBlocks,positionY)
     }
-
     //todo adaptar a array
     fun generateNewLevel(ancho: Int, alto: Int){
         var fila: MutableList<Boolean>? = null
@@ -250,7 +289,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         var probRandomHole : Float=0.3F
         //Probability that once one line is created it reapeats itselve just after
         var probRepetLine : Float=0.7F
-
 
         var prob : Float
 
