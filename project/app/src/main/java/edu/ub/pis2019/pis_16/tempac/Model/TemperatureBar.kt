@@ -83,12 +83,13 @@ class TemperatureBar(): Object() {
     }
 
     fun changeTemperature(orb : Orb){
-        when(orb.operand) {
-            Orb.Operand.ADD -> temperature += orb.number
-            Orb.Operand.MUL -> temperature *= orb.number
-            Orb.Operand.SUB -> temperature -= orb.number
-            Orb.Operand.DIV -> temperature /= orb.number
+        when(orb) {
 
+            is OrbAdd -> temperature += orb.number
+            is OrbSub -> temperature *= orb.number
+            is OrbMul -> temperature -= orb.number
+            is OrbDiv -> temperature /= orb.number
+            else -> temperature = temperature //i didnt know what to put in here
         }
     }
     /*fun colorGradient(color1:Int, color2:Int, percentage: Float):Int{

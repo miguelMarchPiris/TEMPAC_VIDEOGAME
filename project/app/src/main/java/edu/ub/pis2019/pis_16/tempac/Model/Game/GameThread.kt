@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.graphics.Canvas
+import android.opengl.Visibility
 import android.util.Log
 import android.view.SurfaceHolder
 import java.lang.Exception
@@ -30,9 +31,13 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
             try{
                 canvas = this.surfaceHolder.lockCanvas()
                 synchronized(surfaceHolder){
-                    gameEngine.update()
-                    //drawCanvas?
-                    gameEngine.draw(canvas)
+                    if(gameEngine.dead) {
+                        gameView.endGame(gameEngine.getScore())
+                    }
+                    else {
+                        gameEngine.update()
+                        gameEngine.draw(canvas)
+                    }
                 }
             }catch (e:Exception){
                 e.printStackTrace()
@@ -71,6 +76,5 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
     fun setRunning(running: Boolean){
         isrunning = running
     }
-
 
 }

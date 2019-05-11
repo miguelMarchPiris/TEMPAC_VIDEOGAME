@@ -20,4 +20,5 @@ class GhostFactory(var ghostImages : List<Bitmap>) : Factory {
             GhostType.YELLOW -> GhostY(ghostImages[3])
         }
     }
+
 }

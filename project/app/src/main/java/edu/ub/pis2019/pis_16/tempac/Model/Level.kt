@@ -7,7 +7,15 @@ import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
+    companion object{
+        const val MAX_ORBS = 4
+        const val MAX_BLOCKS = 50
+        const val MAX_LINES = 0
+    }
+    var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
+
+    var temperature = 0f
 
     //TODO hay que ver que hacemos con blocks, pq tiene mas sentido que trabajemos con lines
     //hay que hacer el update de cada fila para saber cuando los bloques estÁN FUERA
@@ -33,12 +41,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
 
 
-
-
-
-
-
-
         //Instanciamos bloques para hacer pruebas
         //Los bloques tienen un ancho de 80 (se puede modificar en classe block)
 
@@ -55,10 +57,11 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         //Block size can be changed in companion object in Block class.
 
+
     }
 
     override fun draw(canvas: Canvas?) {
-        for (orb in orbs) {
+        for (orb:Orb in orbs) {
             orb.draw(canvas)
         }
         for (array in filasA){
@@ -80,6 +83,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     fun update(scroll : Float){
+
         for(orb in orbs){orb.update(scroll)}
 
         for (array in filasA){
@@ -91,6 +95,17 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 }
             }
         }
+        spawnOrbs()
+
+        for(orb in orbs){
+            orb.update(scroll)
+        }
+
+        for (block in blocks){
+            block.update(scroll)
+        }
+    }      
+      
     }
 
     fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
@@ -100,6 +115,16 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
     fun getLastArray(): Array<Block?> {
         return filasA.get(filasA.lastIndex)
+    }
+
+    fun spawnOrbs(){
+        if(orbs.size <= MAX_ORBS) {
+            orbs.add(ofactory.create(temperature))
+
+            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
+            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+            orbs[(orbs.size - 1)].setPosition(250f, 250f)
+        }
     }
 
     fun removeBreakableBlock(b : Block){

@@ -1,11 +1,14 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
+import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.navigation.Navigation
+import edu.ub.pis2019.pis_16.tempac.R
 
-class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
+class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
     private var thread : GameThread
     private var engine : GameEngine
     init {
@@ -24,7 +27,6 @@ class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-
             retry = false
         }
     }
@@ -42,6 +44,25 @@ class GameView(context:Context): SurfaceView(context), SurfaceHolder.Callback{
     override fun onTouchEvent(event: MotionEvent): Boolean {
         engine.processInput(event)
         return true
+    }
+    fun endGame(score:Float){
+        //Stop the thread
+        var retry = true
+        while (retry) {
+            try {
+                thread.setRunning(false)
+                thread.interrupt()
+                thread.join()
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            retry = false
+        }
+        var nav = Navigation.findNavController(this)
+        var bundle = Bundle()
+        bundle.putFloat("score",score)
+        nav.navigate(R.id.gameOverFragment, bundle)
+
     }
 
 }

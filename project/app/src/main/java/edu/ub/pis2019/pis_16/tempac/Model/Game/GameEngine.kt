@@ -17,11 +17,14 @@ class GameEngine(var context: Context) : Drawable {
     companion object {
         const val MAX_GHOSTS = 6
         const val MIN_DISTANCE = 105f
+        const val MAX_ORBS = 12
+        const val PLAYFIELD_WIDTH = 1400
+        const val PLAYFIELD_HEIGTH = 1080
     }
 
     //Game variables
     private var scrollSpeed = 1.5f
-    private var dead = false
+    var dead = false
 
     //Secondary Game Variables
     private var breakableTempeature=90f
@@ -51,9 +54,9 @@ class GameEngine(var context: Context) : Drawable {
     private var touchEndY = 0f
 
     //Screen variables
-    var metrics = context.resources.displayMetrics
-    var w = metrics.widthPixels
-    var h = metrics.heightPixels
+    private var metrics = context.resources.displayMetrics
+    private var w = metrics.widthPixels
+    private var h = metrics.heightPixels
 
     init {
 
@@ -105,16 +108,15 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
-        score.update(bonus = 0)
-        if(dead){
-            //Player died we should make the game end
-        }
+        level.temperature = temperatureBar.temperature
+        //Increment scroll speed
+        score.update(1f)    //To test the score in game over screen works fine
+        level.update(scrollSpeed)
+        spawnGhost()
         //Process inputs
         player.update(scrollSpeed)
 
         //Process AI
-        generateGhost()
-        level.update(scrollSpeed)
         for(ghost in ghosts) ghost.update(scrollSpeed)
 
         //Process physics
@@ -126,9 +128,14 @@ class GameEngine(var context: Context) : Drawable {
         //Process video
     }
 
-    fun generateGhost(){
+    fun spawnGhost(){
         if(ghosts.size <= MAX_GHOSTS){
             ghosts.add(gfactory.create(temperatureBar.temperature))
+
+            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
+            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+
+            ghosts[ghosts.size-1].setPosition(500f,500f)
         }
     }
     override fun draw(canvas: Canvas?){
@@ -198,6 +205,10 @@ class GameEngine(var context: Context) : Drawable {
                     checkCollisionsBlock(block)
                 }
             }
+        }
+
+        for(ghost in ghosts){
+            checkCollisionsGhost(ghost)
         }
 
     }
@@ -270,14 +281,11 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun checkCollisionsGhost(ghost : Ghost){
+
         if(RectF.intersects(ghost.rectangle,player.rectangle)){
             player.direction = Player.Direction.STATIC
             dead = true
         }
-    }
-
-    private fun breakableState(){
-        //TODO() //probably we should add a list in level that marks the possible changeable blocks (Ask Miguel)
     }
 
     private fun isOutOfPlayzone(actor: Actor):Boolean{
@@ -305,5 +313,9 @@ class GameEngine(var context: Context) : Drawable {
             return true
         }
         return false
+    }
+
+    fun getScore():Float{
+        return score.score
     }
 }
