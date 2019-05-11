@@ -36,7 +36,7 @@ class GameEngine(var context: Context) : Drawable {
     //Actors
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     private var player : Player = Player(500f,1000f, initPacmanImages())
-    private var ghosts : MutableList<Ghost> = mutableListOf<>()
+    private var ghosts : MutableList<Ghost> = mutableListOf()
     private var level : Level = Level(initBlockImages())
 
     //Play zone rects
