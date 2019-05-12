@@ -3,14 +3,14 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".GameOverFragment">
+             tools:context=".View.GameOverFragment">
     <android.support.constraint.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".GameActivity"
+            tools:context=".View.GameActivity"
             android:background="@color/colorPrimaryDark"
             android:id="@+id/backgroundLayout">
 
@@ -66,18 +66,18 @@
                       android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
                       android:layout_marginEnd="75dp" android:layout_marginRight="8dp">
             <TextView
-                    android:text="1903"
+                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/yourScoreResultText" android:textSize="18sp" android:textColor="@color/colorText"/>
             <TextView
-                    android:text="8462"
+                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/youtHighScoreResultText" android:textSize="18sp"
                     android:textColor="@color/colorText"/>
             <TextView
-                    android:text="10666"
+                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/overallHighScoreResultText" android:textSize="18sp"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/game_nav"
+            app:startDestination="@id/inGameFragment">
+
+    <fragment android:id="@+id/inGameFragment" android:name="edu.ub.pis2019.pis_16.tempac.View.InGameFragment"
+              android:label="fragment_in_game" tools:layout="@layout/fragment_in_game">
+        <action android:id="@+id/action_inGameFragment_to_gameOverFragment" app:destination="@id/gameOverFragment"/>
+    </fragment>
+    <fragment android:id="@+id/gameOverFragment" android:name="edu.ub.pis2019.pis_16.tempac.View.GameOverFragment"
+              android:label="fragment_game_over" tools:layout="@layout/fragment_game_over">
+        <action android:id="@+id/action_gameOverFragment_to_inGameFragment" app:destination="@id/inGameFragment"/>
+        <argument android:name="score" app:argType="integer"/>
+    </fragment>
+</navigation>
