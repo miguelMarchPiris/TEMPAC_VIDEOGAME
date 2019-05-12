@@ -144,7 +144,10 @@ class GameEngine(var context: Context) : Drawable {
             val listOfHoles=pair.second
             //We select a random position in the line
             var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
-            g.setPosition(positionInTheLine.times(Block.blockSide),(pair.first as Float)-300)
+            g.setPosition(positionInTheLine.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+            //g.setPosition(1.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+
+
 
             ghosts.add(g)
         }
@@ -289,6 +292,9 @@ class GameEngine(var context: Context) : Drawable {
         val collides = RectF.intersects(orb.rectangle,player.rectangle)
         if(collides){
             temperatureBar.changeTemperature(orb)
+            ghosts= mutableListOf<Ghost>()
+        }
+
         return collides
     }
 
