@@ -19,6 +19,10 @@ class GameEngine(var context: Context) : Drawable {
         const val MAX_ORBS = 12
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
+        const val bottomPlayingField : Float = 1625F
+        const val leftPlayingField : Float = 0F
+        const val rightPlayingField : Float = 1080F
+        const val topPlayingField : Float = 225F
     }
 
     //Game variables
@@ -43,7 +47,7 @@ class GameEngine(var context: Context) : Drawable {
     private var level : Level = Level(initBlockImages())
 
     //Play zone rects
-    private val playingField = RectF(0f, 225f,1080f,1625f)
+    private val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
     private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
     private val fieldLinePaint = Paint()
     private val fieldPaint = Paint()
@@ -154,11 +158,20 @@ class GameEngine(var context: Context) : Drawable {
         }
     }
     fun spawnGhost(){
-        if(ghosts.size <= MAX_GHOSTS){
-            ghosts.add(gfactory.create(temperatureBar.temperature))
+        if(ghosts.size < MAX_GHOSTS){
+            var g=gfactory.create(temperatureBar.temperature)
+
 
             //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
+            val lastArray=level.getLastArray()
+            val pair=level.getPositionHoles(lastArray)
+            val listOfHoles=pair.second
+            //We select a random position in the line
+            var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
+            g.setPosition(positionInTheLine.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+            //g.setPosition(1.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+
 
             ghosts[ghosts.size-1].setPosition(500f,500f)
         }
@@ -213,11 +226,11 @@ class GameEngine(var context: Context) : Drawable {
 
         //todo check best way to check is lastArray is out
         //Last array of the matrix
-        val lastArray:Array<Block?>? =level.getLastArray()
+        val lastArray:Array<Block?> =level.getLastArray()
         //This returns the positionY of every block on the line(even if there are no blocks
         var positionYLastArray : Float?=level.positionYArray.get(lastArray)
         if (positionYLastArray!=null && lastArray!=null){
-            if (positionYLastArray>(playingField.bottom+Block.blockSide)){
+            if (positionYLastArray>(playingField.bottom+Block.blockSide.times(1.5f))){
                 level.deleteLine(lastArray)
             }
         }
@@ -225,7 +238,8 @@ class GameEngine(var context: Context) : Drawable {
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
         }).toMutableList()
-        ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
+        //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
+        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(element.getH()))}).toMutableList()
         for(array in level.filasA){
             for(block in array){
                 //check collisions
@@ -292,8 +306,8 @@ class GameEngine(var context: Context) : Drawable {
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed*0.5f, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed*0.5f, player.y)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
                     Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
                 }
                 player.direction = Player.Direction.STATIC

@@ -18,6 +18,5 @@ abstract class Actor() : Object()  {
     //process inputs
     open fun update(scroll: Float){
         y+=scroll
-        
     }
 }
