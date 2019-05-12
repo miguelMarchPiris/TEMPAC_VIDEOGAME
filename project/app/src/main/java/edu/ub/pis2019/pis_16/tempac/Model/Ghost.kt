@@ -17,7 +17,14 @@ abstract class Ghost(image : Bitmap) : Actor(){
         rectangle = RectF(x-w,y-h,x,y)
         r= Random()
         //speed=r.nextFloat().minus(0.5f)
-        speed=5F
+        speed=-0.5F
+    }
+
+    fun getH(): Float {
+        return h
+    }
+    fun getW(): Float {
+        return w
     }
 
     fun follow(){

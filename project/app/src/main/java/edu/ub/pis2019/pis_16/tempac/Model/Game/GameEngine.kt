@@ -200,7 +200,7 @@ class GameEngine(var context: Context) : Drawable {
         //This returns the positionY of every block on the line(even if there are no blocks
         var positionYLastArray : Float?=level.positionYArray.get(lastArray)
         if (positionYLastArray!=null){
-            if (positionYLastArray>(playingField.bottom+Block.blockSide)){
+            if (positionYLastArray>(playingField.bottom+Block.blockSide.times(1.5f))){
                 level.deleteLine(lastArray)
             }
         }
@@ -208,7 +208,8 @@ class GameEngine(var context: Context) : Drawable {
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
         }).toMutableList()
-        ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
+        //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
+        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(element.getH()))}).toMutableList()
         for(array in level.filasA){
             for(block in array){
                 //check collisions
@@ -286,7 +287,7 @@ class GameEngine(var context: Context) : Drawable {
 
     private fun checkCollisionsOrb(orb: Orb):Boolean{
         val collides = RectF.intersects(orb.rectangle,player.rectangle)
-        if(collides)
+        if(collides){
             temperatureBar.changeTemperature(orb)
         return collides
     }
