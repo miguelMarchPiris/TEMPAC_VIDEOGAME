@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameView
 import android.R.layout
 import android.R
+import android.opengl.Visibility
 import android.support.constraint.ConstraintSet
 import edu.ub.pis2019.pis_16.tempac.Model.ViewIdGenerator
 import kotlin.concurrent.thread
@@ -24,6 +25,7 @@ import kotlin.concurrent.thread
 class InGameFragment : Fragment() {
 
     lateinit var view: GameView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,11 +48,31 @@ class InGameFragment : Fragment() {
         set.applyTo(layout)
 
 
-        //add pause button action
+
+        val continueButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonContinue)
+        continueButton.visibility = Button.GONE
         val pauseButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonPause)
+        val backButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonBack)
+        backButton.visibility = Button.GONE
+
+        //add back button action
+        backButton.setOnClickListener{
+            activity?.finish()
+        }
+        //add pause button action
         pauseButton.setOnClickListener{
+            when(continueButton.visibility){
+                Button.GONE -> continueButton.visibility = Button.VISIBLE
+                Button.VISIBLE -> continueButton.visibility = Button.GONE
+            }
+            backButton.visibility = continueButton.visibility
             view.tooglePauseThread()
         }
+        //add continue button action
+        continueButton.setOnClickListener{
+            pauseButton.performClick()
+        }
+
 
         return inflatedLayout
     }

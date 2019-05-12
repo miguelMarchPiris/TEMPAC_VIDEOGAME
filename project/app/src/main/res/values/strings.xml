@@ -60,4 +60,6 @@
     <string name="sure_to_exit">Are you sure you want to exit the game?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="back2Menu">Back to menu</string>
+    <string name="continueGame">continue</string>
 </resources>
