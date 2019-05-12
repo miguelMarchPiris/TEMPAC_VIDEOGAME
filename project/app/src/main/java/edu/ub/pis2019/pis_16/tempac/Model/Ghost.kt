@@ -10,7 +10,7 @@ import java.util.*
 abstract class Ghost(image : Bitmap) : Actor(){
     private var w : Float = 0f
     private var h : Float = 0f
-    var speed = 2f
+    var speed = 0.75f
     var im = image
     init {
         w = im.width.toFloat()
@@ -48,25 +48,25 @@ abstract class Ghost(image : Bitmap) : Actor(){
          **************************************/
         row = rows.second
         //presuponemos que nos podemos mover izq
-        moveLeft()
+        moveLeft(scroll)
         updateRect()
         //If the movement is valid, we calculate distance to the player
         if(row==null || !collidesWithBlock(row)){
             distances[1] = calculateDistanceToPlayer(playerPosition)
         }
         //deshacemos movement
-        moveRight()
+        moveRight(scroll)
         /***************************************
          *           CHECK RIGHT
          **************************************/
-        moveRight()
+        moveRight(scroll)
         updateRect()
         //If the movement is valid, we calculate distance to the player
         if(row==null || !collidesWithBlock(row)){
             distances[2] = calculateDistanceToPlayer(playerPosition)
         }
         //deshacemos el movimiento
-        moveLeft()
+        moveLeft(scroll)
 
         /***************************************
          *           CHECK DOWN
@@ -96,8 +96,8 @@ abstract class Ghost(image : Bitmap) : Actor(){
         }
         when(minIndex){
             0 -> moveUp(scroll)
-            1 -> moveLeft()
-            2 -> moveRight()
+            1 -> moveLeft(scroll)
+            2 -> moveRight(scroll)
             3 -> moveDown(scroll)
         }
         updateRect()
@@ -108,11 +108,11 @@ abstract class Ghost(image : Bitmap) : Actor(){
     private fun moveUp(scroll: Float){
         y-=speed+scroll
     }
-    private fun moveLeft(){
-        x-=speed
+    private fun moveLeft(scroll: Float){
+        x-=speed+scroll*0.5f
     }
-    private fun moveRight(){
-        x+=speed
+    private fun moveRight(scroll: Float){
+        x+=speed+scroll*0.5f
     }
     private fun moveDown(scroll: Float){
         y+=speed+scroll

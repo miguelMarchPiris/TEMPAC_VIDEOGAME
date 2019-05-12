@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".View.InGameFragment" android:id="@+id/frameLayout">
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/linearLayout">
-    </LinearLayout>
-</FrameLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/linearLayout"
+              tools:context=".View.InGameFragment"
+              android:background="#000">
+    <Button
+            android:text="▌▌"
+            android:layout_width="1000dp"
+            android:layout_height="wrap_content" android:id="@+id/buttonPause"
+            android:background="@android:color/background_dark" android:textColor="@color/brightYellow"
+            android:textStyle="bold" android:textSize="12dp"
+            android:layout_gravity="center"/>
+</LinearLayout>

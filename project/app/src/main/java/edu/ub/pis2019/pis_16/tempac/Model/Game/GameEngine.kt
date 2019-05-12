@@ -7,13 +7,14 @@ import android.util.Log
 import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.*
 import edu.ub.pis2019.pis_16.tempac.R
+import java.util.*
 
 
 class GameEngine(var context: Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 1    //1 ghost para probar ai
+        const val MAX_GHOSTS = 6
         const val MIN_DISTANCE = 105f
         const val MAX_ORBS = 12
         const val PLAYFIELD_HEIGTH = 1400
@@ -23,6 +24,10 @@ class GameEngine(var context: Context) : Drawable {
     //Game variables
     private var scrollSpeed = 3f
     var dead = false
+    var paused = false
+
+    //Time variables
+    private val startTime = System.currentTimeMillis()
 
     //Secondary Game Variables
     private var breakableTempeature=90f
@@ -44,6 +49,9 @@ class GameEngine(var context: Context) : Drawable {
     private val fieldPaint = Paint()
     private val overlay : List<RectF>
     private val overlayPaint = Paint()
+
+    //Score text paint
+    private val textPaint = Paint()
 
     //Input variables
     private var touchStartX = 0f
@@ -73,8 +81,11 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
-        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
+        textPaint.color = Color.WHITE
+        textPaint.textSize = 40f
+        textPaint.textAlign = Paint.Align.CENTER
         //Factory (maybe this is not necesesary?)
         ghosts.add(gfactory.create(temperatureBar.temperature))
 
@@ -106,9 +117,10 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
+        scrollSpeed +=0.0005f
         level.temperature = temperatureBar.temperature
         //Increment scroll speed
-        score.update(1f)    //To test the score in game over screen works fine
+        score.update(score.getScore()+1)    //To test the score in game over screen works fine
         level.update(scrollSpeed)
         deleteGhosts(temperatureBar.temperature)
         spawnGhost()
@@ -159,20 +171,24 @@ class GameEngine(var context: Context) : Drawable {
             //Draw background
             canvas.drawColor(Color.BLACK)
 
-            //Draw Actors
-            player.draw(canvas)
-            level.draw(canvas)
-            for(ghost in ghosts) ghost.draw(canvas)
-            //Draw Overlay & Playzone
-            for(rect in overlay)
-                canvas.drawRect(rect,overlayPaint)
-            canvas.drawRect(playingFieldLine,fieldLinePaint)
+            if(!paused) {
+                //Draw Actors
+                player.draw(canvas)
+                level.draw(canvas)
+                for (ghost in ghosts) ghost.draw(canvas)
+                //Draw Overlay & Playzone
+                for (rect in overlay)
+                    canvas.drawRect(rect, overlayPaint)
+                canvas.drawRect(playingFieldLine, fieldLinePaint)
 
+                //Draw Objects
+                temperatureBar.draw(canvas)
 
-            //Draw Objects
-            temperatureBar.draw(canvas)
-            //>>posar aqui el draw de pause i score<<
-
+            }
+            else{
+                canvas.drawText("PAUSED", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
+            }
+            canvas.drawText("Score: " + score.getScore().toString(), 1080 / 2f, PLAYFIELD_HEIGTH + 300f, textPaint)
 
 
         }
@@ -276,8 +292,8 @@ class GameEngine(var context: Context) : Drawable {
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed*0.5f, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed*0.5f, player.y)
                     Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
                 }
                 player.direction = Player.Direction.STATIC
@@ -327,7 +343,7 @@ class GameEngine(var context: Context) : Drawable {
         return false
     }
 
-    fun getScore():Float{
-        return score.score
+    fun getScore():Int{
+        return score.getScore()
     }
 }

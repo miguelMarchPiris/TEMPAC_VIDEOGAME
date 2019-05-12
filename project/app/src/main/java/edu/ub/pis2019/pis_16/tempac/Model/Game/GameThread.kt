@@ -12,7 +12,7 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
     private var avgFps = 0.0
     private var isrunning = false
     var canvas:Canvas? = null
-
+    var pauseGame =false
     //GameLoop
     override fun run() {
         var startTime : Long
@@ -34,7 +34,12 @@ class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView:
                     if(gameEngine.dead) {
                         gameView.endGame(gameEngine.getScore())
                     }
+                    else if(pauseGame){
+                        gameEngine.paused = true
+                        gameEngine.draw(canvas)
+                    }
                     else {
+                        gameEngine.paused = false
                         gameEngine.update()
                         gameEngine.draw(canvas)
                     }

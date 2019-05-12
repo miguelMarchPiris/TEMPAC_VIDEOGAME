@@ -11,6 +11,6 @@
     <fragment android:id="@+id/gameOverFragment" android:name="edu.ub.pis2019.pis_16.tempac.View.GameOverFragment"
               android:label="fragment_game_over" tools:layout="@layout/fragment_game_over">
         <action android:id="@+id/action_gameOverFragment_to_inGameFragment" app:destination="@id/inGameFragment"/>
-        <argument android:name="score" app:argType="float"/>
+        <argument android:name="score" app:argType="integer"/>
     </fragment>
 </navigation>
