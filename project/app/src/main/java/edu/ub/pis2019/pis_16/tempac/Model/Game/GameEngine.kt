@@ -25,6 +25,7 @@ class GameEngine(var context: Context) : Drawable {
     //Game variables
     private var scrollSpeed = 3f
     var dead = false
+    val startTime = System.currentTimeMillis()
 
     //Secondary Game Variables
     private var breakableTempeature=90f
@@ -46,6 +47,9 @@ class GameEngine(var context: Context) : Drawable {
     private val fieldPaint = Paint()
     private val overlay : List<RectF>
     private val overlayPaint = Paint()
+
+    //Score text paint
+    private val textPaint = Paint()
 
     //Input variables
     private var touchStartX = 0f
@@ -77,6 +81,9 @@ class GameEngine(var context: Context) : Drawable {
         overlayPaint.color = Color.BLACK
         overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
+        textPaint.color = Color.WHITE
+        textPaint.textSize = 40f
+        textPaint.textAlign = Paint.Align.CENTER
         //Factory (maybe this is not necesesary?)
         ghosts.add(gfactory.create(temperatureBar.temperature))
 
@@ -110,7 +117,7 @@ class GameEngine(var context: Context) : Drawable {
         //Process state of the game
         level.temperature = temperatureBar.temperature
         //Increment scroll speed
-        score.update(1f)    //To test the score in game over screen works fine
+        score.update(((System.currentTimeMillis() - startTime)/100).toInt())    //To test the score in game over screen works fine
         level.update(scrollSpeed)
         deleteGhosts(temperatureBar.temperature)
         spawnGhost()
@@ -174,7 +181,7 @@ class GameEngine(var context: Context) : Drawable {
 
             //Draw Objects
             temperatureBar.draw(canvas)
-            //>>posar aqui el draw de pause i score<<
+            canvas.drawText("Score: "+score.getScore().toString(), 1080/2f, PLAYFIELD_HEIGTH + 300f,textPaint)
 
 
 
@@ -330,7 +337,7 @@ class GameEngine(var context: Context) : Drawable {
         return false
     }
 
-    fun getScore():Float{
-        return score.score
+    fun getScore():Int{
+        return score.getScore()
     }
 }

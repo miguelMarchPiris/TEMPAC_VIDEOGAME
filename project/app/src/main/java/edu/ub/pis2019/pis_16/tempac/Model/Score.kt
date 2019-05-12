@@ -2,9 +2,17 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 class Score {
 
-    var score : Float = 0f
 
-    fun update(bonus : Float){
-        score += 1 + bonus
+    private var bonus = 0
+    private var base = 0
+
+    fun updateBonus(bonusScore : Int){
+        bonus += bonusScore
+    }
+    fun update(baseScore: Int){
+        base = baseScore
+    }
+    fun getScore():Int{
+        return base+bonus
     }
 }
