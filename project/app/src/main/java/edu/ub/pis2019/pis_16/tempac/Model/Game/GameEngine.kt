@@ -14,15 +14,15 @@ class GameEngine(var context: Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 6
+        const val MAX_GHOSTS = 3
         const val MIN_DISTANCE = 105f
-        const val MAX_ORBS = 12
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
         const val bottomPlayingField : Float = 1625F
         const val leftPlayingField : Float = 0F
         const val rightPlayingField : Float = 1080F
         const val topPlayingField : Float = 225F
+        const val breakableTempeature = 90f
     }
 
     //Game variables
@@ -30,11 +30,7 @@ class GameEngine(var context: Context) : Drawable {
     var dead = false
     var paused = false
 
-    //Time variables
-    private val startTime = System.currentTimeMillis()
 
-    //Secondary Game Variables
-    private var breakableTempeature=90f
 
     //Objects
     private var temperatureBar = TemperatureBar()
@@ -229,7 +225,7 @@ class GameEngine(var context: Context) : Drawable {
 
         //todo check best way to check is lastArray is out
         //Last array of the matrix
-        val lastArray:Array<Block?>? =level.getLastArray()
+        val lastArray:Array<Block?>? = level.getLastArray()
         if (lastArray==null){
             Log.d("LastArray","Null")
         }
@@ -312,9 +308,9 @@ class GameEngine(var context: Context) : Drawable {
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
-                    Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed*0.5f, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed*0.5f, player.y)
+                    Player.Direction.STATIC -> player.setPosition(player.x, player.y - scrollSpeed)
                 }
                 player.direction = Player.Direction.STATIC
             }
