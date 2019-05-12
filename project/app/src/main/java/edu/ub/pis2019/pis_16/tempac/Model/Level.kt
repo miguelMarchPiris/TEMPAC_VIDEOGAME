@@ -12,9 +12,9 @@ import java.util.*
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
-        const val MAX_ORBS = 12
-        const val MAX_BLOCKS = 50
-        const val MAX_LINES = 0
+        const val MAX_ORBS = 3
+        //const val MAX_BLOCKS = 50
+        //const val MAX_LINES = 0
     }
     //ORBS
     var ofactory : OrbFactory = OrbFactory()
@@ -71,7 +71,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             updateArrayPositionY(scroll,array)
             for (block in array){
                 if (block!=null){
-                    block.update(scroll)
+                    block.update(scroll,temperature)
                 }
             }
         }
@@ -382,7 +382,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     //Method to give the ghost info about where he can move next
     //With the ghost's Y we return the row above, below and in the middle
     fun get3RowsAtY(ghostY: Float):Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>{
-        /*var aboveRow : Array<Block?>? = null
+        var aboveRow : Array<Block?>? = null
         var middleRow : Array<Block?>? = null
         var downRow : Array<Block?>? = null
         val lastArrayPosition = positionYArray.get(getLastArray())
@@ -392,20 +392,23 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             val halfBlock=Block.blockSide/2
             for (i in 0 .. filasA.size){
                 rowPosition=lastArrayPosition-Block.blockSide.times(i)
+                //hay que mirar la lista por el final
+                val j = filasA.size - (i + 1)
                 if (ghostY in rowPosition-halfBlock .. rowPosition+halfBlock){
                     //el filasA.get(índice) es el del medio
 
                     //Cuidado, revisa los casos en los extremos
-                    aboveRow=filasA.getOrNull(i-1)
-                    middleRow=filasA.getOrNull(i)
-                    downRow=filasA.getOrNull(i+1)
+                    aboveRow=filasA.getOrNull(j-1)
+                    middleRow=filasA.getOrNull(j)
+                    downRow=filasA.getOrNull(j+1)
+                    break
                 }
             }
-        }*/
+        }
         return Triple(
-            null,
-            null,
-            null
+            downRow,
+            middleRow,
+            aboveRow
         )
 
     }
