@@ -398,7 +398,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                     //Cuidado, revisa los casos en los extremos
                     aboveRow=filasA.getOrNull(i-1)
                     middleRow=filasA.getOrNull(i)
-                    downRow=filasA.getOr(i+1)
+                    downRow=filasA.getOrNull(i+1)
                 }
             }
         }*/
