@@ -39,6 +39,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     var probRepeatLine : Float=0.5F
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
+    //Probability of random hole
 
     var r : Random=Random()
     var blockImages : List<Bitmap>
@@ -185,6 +186,9 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         diffLines.add(1,BooleanArray(booleanArray.size))
         for (i in 0 until booleanArray.size){
             diffLines.get(0).set(i,i%2==0)
+            if(r.nextFloat()<probRandomHole){
+                diffLines.get(0).set(i,false)
+            }
             diffLines.get(1).set(i,false)
         }
         //return diffLines.get(r.nextInt(2))
@@ -270,7 +274,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide)
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide.times(1.5F))
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
         
         for (k in 0 until arrayBooleanos.size){
@@ -392,9 +396,9 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                     //el filasA.get(índice) es el del medio
 
                     //Cuidado, revisa los casos en los extremos
-                    aboveRow=filasA.get(i-1)
-                    middleRow=filasA.get(i)
-                    downRow=filasA.get(i+1)
+                    aboveRow=filasA.getOrNull(i-1)
+                    middleRow=filasA.getOrNull(i)
+                    downRow=filasA.getOr(i+1)
                 }
             }
         }*/

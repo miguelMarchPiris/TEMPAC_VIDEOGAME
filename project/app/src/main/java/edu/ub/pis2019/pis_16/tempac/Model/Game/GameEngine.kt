@@ -91,7 +91,8 @@ class GameEngine(var context: Context) : Drawable {
         textPaint.textSize = 40f
         textPaint.textAlign = Paint.Align.CENTER
         //Factory (maybe this is not necesesary?)
-        ghosts.add(gfactory.create(temperatureBar.temperature))
+        //todo check if its necesary
+        //ghosts.add(gfactory.create(temperatureBar.temperature))
 
     }
 
@@ -159,21 +160,23 @@ class GameEngine(var context: Context) : Drawable {
     }
     fun spawnGhost(){
         if(ghosts.size < MAX_GHOSTS){
-            var g=gfactory.create(temperatureBar.temperature)
-
 
             //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
             val lastArray=level.getLastArray()
+            if(lastArray==null){
+                return
+            }
             val pair=level.getPositionHoles(lastArray)
             val listOfHoles=pair.second
             //We select a random position in the line
             var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
-            g.setPosition(positionInTheLine.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+
+            var g=gfactory.create(temperatureBar.temperature)
+            g.setPosition((0.5f+positionInTheLine)*(Block.blockSide),(pair.first as Float))
             //g.setPosition(1.times(Block.blockSide.times(1.5f)),(pair.first as Float))
 
-
-            ghosts[ghosts.size-1].setPosition(500f,500f)
+            ghosts.add(g)
         }
     }
     override fun draw(canvas: Canvas?){
@@ -226,12 +229,15 @@ class GameEngine(var context: Context) : Drawable {
 
         //todo check best way to check is lastArray is out
         //Last array of the matrix
-        val lastArray:Array<Block?> =level.getLastArray()
+        val lastArray:Array<Block?>? =level.getLastArray()
+        if (lastArray==null){
+            Log.d("LastArray","Null")
+        }
         //This returns the positionY of every block on the line(even if there are no blocks
         var positionYLastArray : Float?=level.positionYArray.get(lastArray)
-        if (positionYLastArray!=null && lastArray!=null){
+        if (positionYLastArray!=null){
             if (positionYLastArray>(playingField.bottom+Block.blockSide.times(1.5f))){
-                level.deleteLine(lastArray)
+                level.deleteLine(lastArray as Array<Block?>)
             }
         }
         level.orbs = (level.orbs.filter { element ->

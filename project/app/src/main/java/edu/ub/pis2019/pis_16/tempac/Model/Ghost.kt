@@ -19,6 +19,13 @@ abstract class Ghost(image : Bitmap) : Actor(){
         r= Random()
     }
 
+    fun getH(): Float {
+        return h
+    }
+    fun getW(): Float {
+        return w
+    }
+
     fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>){
         super.update(scroll)
 
