@@ -55,7 +55,7 @@ class GameOverFragment : Fragment() {
         }
 
         //Score setup
-        val score = arguments?.getFloat("score")
+        val score = arguments?.getInt("score")
         val scoreText = inflatedView.findViewById<TextView>(R.id.yourScoreResultText)
         scoreText?.text = score.toString()
 
