@@ -45,7 +45,7 @@ class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
         engine.processInput(event)
         return true
     }
-    fun endGame(score:Float){
+    fun endGame(score:Int){
         //Stop the thread
         var retry = true
         while (retry) {
@@ -60,7 +60,7 @@ class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
         }
         var nav = Navigation.findNavController(this)
         var bundle = Bundle()
-        bundle.putFloat("score",score)
+        bundle.putInt("score",score)
         nav.navigate(R.id.gameOverFragment, bundle)
 
     }
