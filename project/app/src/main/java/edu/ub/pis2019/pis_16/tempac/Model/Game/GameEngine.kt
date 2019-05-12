@@ -9,9 +9,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.*
 import edu.ub.pis2019.pis_16.tempac.R
 import java.util.*
 
-/*GameEngine singelton????
-* Usar la classe collisionable per a algo, lol.
-* */
+
 class GameEngine(var context: Context) : Drawable {
 
     //Const values
@@ -119,6 +117,7 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
+        scrollSpeed +=0.0005f
         level.temperature = temperatureBar.temperature
         //Increment scroll speed
         score.update(score.getScore()+1)    //To test the score in game over screen works fine
@@ -129,7 +128,7 @@ class GameEngine(var context: Context) : Drawable {
         player.update(scrollSpeed)
 
         //Process AI
-        for(ghost in ghosts) ghost.update(scrollSpeed)
+        for(ghost in ghosts) ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed))
 
         //Process physics
         processPhysics()
@@ -168,15 +167,15 @@ class GameEngine(var context: Context) : Drawable {
         if (canvas != null) {
 
             canvas.scale(w/1080f,w/1080f)
+
             //Draw background
             canvas.drawColor(Color.BLACK)
 
             if(!paused) {
                 //Draw Actors
                 player.draw(canvas)
-                for (ghost in ghosts) ghost.draw(canvas)
                 level.draw(canvas)
-
+                for (ghost in ghosts) ghost.draw(canvas)
                 //Draw Overlay & Playzone
                 for (rect in overlay)
                     canvas.drawRect(rect, overlayPaint)
@@ -293,8 +292,8 @@ class GameEngine(var context: Context) : Drawable {
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed, player.y)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed*0.5f, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed*0.5f, player.y)
                     Player.Direction.STATIC -> player.setPosition(player.x, player.y + scrollSpeed)
                 }
                 player.direction = Player.Direction.STATIC
