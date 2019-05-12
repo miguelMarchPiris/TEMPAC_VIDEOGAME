@@ -64,5 +64,8 @@ class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
         nav.navigate(R.id.gameOverFragment, bundle)
 
     }
+    fun tooglePauseThread(){
+        thread.pauseGame = !thread.pauseGame
+    }
 
 }
