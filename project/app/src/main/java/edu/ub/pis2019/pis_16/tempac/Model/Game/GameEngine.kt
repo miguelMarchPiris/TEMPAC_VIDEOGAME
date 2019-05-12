@@ -142,6 +142,7 @@ class GameEngine(var context: Context) : Drawable {
             val lastArray=level.getLastArray()
             val pair=level.getPositionHoles(lastArray)
             val listOfHoles=pair.second
+            //We select a random position in the line
             var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
             g.setPosition(positionInTheLine.times(Block.blockSide),(pair.first as Float)-300)
 
