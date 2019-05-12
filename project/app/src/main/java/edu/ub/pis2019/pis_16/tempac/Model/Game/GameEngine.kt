@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.*
 import edu.ub.pis2019.pis_16.tempac.R
+import java.util.*
 
 /*GameEngine singelton????
 * Usar la classe collisionable per a algo, lol.
@@ -25,7 +26,10 @@ class GameEngine(var context: Context) : Drawable {
     //Game variables
     private var scrollSpeed = 3f
     var dead = false
-    val startTime = System.currentTimeMillis()
+    var paused = false
+
+    //Time variables
+    private val startTime = System.currentTimeMillis()
 
     //Secondary Game Variables
     private var breakableTempeature=90f
@@ -79,7 +83,7 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
-        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
         textPaint.textSize = 40f
@@ -117,7 +121,7 @@ class GameEngine(var context: Context) : Drawable {
         //Process state of the game
         level.temperature = temperatureBar.temperature
         //Increment scroll speed
-        score.update(((System.currentTimeMillis() - startTime)/100).toInt())    //To test the score in game over screen works fine
+        score.update(score.getScore()+1)    //To test the score in game over screen works fine
         level.update(scrollSpeed)
         deleteGhosts(temperatureBar.temperature)
         spawnGhost()
@@ -164,25 +168,28 @@ class GameEngine(var context: Context) : Drawable {
         if (canvas != null) {
 
             canvas.scale(w/1080f,w/1080f)
-
             //Draw background
             canvas.drawColor(Color.BLACK)
 
-            //Draw Actors
-            player.draw(canvas)
-            for(ghost in ghosts) ghost.draw(canvas)
-            level.draw(canvas)
+            if(!paused) {
+                //Draw Actors
+                player.draw(canvas)
+                for (ghost in ghosts) ghost.draw(canvas)
+                level.draw(canvas)
 
-            //Draw Overlay & Playzone
-            for(rect in overlay)
-                canvas.drawRect(rect,overlayPaint)
-            canvas.drawRect(playingFieldLine,fieldLinePaint)
+                //Draw Overlay & Playzone
+                for (rect in overlay)
+                    canvas.drawRect(rect, overlayPaint)
+                canvas.drawRect(playingFieldLine, fieldLinePaint)
 
+                //Draw Objects
+                temperatureBar.draw(canvas)
 
-            //Draw Objects
-            temperatureBar.draw(canvas)
-            canvas.drawText("Score: "+score.getScore().toString(), 1080/2f, PLAYFIELD_HEIGTH + 300f,textPaint)
-
+            }
+            else{
+                canvas.drawText("PAUSED", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
+            }
+            canvas.drawText("Score: " + score.getScore().toString(), 1080 / 2f, PLAYFIELD_HEIGTH + 300f, textPaint)
 
 
         }
