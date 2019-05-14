@@ -1,7 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
@@ -27,6 +26,9 @@ class GameEngine(var context: Context) : Drawable {
 
     //Game variables
     private var scrollSpeed = 3f
+    private var ghostSpeed = 0f
+    private var baseScrollSpeed = 3f
+    private var screenCatchUp = false
     var dead = false
     var paused = false
 
@@ -118,15 +120,21 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
-        scrollSpeed +=0.0005f
+        baseScrollSpeed +=0.0005f
+        screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.9f
         level.temperature = temperatureBar.temperature
-        //Increment scroll speed
+        if(screenCatchUp)
+            scrollSpeed = baseScrollSpeed + player.speed
+        else
+            scrollSpeed = baseScrollSpeed
+
+
         score.update(score.getScore()+1)    //To test the score in game over screen works fine
         level.update(scrollSpeed)
         deleteGhosts(temperatureBar.temperature)
         spawnGhost()
         //Process inputs
-        player.update(scrollSpeed)
+        player.update(scrollSpeed, screenCatchUp)
 
         //Process AI
         for(ghost in ghosts) ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed))

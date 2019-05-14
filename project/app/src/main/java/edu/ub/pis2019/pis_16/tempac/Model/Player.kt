@@ -44,10 +44,15 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
 
     }
 
-    override fun update(scroll: Float){
+    fun update(scroll: Float,screenCatchUp : Boolean){
         super.update(scroll)
         when(direction){
-            Direction.UP -> y-=scroll + speed
+            Direction.UP -> {
+                if (screenCatchUp) {
+                    y -= scroll
+                } else
+                    y -= scroll + speed
+            }
             Direction.LEFT -> x-=speed+scroll*0.5f
             Direction.RIGHT -> x+=speed+scroll*0.5f
             Direction.DOWN -> y+=scroll+speed
