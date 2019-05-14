@@ -120,13 +120,14 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
+        level.temperature = temperatureBar.temperature
         baseScrollSpeed +=0.0005f
         screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.9f
-        level.temperature = temperatureBar.temperature
         if(screenCatchUp)
             scrollSpeed = baseScrollSpeed + player.speed
         else
             scrollSpeed = baseScrollSpeed
+        Log.v("SCROLL", "SCROLL: " + scrollSpeed)
 
 
         score.update(score.getScore()+1)    //To test the score in game over screen works fine

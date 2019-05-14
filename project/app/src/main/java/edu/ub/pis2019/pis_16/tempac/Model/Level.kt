@@ -10,7 +10,7 @@ import java.util.*
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
-        const val MAX_ORBS = 12
+        const val MAX_ORBS = 7
         //const val MAX_BLOCKS = 50
         //const val MAX_LINES = 0
     }

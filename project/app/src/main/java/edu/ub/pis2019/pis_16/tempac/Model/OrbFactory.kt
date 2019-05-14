@@ -10,10 +10,10 @@ class OrbFactory() : Factory {
         var r : Random = Random()
         when(temperature){
             //NOTE: all the numbers in the setRandomChandes added must be equal to 100. These tell u the probablities for each orb to be choosed.
-            in 0f..25f -> OrbType.setChances(40,10,40,10)
-            in 25f..50f -> OrbType.setChances(30, 20, 30, 20)
-            in 50f..75f -> OrbType.setChances(20, 30, 20, 30)
-            in 75f..100f -> OrbType.setChances(10, 40, 10, 40)
+            in 0f..25f -> OrbType.setChances(60,15,20,5)
+            in 25f..50f -> OrbType.setChances(45, 30, 15, 10)
+            in 50f..75f -> OrbType.setChances(30, 45, 10, 15)
+            in 75f..100f -> OrbType.setChances(15, 60, 5, 20)
             else -> OrbType.setChances(25, 25, 25, 25)
         }
 

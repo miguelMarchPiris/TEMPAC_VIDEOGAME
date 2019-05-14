@@ -27,16 +27,17 @@ class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : Li
         paint.color = blockColor
         paint.style = Paint.Style.FILL
 
-        paintInside.color = Color.BLACK
+        paintInside.color =  Color.BLACK
         super.setPosition(posx, posy)
-        rectangle = RectF(x-width/2f+10f,y-height/2f+10f,x+width/2f-10,y+height/2f-10)
+        rectangle = RectF(x-width/2f+20f,y-height/2f+20f,x+width/2f-20,y+height/2f-20)
         //h = image.height.toFloat()
         //w = image.width.toFloat()
     }
 
     override fun draw(canvas: Canvas?){
         canvas?.drawRect(rectangle,paint)
-        canvas?.drawRoundRect(rectangleInside,7f,7f,paintInside)
+
+        canvas?.drawRoundRect(rectangleInside,5f,5f,paintInside)
 
         /*
         if(breakable){
