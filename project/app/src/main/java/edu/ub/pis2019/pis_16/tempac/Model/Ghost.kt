@@ -8,6 +8,9 @@ import java.text.FieldPosition
 import java.util.*
 
 abstract class Ghost(image : Bitmap) : Actor(){
+    companion object {
+        const val BASESPEED = 0.75F
+    }
     private var w : Float = 0f
     private var h : Float = 0f
     var speed = 0.75f

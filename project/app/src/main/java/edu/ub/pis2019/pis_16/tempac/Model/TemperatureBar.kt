@@ -44,6 +44,10 @@ class TemperatureBar(): Object() {
 
         //Color transition
         when(temperature){
+            in 0f..15f ->{
+                startingColor = Color.BLUE
+                endColor = Color.BLUE
+            }
             in 15f..40f ->{
                 startingColor = Color.BLUE
                 endColor = Color.GREEN
