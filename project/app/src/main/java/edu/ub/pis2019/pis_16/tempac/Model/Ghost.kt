@@ -11,7 +11,9 @@ abstract class Ghost(image : Bitmap) : Actor(){
     private var w : Float = 0f
     private var h : Float = 0f
     var speed = 0.75f
+    var belowTheLineSpeed = speed.times(5)
     var im = image
+    var belowTheLine : Boolean = true
     init {
         w = im.width.toFloat()
         h = im.height.toFloat()
@@ -26,9 +28,10 @@ abstract class Ghost(image : Bitmap) : Actor(){
         return w
     }
 
-    fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>){
+    fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean){
         super.update(scroll)
 
+        this.belowTheLine=belowTheLine
         //Chasing algorithm:
         //Based on calculating the distance to the player with every valid movement and then performing the move that gets
         //the ghost closer to the player
@@ -113,16 +116,24 @@ abstract class Ghost(image : Bitmap) : Actor(){
         return Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
     }
     private fun moveUp(scroll: Float){
-        y-=speed+scroll
+        if(belowTheLine){
+            y-=speed.times(belowTheLineSpeed)+scroll
+        }else{ y-=speed+scroll }
     }
     private fun moveLeft(scroll: Float){
-        x-=speed+scroll*0.5f
+        if(belowTheLine){
+            x-=speed.times(belowTheLineSpeed)+scroll
+        }else{x-=speed+scroll }
     }
     private fun moveRight(scroll: Float){
-        x+=speed+scroll*0.5f
+        if(belowTheLine){
+            x+=speed.times(belowTheLineSpeed)+scroll
+        }else{ x+=speed+scroll }
     }
     private fun moveDown(scroll: Float){
-        y+=speed+scroll
+        if(belowTheLine){y+=speed.times(belowTheLineSpeed)+scroll
+
+        }else{ y+=speed+scroll }
     }
     private fun collidesWithBlock(row:Array<Block?>):Boolean{
         var collides = false
