@@ -2,17 +2,15 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
-import java.lang.NullPointerException
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
-        const val MAX_ORBS = 3
+        const val MAX_ORBS = 12
         //const val MAX_BLOCKS = 50
         //const val MAX_LINES = 0
     }
@@ -34,9 +32,9 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     //Probability that each place in the first line has a block
     var probPrimeros : Float=0.3F
     //Probability that one HOLE is created afterwards the obligatory HOLES are created
-    var probRandomHole : Float=0.3F
+    var probRandomHole : Float=0.2F
     //Probability that ONE line is repeated
-    var probRepeatLine : Float=0.5F
+    var probRepeatLine : Float=0.1F
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
     //Probability of random hole
@@ -53,7 +51,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         nLinesToDraw = (GameEngine.bottomPlayingField-GameEngine.topPlayingField).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
-
+    //DRAW AND UPDATE
     override fun draw(canvas: Canvas?) {
         for (array in filasA){
             for (block in array){
@@ -83,41 +81,10 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         positionYArray.set(array,positionYArray.getValue(array)+scroll)
     }
 
-    fun getLastArray(): Array<Block?>? {
-        if(filasA.lastIndex!=-1)
-            return filasA.get(filasA.lastIndex)
-        else
-            return null
-    }
-    fun getFirstArray(): Array<Block?>? {
-        return filasA.get(0)
-    }
-    fun getFirstPositiveArray(): Array<Block?>? {
-        for (array in filasA){
-            if (positionYArray.get(array)!! >=0){
-                return array
-            }
-        }
-        return null
-    }
-    //Given an array of blocks, returns the positionY of that array
-    //and the index of the holes in it
-
-    fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
-        val positionY:Float?=positionYArray.get(array)
-        val indexList= mutableListOf<Int>()
-        for (i in 0 until array.size){
-            if (array.get(i)==null){
-                indexList.add(i)
-            }
-        }
-        return Pair(positionY,indexList)
-    }
-
-
+    //SPAWNER OF ORBS
     fun spawnOrbs(){
         val arrayBlocks=getFirstPositiveArray()
-        if(arrayBlocks==null || orbs.size == MAX_ORBS || orbInLastLine){
+        if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
             return
         }
         val par=getPositionHoles(arrayBlocks)
@@ -144,17 +111,43 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
     }
 
+    //GET ARRAYS OF BLOCKS
+    fun getLastArray(): Array<Block?>? {
+        if(filasA.lastIndex!=-1)
+            return filasA.get(filasA.lastIndex)
+        else
+            return null
+    }
+    fun getFirstArray(): Array<Block?>? {
+        return filasA.get(0)
+    }
+    fun getFirstPositiveArray(): Array<Block?>? {
+        for (array in filasA){
+            if (positionYArray.get(array)!! >=0){
+                return array
+            }
+        }
+        return null
+    }
+
+    //Given an array of blocks, returns the positionY of that array
+    //and the index of the holes in it
+    fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
+        val positionY:Float?=positionYArray.get(array)
+        val indexList= mutableListOf<Int>()
+        for (i in 0 until array.size){
+            if (array.get(i)==null){
+                indexList.add(i)
+            }
+        }
+        return Pair(positionY,indexList)
+    }
+
+    //
     fun deleteLine(array : Array<Block?>){
         //First we delete the line
-        var block: Block?
         for(i in 0 until array.size){
-            block = array.get(i)
-            if (block!=null){
-                if (block.breakable){
-                    deleteBreakableBlock(block)
-                }
-                array.set(i,null)
-            }
+            array.set(i,null)
         }
         //We remove it from the hasmap positionY
         positionYArray.remove(array)
@@ -167,14 +160,14 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun newLineOnTop() {
         val first=getFirstArray()
         val positionY=positionYArray.get(first)as Float
-        if(first==null){
-            Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks")
-        }
+        if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
+
         var firstBArray= createBooleanArray(first as Array<Block?>)
         //Here we decide if the last line of blocks gets repeted
         if(!(r.nextFloat()<probRepeatLine)){
             //getNewBooleanArray is the method that creates new lines(now is trivial)
-            firstBArray = getNewBooleanArray(firstBArray)
+            //firstBArray = getNewBooleanArray(firstBArray)
+            firstBArray = getNewBooleanArray(firstBArray, true)
         }
         createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
     }
@@ -197,6 +190,55 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         return diffLines.get(0)
     }
+    fun getNewBooleanArray(booleanArray: BooleanArray, j : Boolean): BooleanArray{
+        //todo AQUÍ puedo poder el algoritmo para crear lineas y caminos
+        var nueva : BooleanArray= BooleanArray(booleanArray.size)
+        for (i in 0 until nueva.size){nueva.set(i,true)} //We init the array to true
+
+        var holes : MutableList<Pair<Int,Int>> = getHoles(booleanArray)
+        var firstPositionHole : Int =0
+        var totalHuecos : Int = 0
+        var tupla : Pair<Int,Int>
+
+        for ( i in 0 until holes.size){
+            tupla = holes.get(i)
+            firstPositionHole=tupla.first
+            totalHuecos=tupla.second
+
+            //This is to make 2 paths from a large hole
+            if(totalHuecos>=3){
+                nueva.set(firstPositionHole,false)
+                nueva.set(firstPositionHole+(totalHuecos-1), false)
+            }
+
+            else{
+                if(totalHuecos==1){
+                    nueva.set((firstPositionHole),false)
+                }
+                else{
+                    //We put a false in any random place of the hole
+                    nueva.set((firstPositionHole+(r.nextInt(totalHuecos))),false)
+                }
+
+            }
+
+            //We create random holes
+            var left : Boolean?
+            var right : Boolean?
+            for (i in 0 until nueva.size){
+                left=nueva.getOrNull(i-1)
+                right=nueva.getOrNull(i+1)
+                if(left==null){left=true}
+                if(right==null){right=true}
+
+                if(r.nextFloat()<probRandomHole && (! booleanArray.get(i) || !left || !right )  ){
+                    nueva.set(i,false)
+                }
+            }
+        }
+        return nueva
+    }
+
     fun createBooleanArray(array: Array<Block?>):BooleanArray{
         val booleanArray : BooleanArray= BooleanArray(array.size)
         for (i in 0 until array.size){
@@ -302,7 +344,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     fun generateNewLine(filaAnterior : MutableList<Boolean>?, ancho : Int): MutableList<Boolean>? {
         var nueva : MutableList<Boolean> = mutableListOf()
         var holes : MutableList<Pair<Int,Int>>
-
+        var j = BooleanArray(3)
         var prob : Float
 
         var n: Int
@@ -315,7 +357,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
         else{
-            holes = getHoles(filaAnterior.toMutableList<Boolean>())
+            holes = getHoles(j)
             for (i in 0 until ancho) {nueva.add(i, true)}//inicializamos la fila llena de bloques
             var tupla: Pair<Int,Int>
             var totalhuecos : Int
@@ -344,12 +386,18 @@ class Level(blockImg : List<Bitmap>) : Drawable {
 
         return nueva
     }
-    fun getHoles(line: MutableList<Boolean>): MutableList<Pair<Int, Int>> {
+
+    //Returns a MutableList of Pairs.
+    // The first is the position (index) where its begins,
+    // the second is the width of the hole
+    // Examenple    XXX__XX would be (3,2)
+    fun getHoles(line : BooleanArray) : MutableList<Pair<Int, Int>> {
         var holeList : MutableList<Pair<Int,Int>> = mutableListOf<Pair<Int,Int>>()
-        var prev : Boolean = false
+        var prev : Boolean = true
         var position : Int=0
-        var withHole : Int=0
+        var widthHole : Int=0
         var actual : Boolean
+
         for (i in 0 until line.size){
             actual=line.get(i)
 
@@ -359,18 +407,20 @@ class Level(blockImg : List<Bitmap>) : Drawable {
                 // (X_) Empezamos a contar
                 else{
                     position=i
-                    withHole=0
+                    widthHole=0
+                    if(i==line.size-1){holeList.add(Pair(position, widthHole+1))}
                 }
             }
             else{
                 //(_X)
-                if (actual){holeList.add(Pair(position, withHole+1)) }
+                if (actual){holeList.add(Pair(position, widthHole+1)) }
                 //(__)
                 else{
-                    withHole++
-                    if(i==line.size-1){holeList.add(Pair(position, withHole+1))}
+                    widthHole++
+                    if(i==line.size-1){holeList.add(Pair(position, widthHole+1))}
                 }
             }
+            prev=actual
         }
         return holeList
     }

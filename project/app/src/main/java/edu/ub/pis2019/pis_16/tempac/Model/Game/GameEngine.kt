@@ -13,7 +13,7 @@ class GameEngine(var context: Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 3
+        const val MAX_GHOSTS = 30
         const val MIN_DISTANCE = 105f
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
@@ -137,7 +137,11 @@ class GameEngine(var context: Context) : Drawable {
         player.update(scrollSpeed, screenCatchUp)
 
         //Process AI
-        for(ghost in ghosts) ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed))
+        for(ghost in ghosts){
+            val belowTheLine=ghost.y> bottomPlayingField
+
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
+        }
 
         //Process physics
         processPhysics()
@@ -168,9 +172,7 @@ class GameEngine(var context: Context) : Drawable {
             //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
             val lastArray=level.getLastArray()
-            if(lastArray==null){
-                return
-            }
+            if(lastArray==null){ return }
             val pair=level.getPositionHoles(lastArray)
             val listOfHoles=pair.second
             //We select a random position in the line
@@ -249,7 +251,7 @@ class GameEngine(var context: Context) : Drawable {
             !checkCollisionsOrb(element)
         }).toMutableList()
         //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
-        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(element.getH()))}).toMutableList()
+        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(Block.blockSide.times(1.5f)))   }).toMutableList()
         for(array in level.filasA){
             for(block in array){
                 //check collisions
@@ -316,8 +318,8 @@ class GameEngine(var context: Context) : Drawable {
                 when (player.direction) {
                     Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed*0.5f, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed*0.5f, player.y)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed, player.y)
                     Player.Direction.STATIC -> player.setPosition(player.x, player.y - scrollSpeed)
                 }
                 player.direction = Player.Direction.STATIC

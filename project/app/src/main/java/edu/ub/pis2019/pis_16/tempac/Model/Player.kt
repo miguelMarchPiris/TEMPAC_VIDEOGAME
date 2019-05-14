@@ -53,8 +53,8 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
                 } else
                     y -= scroll + speed
             }
-            Direction.LEFT -> x-=speed+scroll*0.5f
-            Direction.RIGHT -> x+=speed+scroll*0.5f
+            Direction.LEFT -> x-=speed+scroll
+            Direction.RIGHT -> x+=speed+scroll
             Direction.DOWN -> y+=scroll+speed
         }
         //these two lines are used if the image change his size. Are just a way to prevent random things to happen (the hitbox goes acord the image size)
