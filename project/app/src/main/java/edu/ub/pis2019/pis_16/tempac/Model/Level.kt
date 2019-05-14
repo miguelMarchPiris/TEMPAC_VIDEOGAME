@@ -226,6 +226,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             var left : Boolean?
             var right : Boolean?
             for (i in 0 until nueva.size){
+                //So it can make holes beneath holes
                 left=nueva.getOrNull(i-1)
                 right=nueva.getOrNull(i+1)
                 if(left==null){left=true}
