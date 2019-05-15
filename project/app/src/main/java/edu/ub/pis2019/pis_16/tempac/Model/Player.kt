@@ -22,9 +22,9 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
     init {
         x=posx
         y=posy
-        h = image.height.toFloat()
-        w = image.width.toFloat()
-        rectangle.set(x-w,y-h,x,y)
+        h = image.height.toFloat()/2
+        w = image.width.toFloat()/2
+        rectangle.set(x-w,y-h,x+w,y+h)
 
         //paint.color = Color.RED
 

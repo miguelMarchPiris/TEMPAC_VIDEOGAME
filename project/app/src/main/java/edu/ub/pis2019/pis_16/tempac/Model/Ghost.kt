@@ -18,9 +18,9 @@ abstract class Ghost(image : Bitmap) : Actor(){
     var im = image
     var belowTheLine : Boolean = true
     init {
-        w = im.width.toFloat()
-        h = im.height.toFloat()
-        rectangle = RectF(x-w,y-h,x,y)
+        w = im.width.toFloat()/2
+        h = im.height.toFloat()/2
+        rectangle = RectF(x-w,y-h,x-w,y-h)
         r= Random()
     }
 
