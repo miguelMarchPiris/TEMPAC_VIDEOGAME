@@ -321,7 +321,7 @@ class GameEngine(var context: Context) : Drawable {
                     Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
                     Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed, player.y)
                     Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed, player.y)
-                    Player.Direction.STATIC -> player.setPosition(player.x, player.y - scrollSpeed)
+                    Player.Direction.STATIC -> player.setPosition(player.x, player.y)
                 }
                 player.direction = Player.Direction.STATIC
             }
