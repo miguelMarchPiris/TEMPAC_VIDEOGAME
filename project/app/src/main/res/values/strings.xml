@@ -62,4 +62,5 @@
     <string name="no">NO</string>
     <string name="back2Menu">Back to menu</string>
     <string name="continueGame">continue</string>
+    <string name="signout">Sign Out</string>
 </resources>
