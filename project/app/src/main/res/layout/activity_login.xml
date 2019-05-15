@@ -9,81 +9,33 @@
     android:background="@color/colorPrimaryDark">
 
 
-    <Button
-            android:text="@string/skipLogin"
-            android:id="@+id/button_skipLogin" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" style="@style/ButtonLight"
-            android:layout_marginBottom="20dp"
-            android:layout_width="0dp" android:layout_height="wrap_content"/>
-    <Button
-            android:text="@string/googlePlayLogin"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:id="@+id/button_google"
-            android:background="@color/colorPrimary" android:textColor="@color/colorText"
-            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="8dp"
-            app:layout_constraintHorizontal_bias="1.0"
-            android:layout_marginBottom="20dp" app:layout_constraintBottom_toTopOf="@+id/button_skipLogin"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="275dp"
             android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:layout_marginTop="120dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:background="@color/colorPrimary"
             android:padding="40dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/button_google">
+            android:layout_marginBottom="8dp"
+            android:id="@+id/linearLayout" app:layout_constraintBottom_toBottomOf="parent">
 
-        <EditText
+        <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:background="@color/colorPrimaryDark"
-                android:padding="8dp"
-                android:textColorHint="@color/colorPrimary"
-                android:id="@+id/editText_mail" android:layout_weight="1" android:textColor="@color/colorText"
-                android:autofillHints="" android:hint="@string/email"/>
+                android:layout_gravity="center"
+                android:layout_height="wrap_content" />
         <View
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:background="@color/colorPrimary"/>
-
-        <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:background="@color/colorPrimaryDark"
-                android:padding="8dp"
-                android:id="@+id/editText_password"
-                android:layout_weight="1"
-                android:textColor="@color/colorText"
-                android:textColorHint="@color/colorPrimary"
-
-                android:inputType="textPassword" android:autofillHints="" android:hint="@string/password"/>
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:background="@color/colorPrimary"/>
-        <Button
-                android:text="@string/login"
-                android:layout_width="match_parent"
-                android:id="@+id/button_login"
-                style="@style/ButtonDark" android:layout_height="wrap_content"/>
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
+                android:layout_height="24dp"
                 android:background="@color/colorPrimary" android:id="@+id/view" android:layout_weight="1"/>
         <Button
-                android:text="@string/signUp"
-                android:layout_width="match_parent"
-                android:id="@+id/button_signup"
-                android:textColor="@color/colorText"
-                style="@style/ButtonDark" android:layout_height="wrap_content"/>
+                android:text="@string/skipLogin"
+                android:id="@+id/button_skipLogin"
+                style="@style/ButtonDark"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 
