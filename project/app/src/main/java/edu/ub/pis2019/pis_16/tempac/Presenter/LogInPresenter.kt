@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
 import android.content.Intent
+import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.Toast
@@ -13,13 +14,21 @@ import com.google.android.gms.common.SignInButton
 import edu.ub.pis2019.pis_16.tempac.R
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import edu.ub.pis2019.pis_16.tempac.Model.User
 
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     // Configure sign-in to request the user's ID, email address, and basic
     // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken("620556730398-7qivkru1bbtlsh9mdj8dgbuav4hk6t09.apps.googleusercontent.com")
+        .requestEmail()
+        .build()
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
     private val RC_SIGN = 69
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -44,6 +53,9 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     override fun onCreate() {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
         // Set the dimensions of the sign-in button.
         val signInButton = activity.findViewById<SignInButton>(R.id.sign_in_button)
         signInButton.setSize(SignInButton.SIZE_WIDE)
@@ -59,12 +71,13 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     fun onStart(){
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        val account = GoogleSignIn.getLastSignedInAccount(activity)
+        val account = auth.currentUser
         if(account != null){
             login(account)
         }
     }
     fun askForlogin(){
+        mGoogleSignInClient.signOut()
         val signInIntent = mGoogleSignInClient.signInIntent
         activity.startActivityForResult(signInIntent,RC_SIGN)
     }
@@ -72,34 +85,55 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if(requestCode == RC_SIGN){
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             // The Task returned from this call is always completed, no need to attach
             // a listener.
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
+                // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
-
-                // Signed in successfully, show authenticated UI.
-                login(account)
+                firebaseAuthWithGoogle(account!!)
             } catch (e: ApiException) {
-                // The ApiException status code indicates the detailed failure reason.
-                // Please refer to the GoogleSignInStatusCodes class reference for more information.
-                Log.w("GOOGLE", "signInResult:failed code=" + e.statusCode)
-                loginFailed()
+                // Google Sign In failed, update UI appropriately
+                Log.w("GOOGLE EROR", "Google sign in failed", e)
+                // ...
             }
 
         }
     }
-    fun loginFailed(){
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        Log.d("FB LOGIN", "firebaseAuthWithGoogle:" + acct.id!!)
+
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("FB LOGIN", "signInWithCredential:success")
+                    val user = auth.currentUser
+                    login(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("FB LOGIN", "signInWithCredential:failure", task.exception)
+                    login(null)
+                }
+            }
+    }
+    private fun loginFailed(){
         Toast.makeText(activity,"Login failed, try again", Toast.LENGTH_SHORT).show()
     }
-    fun login(account: GoogleSignInAccount?) {
+    private fun login(account: FirebaseUser?) {
         if(account!=null){
-            Toast.makeText(activity,"Login successful! Welcome "+account.displayName, Toast.LENGTH_SHORT).show()
+            (activity.application as TempacApplication).user = User(account.displayName!!, account.email!!)
+            Toast.makeText(activity,"Login successful! Welcome "+account.displayName, Toast.LENGTH_LONG).show()
             //Create user object and save it
             changeActivity(MainMenuActivity())
         }
     }
-    fun skipLogin(){
+    private fun skipLogin(){
+        //Afegim usuari amb ID la del dispositiu
+        (activity.application as TempacApplication).user = User(Settings.Secure.getString(activity.contentResolver,
+            Settings.Secure.ANDROID_ID))
+        Toast.makeText(activity,"Logged in with device ID: "+(activity.application as TempacApplication).user.username, Toast.LENGTH_LONG).show()
         changeActivity(MainMenuActivity())
     }
     private fun changeActivity(activity: AppCompatActivity){

@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
 import edu.ub.pis2019.pis_16.tempac.View.CreditsActivity
 import edu.ub.pis2019.pis_16.tempac.View.LogInActivity
 import edu.ub.pis2019.pis_16.tempac.R
@@ -54,15 +55,12 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
 
     }
     private fun signOut(){
-        val  gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-        val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
-        mGoogleSignInClient.signOut().addOnCompleteListener(activity, OnCompleteListener<Void> {
-                //Clean user data
-                //Restart app
-                val intent = Intent(activity,LogInActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                activity.startActivity(intent)
-        })
+        FirebaseAuth.getInstance().signOut()
+        //Restart app
+        val intent = Intent(activity,LogInActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.startActivity(intent)
+
     }
     private fun changeActivityCredits(){
         val intent = Intent(activity, CreditsActivity::class.java)
