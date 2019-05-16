@@ -1,11 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.content.res.Resources
 import android.graphics.*
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
-import edu.ub.pis2019.pis_16.tempac.R
 
 class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
     private var paint = Paint()
@@ -51,7 +47,7 @@ class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : Li
 
     fun update(scroll: Float, temperature:Float) {
         super.update(scroll)
-        if(breakable && temperature>=GameEngine.breakableTempeature){
+        if(breakable && temperature>=GameEngine.BLOCK_BREAKABLE_TEMPERATURE){
             paint.color = Color.RED
         }
         else{

@@ -5,14 +5,16 @@ class Score {
 
     private var bonus = 0
     private var base = 0
+    private var score = 0
+    var multiplayer = 0
 
     fun updateBonus(bonusScore : Int){
-        bonus += bonusScore
+        bonus = bonusScore
     }
-    fun update(baseScore: Int){
-        base = baseScore
+    fun update(augment: Int){
+        score += augment
     }
     fun getScore():Int{
-        return base+bonus
+        return score+bonus
     }
 }
