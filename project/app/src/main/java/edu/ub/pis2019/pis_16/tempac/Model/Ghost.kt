@@ -18,17 +18,10 @@ abstract class Ghost(image : Bitmap) : Actor(){
     var im = image
     var belowTheLine : Boolean = true
     init {
-        w = im.width.toFloat()/2
-        h = im.height.toFloat()/2
-        rectangle = RectF(x-w,y-h,x-w,y-h)
+        w = im.width.toFloat()
+        h = im.height.toFloat()
+        rectangle = RectF(x-w,y-h,x,y)
         r= Random()
-    }
-
-    fun getH(): Float {
-        return h
-    }
-    fun getW(): Float {
-        return w
     }
 
     fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean){

@@ -247,12 +247,14 @@ class GameEngine(var context: Context) : Drawable {
                 level.deleteLine(lastArray as Array<Block?>)
             }
         }
+
         level.orbs = (level.orbs.filter { element ->
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
         }).toMutableList()
         //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
-        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(Block.blockSide.times(1.5f)))   }).toMutableList()
+        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(Block.blockSide.times(1.5f)))}).toMutableList()
+
         for(array in level.filasA){
             for(block in array){
                 //check collisions
