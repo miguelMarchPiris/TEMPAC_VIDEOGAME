@@ -30,7 +30,7 @@ class ConfirmExitActivity : AppCompatActivity() {
         }
 
         btn_No.setOnClickListener {
-            changeActivityMainMenu()
+            finish()
         }
     }
 

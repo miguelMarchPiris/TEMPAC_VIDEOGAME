@@ -128,7 +128,6 @@ class GameEngine(var context: Context) : Drawable {
             scrollSpeed = baseScrollSpeed + player.speed
         else
             scrollSpeed = baseScrollSpeed
-        Log.v("SCROLL", "SCROLL: " + scrollSpeed)
 
         //updating scores lol
         if(extremeWeather) {
