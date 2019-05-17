@@ -12,9 +12,12 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".View.ChooseUsernameActivity"
+                  android:theme="@style/AppTheme.PopUpTheme">
+        </activity>
         <activity
                 android:name=".View.ConfirmExitActivity"
-            android:theme="@style/AppTheme.PopUpTheme">
+                android:theme="@style/AppTheme.PopUpTheme">
         </activity>
         <activity android:name=".View.SignUpActivity">
         </activity>
@@ -25,13 +28,13 @@
         </activity>
         <activity
                 android:name=".View.LogInActivity"
-                tools:ignore="ExtraText"
                 android:allowBackup="true"
                 android:icon="@mipmap/ic_launcher"
                 android:label="@string/app_name"
                 android:roundIcon="@mipmap/ic_launcher_round"
                 android:supportsRtl="true"
-                android:theme="@style/AppTheme">
+                android:theme="@style/AppTheme"
+                tools:ignore="ExtraText">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

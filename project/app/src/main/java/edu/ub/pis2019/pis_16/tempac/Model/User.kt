@@ -1,12 +1,10 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.content.Context
-import android.provider.Settings
 
-class User(var username: String) {
+class User(val uid: String, val username: String) {
     private var highscore = 0
     private var email = ""
-    constructor(username:String,email:String):this(username){
+    constructor(uid:String, username:String,email:String):this(uid,username){
         this.email = email
     }
     fun setHighscore(value:Int):Boolean{
@@ -19,5 +17,4 @@ class User(var username: String) {
     fun getHighscore():Int{
         return highscore
     }
-
 }

@@ -127,7 +127,6 @@ class GameEngine(var context: Context) : Drawable {
             scrollSpeed = baseScrollSpeed + player.speed
         else
             scrollSpeed = baseScrollSpeed
-        Log.v("SCROLL", "SCROLL: " + scrollSpeed)
 
 
         score.update(score.getScore()+1)    //To test the score in game over screen works fine

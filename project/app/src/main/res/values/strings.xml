@@ -61,6 +61,8 @@
     <string name="back2Menu">Back to menu</string>
     <string name="continueGame">continue</string>
     <string name="signout">Sign Out</string>
+    <string name="confirmation">OK!</string>
+    <string name="chooseUsername">Choose a username</string>
 
     <!-- GOOGLE TOKEN: -->
 

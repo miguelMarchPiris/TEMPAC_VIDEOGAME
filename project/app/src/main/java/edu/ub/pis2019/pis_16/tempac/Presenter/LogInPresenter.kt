@@ -14,10 +14,12 @@ import com.google.android.gms.common.SignInButton
 import edu.ub.pis2019.pis_16.tempac.R
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import edu.ub.pis2019.pis_16.tempac.Model.User
+import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
@@ -30,6 +32,8 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
     private val RC_SIGN = 69
+    private val RC_USERNAME = 420
+    private var customUsername = ""
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -51,6 +55,9 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onCreate() {
+        //INCIALIZE FIREBASE
+        FirebaseApp.initializeApp(activity)
+
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
         // Initialize Firebase Auth
@@ -99,6 +106,27 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             }
 
         }
+        //Result returned form launching intent ChooseUsername
+        if(requestCode == RC_USERNAME){
+            if(data?.getStringExtra("username")!= null)
+                customUsername = data?.getStringExtra("username")
+                //Afegim usuari amb ID la del dispositiu
+                if(customUsername!="") {
+                    (activity.application as TempacApplication).user = User(
+                        Settings.Secure.getString(
+                            activity.contentResolver,
+                            Settings.Secure.ANDROID_ID
+                        ), customUsername
+                    )
+                    FirestoreHandler.updateUser((activity.application as TempacApplication).user)
+                    Toast.makeText(
+                        activity,
+                        "Logged in with device ID: " + (activity.application as TempacApplication).user.username,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    changeActivity(MainMenuActivity())
+                }
+        }
     }
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d("FB LOGIN", "firebaseAuthWithGoogle:" + acct.id!!)
@@ -123,18 +151,19 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
     private fun login(account: FirebaseUser?) {
         if(account!=null){
-            (activity.application as TempacApplication).user = User(account.displayName!!, account.email!!)
+            (activity.application as TempacApplication).user = User(account.uid, account.displayName!!, account.email!!)
+            FirestoreHandler.updateUser((activity.application as TempacApplication).user)
             Toast.makeText(activity,"Login successful! Welcome "+account.displayName, Toast.LENGTH_LONG).show()
             //Create user object and save it
+
             changeActivity(MainMenuActivity())
         }
     }
     private fun skipLogin(){
-        //Afegim usuari amb ID la del dispositiu
-        (activity.application as TempacApplication).user = User(Settings.Secure.getString(activity.contentResolver,
-            Settings.Secure.ANDROID_ID))
-        Toast.makeText(activity,"Logged in with device ID: "+(activity.application as TempacApplication).user.username, Toast.LENGTH_LONG).show()
-        changeActivity(MainMenuActivity())
+        //We ask for a username
+        val intent = Intent(activity,ChooseUsernameActivity::class.java)
+        activity.startActivityForResult(intent,RC_USERNAME)
+
     }
     private fun changeActivity(activity: AppCompatActivity){
         val intent = Intent(this.activity, activity::class.java)
