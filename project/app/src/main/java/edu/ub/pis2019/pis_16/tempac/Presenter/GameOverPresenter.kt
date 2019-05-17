@@ -87,7 +87,9 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter {
             val overallHighScoreText = fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText)
             //TODO("Display overall highscore")
 
-
+            //Displau name
+            val nameText = fragment.inflatedView.findViewById<TextView>(R.id.yourNameResultText)
+            nameText.text = user.username
         }
     }
 }
