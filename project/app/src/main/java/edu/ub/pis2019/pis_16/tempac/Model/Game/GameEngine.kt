@@ -21,13 +21,16 @@ class GameEngine(var context: Context) : Drawable {
         const val leftPlayingField : Float = 0F
         const val rightPlayingField : Float = 1080F
         const val topPlayingField : Float = 225F
-        const val breakableTempeature = 90f
+        const val BLOCK_BREAKABLE_TEMPERATURE = 80f
+        const val HOT_TEMPERATURE = 80f
+        const val COLD_TEMPERATURE = 20f
     }
 
     //Game variables
     private var scrollSpeed = 3f
     private var ghostSpeed = 0f
     private var baseScrollSpeed = 3f
+    private var extremeWeather = false //used to control the score. When its cold or hot it activates
     private var screenCatchUp = false
     var dead = false
     var paused = false
@@ -88,10 +91,6 @@ class GameEngine(var context: Context) : Drawable {
         textPaint.color = Color.WHITE
         textPaint.textSize = 40f
         textPaint.textAlign = Paint.Align.CENTER
-        //Factory (maybe this is not necesesary?)
-        //todo check if its necesary
-        //ghosts.add(gfactory.create(temperatureBar.temperature))
-
     }
 
     fun initPacmanImages() : List<Bitmap>{
@@ -120,7 +119,9 @@ class GameEngine(var context: Context) : Drawable {
 
     fun update(){
         //Process state of the game
+        gameState()
         level.temperature = temperatureBar.temperature
+
         baseScrollSpeed +=0.0005f
         screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.9f
         if(screenCatchUp)
@@ -128,8 +129,13 @@ class GameEngine(var context: Context) : Drawable {
         else
             scrollSpeed = baseScrollSpeed
 
+        //updating scores lol
+        if(extremeWeather) {
+            score.update(3)
+        }else{
+            score.update(1)
+        }
 
-        score.update(score.getScore()+1)    //To test the score in game over screen works fine
         level.update(scrollSpeed)
         deleteGhosts(temperatureBar.temperature)
         spawnGhost()
@@ -138,7 +144,7 @@ class GameEngine(var context: Context) : Drawable {
 
         //Process AI
         for(ghost in ghosts){
-            val belowTheLine=ghost.y> bottomPlayingField
+            val belowTheLine=ghost.y > bottomPlayingField
 
             ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
         }
@@ -150,6 +156,19 @@ class GameEngine(var context: Context) : Drawable {
         //Process sound
 
         //Process video
+    }
+
+    fun gameState(){
+        if(temperatureBar.temperature >= HOT_TEMPERATURE) {
+            scrollSpeed = 5f
+            extremeWeather = true
+        }else if(temperatureBar.temperature <= COLD_TEMPERATURE) {
+            scrollSpeed = 2f
+            extremeWeather = true
+        }else{
+            scrollSpeed = 3f
+            extremeWeather = false
+        }
     }
 
     fun deleteGhosts(temperature : Float){
@@ -229,7 +248,7 @@ class GameEngine(var context: Context) : Drawable {
         /*
         level.blocks = (level.blocks.filter { block ->
             !isOutOfPlayzone(block) &&
-            !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=breakableTempeature))
+            !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=BLOCK_BREAKABLE_TEMPERATURE))
         }).toMutableList()
         */
 
@@ -246,12 +265,14 @@ class GameEngine(var context: Context) : Drawable {
                 level.deleteLine(lastArray as Array<Block?>)
             }
         }
+
         level.orbs = (level.orbs.filter { element ->
             !isOutOfPlayzone(element) &&
             !checkCollisionsOrb(element)
         }).toMutableList()
         //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
-        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(Block.blockSide.times(1.5f)))   }).toMutableList()
+        ghosts = (ghosts.filter { element -> !(element.y> bottomPlayingField.plus(Block.blockSide.times(1.5f)))}).toMutableList()
+
         for(array in level.filasA){
             for(block in array){
                 //check collisions
@@ -309,7 +330,7 @@ class GameEngine(var context: Context) : Drawable {
 
         if(RectF.intersects(block.rectangle, player.rectangle)) {
 
-            if(block.breakable && (temperatureBar.temperature>=breakableTempeature)){
+            if(block.breakable && (temperatureBar.temperature>=BLOCK_BREAKABLE_TEMPERATURE)){
                 //Destroy block and return
                 level.deleteBreakableBlock(block)
             }
