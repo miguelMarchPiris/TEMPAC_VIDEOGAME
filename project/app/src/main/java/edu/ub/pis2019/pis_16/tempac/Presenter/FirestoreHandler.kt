@@ -1,15 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
-import android.content.Context
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import edu.ub.pis2019.pis_16.tempac.Model.User
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.DocumentReference
-
 
 
 
@@ -22,7 +14,7 @@ object FirestoreHandler: DatabaseHandler {
         usersCollection = db.collection("users")
     }
     override fun updateUser(user: User) {
-        //If user doesn't exist or the new highscore is better we add
+        //If user doesn't exist or the new highscore is better we update the user
 
         //Get user from db
         val docRef = usersCollection.document(user.uid)
@@ -38,7 +30,25 @@ object FirestoreHandler: DatabaseHandler {
                     }
             }
     }
-    override fun getHighscore(username: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getHighscoreTable(databaseCallback: DatabaseCallback){
+        var highscoreArray = ArrayList<Pair<String,Int>>()
+        val query = usersCollection.orderBy("highscore",Query.Direction.DESCENDING).get()
+            .addOnSuccessListener {
+                for(document in it.documents){
+                    highscoreArray.add(Pair(document.get("username") as String,(document.get("highscore") as Long).toInt()))
+                }
+                databaseCallback.handleHighscoreTable(highscoreArray)
+            }
+    }
+
+    override fun getOverallHighsscore(databaseCallback: DatabaseCallback){
+        var pair = Pair("username",0)
+        val query = usersCollection.orderBy("highscore",Query.Direction.DESCENDING).limit(1).get()
+            .addOnSuccessListener {
+                for(document in it.documents){
+                    pair = Pair(document.get("username") as String,(document.get("highscore") as Long).toInt())
+                }
+                databaseCallback.handleHighscore(pair)
+            }
     }
 }
