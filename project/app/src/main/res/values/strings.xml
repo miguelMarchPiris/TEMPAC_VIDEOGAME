@@ -43,7 +43,7 @@
     <string name="highscores">HIGHSCORES</string>
     <string name="settings">SETTINGS</string>
     <string name="posicion_highscore">Ranking</string>
-    <string name="usuario_highscore">Nickname</string>
+    <string name="usuario_highscore">Username</string>
     <string name="puntuacion_highscore">Score</string>
     <string name="tu_mejor_puntuacion">Your personal highscore!</string>
     <string name="tu_puntuacion">Your personal highscore!</string>

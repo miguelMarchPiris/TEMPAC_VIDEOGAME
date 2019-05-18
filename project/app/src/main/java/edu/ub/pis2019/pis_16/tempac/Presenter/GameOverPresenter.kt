@@ -1,6 +1,5 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
-import android.app.Application
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.animation.AnimationUtils
@@ -10,7 +9,8 @@ import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
 
-class GameOverPresenter(private val fragment:GameOverFragment) : Presenter {
+class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,DatabaseCallback {
+
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -69,7 +69,6 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter {
     fun processArgs(arguments: Bundle?){
         val user = (fragment.activity!!.application as TempacApplication).user
 
-
         val score = arguments?.getInt("score")
         if(score!=null) {
             //Score display
@@ -85,11 +84,16 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter {
             highScoreText.text = user.getHighscore().toString()
             //Display overall highscore
             val overallHighScoreText = fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText)
-            //TODO("Display overall highscore")
-
+            overallHighScoreText.text = "Loading. . ."
+            FirestoreHandler.getOverallHighsscore(this)
             //Displau name
             val nameText = fragment.inflatedView.findViewById<TextView>(R.id.yourNameResultText)
             nameText.text = user.username
         }
+    }
+
+    override fun handleHighscore(highscore: Pair<String, Int>) {
+        fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText).text = highscore.second.toString()
+        fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText).invalidate()
     }
 }
