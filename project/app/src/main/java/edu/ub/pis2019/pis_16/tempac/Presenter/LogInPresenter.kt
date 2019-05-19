@@ -23,12 +23,8 @@ import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
-    // Configure sign-in to request the user's ID, email address, and basic
-    // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("620556730398-7qivkru1bbtlsh9mdj8dgbuav4hk6t09.apps.googleusercontent.com")
-        .requestEmail()
-        .build()
+
+    private lateinit var gso : GoogleSignInOptions
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
     private val RC_SIGN = 69
@@ -57,7 +53,12 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     override fun onCreate() {
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
-
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(activity.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
         // Initialize Firebase Auth

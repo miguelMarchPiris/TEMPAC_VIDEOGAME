@@ -349,7 +349,8 @@ class GameEngine(var context: Context) : Drawable {
                     else//right
                         player.direction = Player.Direction.RIGHT
 
-                }/*
+                }
+                /*
                 else
                     player.direction = Player.Direction.STATIC
                 */
