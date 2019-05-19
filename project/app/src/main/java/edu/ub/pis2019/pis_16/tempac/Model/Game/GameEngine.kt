@@ -135,8 +135,6 @@ class GameEngine(var context: Context) : Drawable {
         player.update(scrollSpeed, screenCatchUp)
 
         //Process AI
-        //deletes the ghosts according the temperature
-        deleteGhosts(temperatureBar.temperature)
         //choose WHERE have to spawn the ghosts.
         spawnGhost()
 
@@ -164,9 +162,11 @@ class GameEngine(var context: Context) : Drawable {
 
     private fun scoreManagement(hotOrCold : Boolean ){
         if(hotOrCold)
-            score.update(3)
+            score.updateBonus(9)
         else
-            score.update(1)
+            score.updateBonus(0)
+
+        score.update()
 
     }
 
@@ -181,6 +181,8 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun deleteGhosts(temperature : Float){
+        var sizeBeggining = ghosts.size
+
         val blues : MutableList<Ghost> = (ghosts.filterIsInstance<GhostB>()).toMutableList()
         val greens : MutableList<Ghost> = (ghosts.filterIsInstance<GhostG>()).toMutableList()
         val yellows : MutableList<Ghost> = (ghosts.filterIsInstance<GhostY>()).toMutableList()
@@ -193,6 +195,10 @@ class GameEngine(var context: Context) : Drawable {
             in 60f..80f -> ghosts = yellows.union(reds).toMutableList()
             in 80f..100f -> ghosts = reds
         }
+
+        var ghostsKilled = sizeBeggining - ghosts.size
+
+        score.ghostBonus(ghostsKilled)
     }
     private fun spawnGhost(){
         if(ghosts.size < MAX_GHOSTS){
@@ -343,10 +349,10 @@ class GameEngine(var context: Context) : Drawable {
                     else//right
                         player.direction = Player.Direction.RIGHT
 
-                }
+                }/*
                 else
                     player.direction = Player.Direction.STATIC
-
+                */
             }
         }
     }
@@ -378,6 +384,7 @@ class GameEngine(var context: Context) : Drawable {
         val collides = RectF.intersects(orb.rectangle,player.rectangle)
         if(collides)
             temperatureBar.changeTemperature(orb)
+            deleteGhosts(temperatureBar.temperature)
         return collides
     }
 
