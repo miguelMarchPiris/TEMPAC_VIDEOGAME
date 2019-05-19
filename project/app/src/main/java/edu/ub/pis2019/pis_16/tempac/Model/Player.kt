@@ -39,6 +39,7 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
             Direction.RIGHT -> image=super.imageList[1]
             Direction.DOWN -> image=super.imageList[2]
             Direction.LEFT -> image=super.imageList[3]
+            Direction.STATIC -> image=image
         }
         canvas?.drawBitmap(image,rectangle.left,rectangle.top,null)
 
