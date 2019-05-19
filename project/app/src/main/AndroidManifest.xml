@@ -12,22 +12,27 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".View.ChooseUsernameActivity"
-                  android:theme="@style/AppTheme.PopUpTheme">
+        <activity
+                android:name=".View.ChooseUsernameActivity"
+                android:theme="@style/AppTheme.PopUpTheme">
+
         </activity>
         <activity
                 android:name=".View.ConfirmExitActivity"
                 android:theme="@style/AppTheme.PopUpTheme">
         </activity>
-        <activity android:name=".View.SignUpActivity">
+        <activity android:name=".View.SignUpActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".View.GameActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+                android:screenOrientation="portrait"
                 tools:ignore="ExtraText">
         </activity>
         <activity
                 android:name=".View.LogInActivity"
+                android:screenOrientation="portrait"
                 android:allowBackup="true"
                 android:icon="@mipmap/ic_launcher"
                 android:label="@string/app_name"
@@ -41,13 +46,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".View.CreditsActivity">
+        <activity android:name=".View.CreditsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".View.SettingsActivity">
+        <activity android:name=".View.SettingsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".View.MainMenuActivity">
+        <activity android:name=".View.MainMenuActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".View.HighScoreActivity">
+        <activity android:name=".View.HighScoreActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 
