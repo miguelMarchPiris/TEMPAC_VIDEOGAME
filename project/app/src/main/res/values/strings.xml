@@ -17,16 +17,14 @@
         Piotr Piwowarski \n\t\t(piotr95piwowarski@gmail.com)
     </string>
     <string name="game_over">GAME OVER</string>
-    <string name="your_score">your score:</string>
-    <string name="your_high_score">your high score:</string>
-    <string name="overall_high_score">overall high score:</string>
-    <string name="your_name">your name:</string>
+    <string name="your_score">Score:</string>
+    <string name="your_high_score">Highscore:</string>
+    <string name="overall_high_score">Overall Highscore:</string>
+    <string name="your_name">Your name:</string>
     <string name="menu">Menu</string>
     <string name="share">Share</string>
     <string name="tap_the_screen_to_play_again">Tap the screen to play again</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pause">Pause</string>
     <!-- SETTINGS STRINGS: -->
     <string name="volume">Volume:</string>
@@ -45,7 +43,7 @@
     <string name="highscores">HIGHSCORES</string>
     <string name="settings">SETTINGS</string>
     <string name="posicion_highscore">Ranking</string>
-    <string name="usuario_highscore">Nickname</string>
+    <string name="usuario_highscore">Username</string>
     <string name="puntuacion_highscore">Score</string>
     <string name="tu_mejor_puntuacion">Your personal highscore!</string>
     <string name="tu_puntuacion">Your personal highscore!</string>
@@ -62,4 +60,10 @@
     <string name="no">NO</string>
     <string name="back2Menu">Back to menu</string>
     <string name="continueGame">continue</string>
+    <string name="signout">Sign Out</string>
+    <string name="confirmation">OK!</string>
+    <string name="chooseUsername">Choose a username</string>
+
+    <!-- GOOGLE TOKEN: -->
+
 </resources>
