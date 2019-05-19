@@ -196,12 +196,12 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         for (i in 0 until nueva.size){nueva.set(i,true)} //We init the array to true
 
         var holes : MutableList<Pair<Int,Int>> = getHoles(booleanArray)
-        var firstPositionHole : Int =0
-        var totalHuecos : Int = 0
+        var firstPositionHole : Int
+        var totalHuecos : Int
         var tupla : Pair<Int,Int>
 
         for ( i in 0 until holes.size){
-            tupla = holes.get(i)
+            tupla = holes[i]
             firstPositionHole=tupla.first
             totalHuecos=tupla.second
 
