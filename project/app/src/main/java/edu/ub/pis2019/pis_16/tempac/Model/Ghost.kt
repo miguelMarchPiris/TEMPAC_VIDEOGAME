@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import edu.ub.pis2019.pis_16.tempac.Model.OrbType.Companion.r
-import java.text.FieldPosition
 import java.util.*
 
 abstract class Ghost(image : Bitmap) : Actor(){
@@ -14,124 +13,55 @@ abstract class Ghost(image : Bitmap) : Actor(){
     private var w : Float = 0f
     private var h : Float = 0f
     var speed = 0.75f
-    var belowTheLineSpeed = speed.times(5)
     var im = image
+
+    var behaviour : GhostBehaviour
+    abstract var topCorrectTemperature : Float
+    abstract var lowerCorrectTemperature : Float
     var belowTheLine : Boolean = true
+    abstract var onCorrectTemperature : Boolean
+
     init {
         w = im.width.toFloat()
         h = im.height.toFloat()
         rectangle = RectF(x-w,y-h,x,y)
         r= Random()
+        behaviour = BehaviourBelowTheLine()
     }
 
-    fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean){
+    fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean, temperature : Float){
         super.update(scroll)
-
+        onCorrectTemperature=getOnCorrectTemperature(temperature)
         this.belowTheLine=belowTheLine
-        //Chasing algorithm:
-        //Based on calculating the distance to the player with every valid movement and then performing the move that gets
-        //the ghost closer to the player
-        var row: Array<Block?>?
-        //distancia al jugador en funcion del movimiento 0-up, 1-left, 2-right, 3-down
-        var distances = arrayOf(Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE,Float.MAX_VALUE)
+        if(belowTheLine){ behaviour=BehaviourBelowTheLine() }
+        else if(getOnCorrectTemperature(temperature)){
+            setSpecialBehaviour()
+        }else{
+            behaviour=BehaviourDefault()
+        }
+        behaviour.chase(this,scroll,playerPosition,rows)
 
-        /***************************************
-         *           CHECK UP
-         **************************************/
-        row = rows.third
-        //presuponemos que nos podemos mover
-        moveUp(scroll)
-        updateRect()
-        //If the movement is valid, we calculate distance to the player
-        if(row==null || !collidesWithBlock(row)){
-            distances[0] = calculateDistanceToPlayer(playerPosition)
-        }
-        //Deshacemos el movimiento
-        moveDown(scroll)
 
-        /***************************************
-         *           CHECK LEFT
-         **************************************/
-        row = rows.second
-        //presuponemos que nos podemos mover izq
-        moveLeft(scroll)
-        updateRect()
-        //If the movement is valid, we calculate distance to the player
-        if(row==null || !collidesWithBlock(row)){
-            distances[1] = calculateDistanceToPlayer(playerPosition)
-        }
-        //deshacemos movement
-        moveRight(scroll)
-        /***************************************
-         *           CHECK RIGHT
-         **************************************/
-        moveRight(scroll)
-        updateRect()
-        //If the movement is valid, we calculate distance to the player
-        if(row==null || !collidesWithBlock(row)){
-            distances[2] = calculateDistanceToPlayer(playerPosition)
-        }
-        //deshacemos el movimiento
-        moveLeft(scroll)
-
-        /***************************************
-         *           CHECK DOWN
-         **************************************/
-        row = rows.first
-        //presuponemos que nos podemos mover
-        moveDown(scroll)
-        updateRect()
-        //If the movement is valid, we calculate distance to the player
-        if(row == null || !collidesWithBlock(row)){
-            distances[3] = calculateDistanceToPlayer(playerPosition)
-        }
-        //deshacemos el movimiento
-        moveUp(scroll)
-
-        /***************************************
-         *        SEARCH MIN DISTANCE
-         **************************************/
-        //Buscamos la distancia mas pequeña y en funcion de eso nos movemos
-        var min = Float.MAX_VALUE
-        var minIndex = 0
-        for((index,distance) in distances.withIndex()){
-            if(distance < min) {
-                min = distance
-                minIndex = index
-            }
-        }
-        when(minIndex){
-            0 -> moveUp(scroll)
-            1 -> moveLeft(scroll)
-            2 -> moveRight(scroll)
-            3 -> moveDown(scroll)
-        }
-        updateRect()
     }
-    private fun calculateDistanceToPlayer(playerPosition: Pair<Float, Float>):Float{
+    abstract fun getOnCorrectTemperature(temperature : Float) : Boolean
+    abstract fun setSpecialBehaviour()
+
+    fun calculateDistanceToPlayer(playerPosition: Pair<Float, Float>):Float{
         return Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
     }
-    private fun moveUp(scroll: Float){
-        if(belowTheLine){
-            y-=speed.times(belowTheLineSpeed)+scroll
-        }else{ y-=speed+scroll }
+    fun moveUp(scroll: Float, f : Float){
+        y-=speed.times(f)+scroll
     }
-    private fun moveLeft(scroll: Float){
-        if(belowTheLine){
-            x-=speed.times(belowTheLineSpeed)+scroll
-        }else{x-=speed+scroll }
+    fun moveLeft(scroll: Float, f : Float){
+        x-=speed.times(f)+scroll
     }
-    private fun moveRight(scroll: Float){
-        if(belowTheLine){
-            x+=speed.times(belowTheLineSpeed)+scroll
-        }else{ x+=speed+scroll }
+    fun moveRight(scroll: Float, f : Float){
+        x+=speed.times(f)+scroll
     }
-    private fun moveDown(scroll: Float){
-        if(belowTheLine){y+=speed.times(belowTheLineSpeed)+scroll
-
-        }else{ y+=speed+scroll }
+    fun moveDown(scroll: Float, f : Float){
+        y+=speed.times(f)+scroll
     }
-    private fun collidesWithBlock(row:Array<Block?>):Boolean{
+    fun collidesWithBlock(row:Array<Block?>):Boolean{
         var collides = false
         for (block in row) {
             if(block!= null && RectF.intersects(rectangle,block.rectangle)){
@@ -141,7 +71,7 @@ abstract class Ghost(image : Bitmap) : Actor(){
         }
         return collides
     }
-    private fun updateRect(){
+    fun updateRect(){
         rectangle.set(x-w,y-h,x,y)
     }
     override fun draw(canvas: Canvas?) {

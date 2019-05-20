@@ -86,7 +86,7 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
-        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
         textPaint.textSize = 40f
@@ -146,7 +146,7 @@ class GameEngine(var context: Context) : Drawable {
         for(ghost in ghosts){
             val belowTheLine=ghost.y > bottomPlayingField
 
-            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine,temperatureBar.temperature)
         }
 
         //Process physics
