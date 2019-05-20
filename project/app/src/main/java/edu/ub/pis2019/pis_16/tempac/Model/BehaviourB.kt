@@ -18,8 +18,6 @@ class BehaviourB : GhostBehaviour() {
 
     var invertedXAxis : Boolean = false
     val probInvertedXAxis : Float = 0.5F
-    val FRAMES_INVERTED : Int = 120
-    var contFrames : Int = 0
     init {
         invertedXAxis=(Random().nextFloat()<probInvertedXAxis)
     }
@@ -33,29 +31,10 @@ class BehaviourB : GhostBehaviour() {
         setData(ghost,scroll,playerPosition,rows)
 
         checkAll()
-
-        if(invertedXAxis){
-            //Here we invert the X Axis
-            var l=distances[2]
-            distances[2]=distances[1]
-            distances[1]=l
-        }
-        moveRandom(searchMinDistance())
-        /**
-        contFrames++
-        if(contFrames==FRAMES_INVERTED){
-        contFrames=0
-        invertXAxis()
-        }
-         */
-
+        moveRandom()
     }
 
-    fun invertXAxis(){
-        invertedXAxis=!invertedXAxis
-    }
-
-    fun moveRandom(minIndex : Int){
+    fun moveRandom(){
         //If you can move up, go up
         if(! (distances[0]== Float.MAX_VALUE)){
             ghost.moveUp(scroll,up)
@@ -64,17 +43,20 @@ class BehaviourB : GhostBehaviour() {
         else{
             getDirection()
         }
-
-
     }
     fun getDirection(){
+        //The above row
         row=rows.third
         if(row==null){
             return
         }
         var minDistance= -1 to Float.MAX_VALUE
         var distanceToHole : Float
-        for ( i in 0 until row!!.size){
+
+        val listOfHoles = getTheHole()
+
+
+        for ( i in listOfHoles){
             //If its a hole
             if(row!!.get(i)==null){
                 //We get the distance in absolute value
@@ -95,4 +77,43 @@ class BehaviourB : GhostBehaviour() {
             ghost.moveRight(scroll,right)
         }
     }
+
+    fun getTheHole(): MutableList<Int> {
+        //The middle the row
+        row=rows.second
+        val listOfHoles= mutableListOf<Int>()
+        //We insert the index of every null in the list
+        var index : Int = -1
+        for ( j in 0 until row!!.size){
+            if(ghost.x-(j+0.5).times(Block.blockSide)<=0.5.times(Block.blockSide)){
+                index=j
+                break
+            }
+        }
+
+        var inTheCorrectHole : Boolean=false
+        for (i in 0 until row!!.size){
+            if(i==index){
+                inTheCorrectHole=true
+            }
+
+            if (row!![i]==null){
+                listOfHoles.add(i)
+            }
+            else{
+                if(inTheCorrectHole){
+                    return listOfHoles
+                }
+                listOfHoles.clear()
+            }
+        }
+        return listOfHoles
+    }
+
+
+
+
+
+
+
 }

@@ -23,7 +23,9 @@ class GhostB(image : Bitmap) : Ghost(image) {
     }
 
     override fun setSpecialBehaviour() {
-        this.behaviour=BehaviourB()
+        //todo
+        //this.behaviour=BehaviourB()
+        this.behaviour=BehaviourR()
     }
 
 }
