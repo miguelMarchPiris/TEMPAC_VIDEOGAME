@@ -21,7 +21,7 @@ class OrbFactory() : Factory {
 
         //here we generate the random in OrbType.
         val randomType = OrbType.getRandomType()
-        var addsubValues = r.nextInt(50)
+        var addsubValues = r.nextInt(50)+1
         var muldivValues = r.nextInt(2)+2
 
 
