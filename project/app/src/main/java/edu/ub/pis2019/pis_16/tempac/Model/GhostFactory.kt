@@ -8,7 +8,7 @@ class GhostFactory(var ghostImages : List<Bitmap>) : Factory {
         var randomType: GhostType = GhostType.BLUE
         while (true) {
             val tempLimits = GhostType.tempLimits[randomType]
-            if ((temperature >= tempLimits.first) && (temperature <= tempLimits.third))
+            if ((temperature >= tempLimits!!.first) && (temperature <= tempLimits!!.third))
                 break
             randomType = GhostType.getRandomType()
         }
