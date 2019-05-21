@@ -17,6 +17,10 @@ class SettingsActivity : AppCompatActivity(){
 
         presenter.onCreate()
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        presenter.onActivityResult(requestCode,resultCode,data)
+    }
 }
 
 

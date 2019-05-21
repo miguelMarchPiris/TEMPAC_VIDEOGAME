@@ -6,10 +6,13 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.Navigation
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
 
-class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,DatabaseCallback {
+class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
+    DatabaseCallback {
 
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

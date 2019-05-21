@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import edu.ub.pis2019.pis_16.tempac.Model.User
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 
 
@@ -30,6 +31,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private val RC_SIGN = 69
     private val RC_USERNAME = 420
     private var customUsername = ""
+    private lateinit var app :TempacApplication
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -51,6 +53,8 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onCreate() {
+        //Save app instance
+        app = (activity.application as TempacApplication)
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
         // Configure sign-in to request the user's ID, email address, and basic
@@ -113,16 +117,13 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 customUsername = data?.getStringExtra("username")
                 //Afegim usuari amb ID la del dispositiu
                 if(customUsername!="") {
-                    (activity.application as TempacApplication).user = User(
-                        Settings.Secure.getString(
-                            activity.contentResolver,
-                            Settings.Secure.ANDROID_ID
-                        ), customUsername
-                    )
-                    FirestoreHandler.updateUser((activity.application as TempacApplication).user)
+                    val id = Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
+                    app.user = User(id,customUsername)
+                    app.saveUser()
+                    FirestoreHandler.updateUser(app.user)
                     Toast.makeText(
                         activity,
-                        "Logged in with device ID: " + (activity.application as TempacApplication).user.username,
+                        "Logged in with device ID, username: " + app.user.username,
                         Toast.LENGTH_LONG
                     ).show()
                     changeActivity(MainMenuActivity())
@@ -152,8 +153,8 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
     private fun login(account: FirebaseUser?) {
         if(account!=null){
-            (activity.application as TempacApplication).user = User(account.uid, account.displayName!!, account.email!!)
-            FirestoreHandler.updateUser((activity.application as TempacApplication).user)
+            app.user = User(account.uid, account.displayName!!, account.email!!)
+            FirestoreHandler.updateUser(app.user)
             Toast.makeText(activity,"Login successful! Welcome "+account.displayName, Toast.LENGTH_LONG).show()
             //Create user object and save it
 
@@ -161,9 +162,21 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
         }
     }
     private fun skipLogin(){
-        //We ask for a username
-        val intent = Intent(activity,ChooseUsernameActivity::class.java)
-        activity.startActivityForResult(intent,RC_USERNAME)
+        //We try to load the user from disk
+        if(app.loadUser()) {
+            Toast.makeText(
+                activity,
+                "Logged in with device ID, username: " + app.user.username,
+                Toast.LENGTH_LONG
+            ).show()
+            changeActivity(MainMenuActivity())
+        }
+        else{
+            //If we couldn't open the user we create a new one
+            //We ask for a username
+            val intent = Intent(activity, ChooseUsernameActivity::class.java)
+            activity.startActivityForResult(intent, RC_USERNAME)
+        }
 
     }
     private fun changeActivity(activity: AppCompatActivity){
