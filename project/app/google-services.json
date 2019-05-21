@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "620556730398-dhp4p7997cg0om39ghh4ektgl2uhgs8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ub.pis2019.pis_16.tempac",
+            "certificate_hash": "e2590a12aed4dc5a73f6fae92f257cc1eeda6f80"
+          }
+        },
+        {
           "client_id": "620556730398-0rkfqb5g2f4s5vjvd2vj9croipmi1qft.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -8,6 +8,7 @@ class GhostFactory(var ghostImages : List<Bitmap>) : Factory {
         var randomType: GhostType = GhostType.BLUE
         while (true) {
             val tempLimits = GhostType.tempLimits[randomType]
+            //Do not change the warning
             if ((temperature >= tempLimits!!.first) && (temperature <= tempLimits!!.third))
                 break
             randomType = GhostType.getRandomType()
