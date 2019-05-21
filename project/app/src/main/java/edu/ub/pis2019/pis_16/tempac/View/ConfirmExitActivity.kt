@@ -25,7 +25,6 @@ class ConfirmExitActivity : AppCompatActivity() {
 
         window.setLayout((width*.8).toInt(), (height*.6).toInt())
         btn_Yes.setOnClickListener {
-            //finishAffinity()  ;TODO ckeck this please
             ActivityCompat.finishAffinity(this)
         }
 

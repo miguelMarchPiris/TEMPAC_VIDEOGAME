@@ -102,7 +102,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 firebaseAuthWithGoogle(account!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("GOOGLE EROR", "Google sign in failed", e)
+                Log.w("GOOGLE ERROR", "Google sign in failed", e)
                 // ...
             }
 
