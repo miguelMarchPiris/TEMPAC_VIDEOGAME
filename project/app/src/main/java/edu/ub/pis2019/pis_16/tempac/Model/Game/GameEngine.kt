@@ -17,19 +17,21 @@ class GameEngine(var context: Context) : Drawable {
         const val MIN_DISTANCE = 105f
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
-        const val bottomPlayingField : Float = 1625F
-        const val leftPlayingField : Float = 0F
-        const val rightPlayingField : Float = 1080F
-        const val topPlayingField : Float = 225F
+        const val BOTTOM_PLAYING_FIELD : Float = 1625F
+        const val LEFT_PLAYING_FIELD : Float = 0F
+        const val RIGHT_PLAYING_FIELD : Float = 1080F
+        const val TOP_PLAYING_FIELD : Float = 225F
         const val BLOCK_BREAKABLE_TEMPERATURE = 80f
         const val HOT_TEMPERATURE = 80f
         const val COLD_TEMPERATURE = 20f
+        const val BACKGROUND_COLOR = Color.BLACK
     }
 
     //Game variables
-    private var scrollSpeed = 3f
+    private var scrollSpeed = 0f
     private var ghostSpeed = 0f
     private var baseScrollSpeed = 3f
+    private var bonusScrollSpeed = 0f
     private var extremeWeather = false //used to control the score. When its cold or hot it activates
     private var screenCatchUp = false
     var dead = false
@@ -45,10 +47,11 @@ class GameEngine(var context: Context) : Drawable {
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     private var player : Player = Player(500f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf()
+    private var dyingGhosts : MutableList<Ghost> = mutableListOf()
     private var level : Level = Level(initBlockImages())
 
     //Play zone rects
-    private val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
+    private val playingField = RectF(LEFT_PLAYING_FIELD, TOP_PLAYING_FIELD, RIGHT_PLAYING_FIELD, BOTTOM_PLAYING_FIELD)
     private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
     private val fieldLinePaint = Paint()
     private val fieldPaint = Paint()
@@ -85,7 +88,7 @@ class GameEngine(var context: Context) : Drawable {
         val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
-        overlayPaint.color = Color.BLACK
+        overlayPaint.color = BACKGROUND_COLOR
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
@@ -98,7 +101,8 @@ class GameEngine(var context: Context) : Drawable {
         val pacman_open_rigth : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_right)
         val pacman_open_down : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_down)
         val pacman_open_left : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_left)
-        val pacmanImages : List<Bitmap> = listOf(pacman_open_up, pacman_open_rigth, pacman_open_down,pacman_open_left)
+        val pacman_closed : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_closed)
+        val pacmanImages : List<Bitmap> = listOf(pacman_open_up, pacman_open_rigth, pacman_open_down,pacman_open_left,pacman_closed)
         return pacmanImages
     }
 
@@ -118,29 +122,50 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     fun update(){
+
+        //UPDATE GAME STATE
         //Changes the boolean extreme temperature and changes the screen speed
         gameState(temperatureBar.temperature)
-
-        //actualizes the temperature of the game
+        //updates the temperature of the game
         level.temperature = temperatureBar.temperature
         //makes the level move downwards
         level.update(scrollSpeed)
-        //makes the player not catching the top of the screen
+        //makes the player not catch up to the top of the screen
         playerCatchingTop()
-
         //manages how the score is added
         scoreManagement(extremeWeather)
-
         //Process inputs
         player.update(scrollSpeed, screenCatchUp)
 
-        //Process AI
-        //choose WHERE have to spawn the ghosts.
+        //PROCESS IA
+        //spawn the ghosts
         spawnGhost()
+        //Update ghosts
+        for(ghost in ghosts){
+            //this push the ghosts up til are visible for the player.
+            val belowTheLine=ghost.y > BOTTOM_PLAYING_FIELD
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
+        }
+        //Update dying ghosts
+        for(ghost in dyingGhosts){
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),false)
+        }
 
-        //Process physics (cheking collisions)
+
+        //PROCESS PHYSICS (checking collisions)
         processPhysics()
+
+
         //Process animations
+        player.animate()
+        temperatureBar.animate()
+        for(ghost in ghosts)
+            ghost.animate()
+        //Delete ghosts that have already ended their animation
+        dyingGhosts = dyingGhosts.filter { ghost -> !ghost.deathAnimEnded }.toMutableList()
+        for(ghost in dyingGhosts)
+            ghost.animate()
+
 
         //Process sound
 
@@ -148,16 +173,22 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun gameState(temperature : Float){
+        //Increment scroll as time goes on
+        baseScrollSpeed +=0.0005f
+
+        //On extreme temps we also change the scroll
         if(temperature >= HOT_TEMPERATURE) {
-            baseScrollSpeed = 7f
+            bonusScrollSpeed = 0.75f
             extremeWeather = true
         }else if(temperature <= COLD_TEMPERATURE) {
-            baseScrollSpeed = 2f
+            bonusScrollSpeed = -0.75f
             extremeWeather = true
         }else{
-            baseScrollSpeed = 4f
+            bonusScrollSpeed = 0f
             extremeWeather = false
         }
+
+        scrollSpeed = baseScrollSpeed + bonusScrollSpeed
     }
 
     private fun scoreManagement(hotOrCold : Boolean ){
@@ -171,13 +202,11 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun playerCatchingTop(){
-        baseScrollSpeed +=0.0005f
-        screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.9f
+        screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.8f
+        //If the player is near the top, we make the scroll go faster
         if(screenCatchUp)
-            scrollSpeed = baseScrollSpeed + player.speed
-        else
-            scrollSpeed = baseScrollSpeed
-        //Log.v("SCROLL", "SCROLL: " + scrollSpeed)
+            scrollSpeed += player.speed
+        Log.v ("SCROLL", scrollSpeed.toString())
     }
 
     private fun deleteGhosts(temperature : Float){
@@ -189,13 +218,34 @@ class GameEngine(var context: Context) : Drawable {
         val reds : MutableList<Ghost> = (ghosts.filterIsInstance<GhostR>()).toMutableList()
 
         when(temperature){
-            in 0f..20f -> ghosts = blues
-            in 20f..40f -> ghosts = blues.union(greens).toMutableList()
-            in 40f..60f -> ghosts = greens.union(yellows).toMutableList()
-            in 60f..80f -> ghosts = yellows.union(reds).toMutableList()
-            in 80f..100f -> ghosts = reds
+            in 0f..20f -> {
+                ghosts = blues
+                //Greens, yellows and reds died
+                dyingGhosts.addAll(greens.union(yellows.union(reds)))
+            }
+            in 20f..40f -> {
+                ghosts = blues.union(greens).toMutableList()
+                //Yellows and reds died
+                dyingGhosts.addAll(yellows.union(reds))
+            }
+            in 40f..60f ->{
+                ghosts = greens.union(yellows).toMutableList()
+                //Blues and reds died
+                dyingGhosts.addAll(yellows.union(blues))
+            }
+            in 60f..80f ->{
+                ghosts = yellows.union(reds).toMutableList()
+                //Blues and greens died
+                dyingGhosts.addAll(blues.union(greens))
+            }
+            in 80f..100f ->{
+                ghosts = reds
+                //Greens, yellows and reds died
+                dyingGhosts.addAll(greens.union(yellows.union(blues)))
+            }
         }
-
+        for(ghost in dyingGhosts)
+            ghost.dead = true
         var ghostsKilled = sizeBeggining - ghosts.size
 
         score.ghostBonus(ghostsKilled)
@@ -203,8 +253,6 @@ class GameEngine(var context: Context) : Drawable {
     private fun spawnGhost(){
         if(ghosts.size < MAX_GHOSTS){
 
-            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
-            //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
             val lastArray= level.getLastArray() ?: return //same as (lastArray == null) {return}
             val pair=level.getPositionHoles(lastArray)
             val listOfHoles=pair.second
@@ -218,12 +266,6 @@ class GameEngine(var context: Context) : Drawable {
             ghosts.add(g)
         }
 
-        //this push the ghosts up til are visible for the player.
-        for(ghost in ghosts){
-            val belowTheLine=ghost.y > bottomPlayingField
-
-            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
-        }
     }
 
     override fun draw(canvas: Canvas?){
@@ -232,13 +274,14 @@ class GameEngine(var context: Context) : Drawable {
             canvas.scale(w/1080f,w/1080f)
 
             //Draw background
-            canvas.drawColor(Color.BLACK)
+            canvas.drawColor(BACKGROUND_COLOR)
 
             if(!paused) {
                 //Draw Actors
                 player.draw(canvas)
                 level.draw(canvas)
                 for (ghost in ghosts) ghost.draw(canvas)
+                for(ghost in dyingGhosts) ghost.draw(canvas)
                 //Draw Overlay & Playzone
                 for (rect in overlay)
                     canvas.drawRect(rect, overlayPaint)
@@ -275,7 +318,6 @@ class GameEngine(var context: Context) : Drawable {
         }).toMutableList()
         */
 
-        //todo check best way to check is lastArray is out
         //Last array of the matrix
         val lastArray:Array<Block?>? = level.getLastArray()
 
@@ -300,9 +342,9 @@ class GameEngine(var context: Context) : Drawable {
         }).toMutableList()
 
 
-        //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
-        //TODO Miguel/Carles explicad que hace esto porfa
-        ghosts = (ghosts.filter {element -> element.y <= bottomPlayingField.plus(Block.blockSide.times(1.5f))}).toMutableList()
+
+        //Deletes the ghost if they are below the screen
+        ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
 
         //goes over the level matrix and checks the blocks collisions
         for(array in level.filasA){
