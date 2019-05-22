@@ -119,7 +119,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 if(customUsername!="") {
                     val id = Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
                     app.user = User(id,customUsername)
-                    app.saveUser()
+                    app.saveLocalUser()
                     FirestoreHandler.updateUser(app.user)
                     Toast.makeText(
                         activity,
@@ -163,7 +163,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
     private fun skipLogin(){
         //We try to load the user from disk
-        if(app.loadUser()) {
+        if(app.loadLocalUser()) {
             Toast.makeText(
                 activity,
                 "Logged in with device ID, username: " + app.user.username,

@@ -1,27 +1,17 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
-import android.app.Application
 import android.content.Intent
-import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import edu.ub.pis2019.pis_16.tempac.Model.User
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.CreditsActivity
 import edu.ub.pis2019.pis_16.tempac.View.LogInActivity
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
-import edu.ub.pis2019.pis_16.tempac.View.MainMenuActivity
-import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.activity_settings.view.*
-import kotlin.math.sign
+import java.lang.Exception
 
 
 class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
@@ -64,20 +54,11 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
         changeUsernameButton.setOnClickListener{
             changeUsername()
         }
-        when(app.user.isGoogleUser()){
-            true -> {
-                changeUsernameButton.visibility = View.GONE
-                changeUsernameButton.invalidate()
-            }
-            false ->{
-                signOutButton.visibility = View.GONE
-                signOutButton.invalidate()
-            }
+        if(!app.user.isGoogleUser())
+        {
+            changeUsernameButton.visibility = View.VISIBLE
+            changeUsernameButton.invalidate()
         }
-
-
-
-
 
     }
     private fun changeUsername(){
@@ -93,7 +74,7 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
             //Afegim usuari amb ID la del dispositiu
             if (customUsername != "") {
                 app.user.username = customUsername
-                app.saveUser()
+                app.saveLocalUser()
                 FirestoreHandler.updateUser(app.user)
                 Toast.makeText(
                     activity,
@@ -104,7 +85,22 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
         }
     }
     private fun signOut(){
-        FirebaseAuth.getInstance().signOut()
+        var msg = "Succesfully logged out "
+        try {
+            FirebaseAuth.getInstance().signOut()
+            msg += "cloud "
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
+        if((activity.application as TempacApplication).signOutLocalUser())
+        {
+            msg += "local "
+        }
+        Toast.makeText(activity,
+            msg + "user: " + app.user.username,
+            Toast.LENGTH_SHORT
+        ).show()
         //Restart app
         val intent = Intent(activity,LogInActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

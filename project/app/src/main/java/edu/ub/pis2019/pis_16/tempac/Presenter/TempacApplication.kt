@@ -12,20 +12,21 @@ class TempacApplication : Application(){
 
     }
     //Methods for data persistency
-    fun saveUser() {
-        val out: ObjectOutput
-        try {
-            val file = File(applicationContext.filesDir, "user.data")
-            out = ObjectOutputStream(FileOutputStream(file))
-            out.writeObject(user)
-            out.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    fun saveLocalUser() {
+        if(!user.isGoogleUser()) {
+            val out: ObjectOutput
+            try {
+                val file = File(applicationContext.filesDir, "user.data")
+                out = ObjectOutputStream(FileOutputStream(file))
+                out.writeObject(user)
+                out.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-
     }
 
-    fun loadUser():Boolean {
+    fun loadLocalUser():Boolean {
         val input: ObjectInput
         var user: User? = null
         var loaded = false
@@ -43,5 +44,14 @@ class TempacApplication : Application(){
             loaded = true
         }
         return loaded
+    }
+    fun signOutLocalUser():Boolean{
+        try {
+            val file = File(applicationContext.filesDir, "user.data")
+            return file.delete()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 }

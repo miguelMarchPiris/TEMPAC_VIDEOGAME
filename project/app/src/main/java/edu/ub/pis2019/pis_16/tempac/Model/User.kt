@@ -6,7 +6,6 @@ import java.io.*
 class User():Serializable {
     private var highscore = 0
     private var email = ""
-    private var googleUser = (email != "")
     var uid = ""
     var username = ""
 
@@ -28,6 +27,7 @@ class User():Serializable {
         return highscore
     }
     fun isGoogleUser():Boolean{
+        val googleUser = (email != "")
         return googleUser
     }
 
