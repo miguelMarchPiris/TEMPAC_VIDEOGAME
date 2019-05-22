@@ -1,4 +1,4 @@
-package edu.ub.pis2019.pis_16.tempac.Presenter
+package edu.ub.pis2019.pis_16.tempac.Presenter.database
 
 import com.google.firebase.firestore.*
 import edu.ub.pis2019.pis_16.tempac.Model.User

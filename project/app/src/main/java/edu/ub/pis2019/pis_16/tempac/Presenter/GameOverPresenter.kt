@@ -6,10 +6,13 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.Navigation
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
 
-class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,DatabaseCallback {
+class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
+    DatabaseCallback {
 
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -67,7 +70,8 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,Datab
         nav.navigate(R.id.inGameFragment)
     }
     fun processArgs(arguments: Bundle?){
-        val user = (fragment.activity!!.application as TempacApplication).user
+        val app = (fragment.activity!!.application as TempacApplication)
+        val user = app.user
 
         val score = arguments?.getInt("score")
         if(score!=null) {
@@ -77,6 +81,9 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,Datab
 
             //We add the highscore to the user (if the new score is lower it wont change)
             user.setHighscore(score)
+            //Save user locally
+            app.saveLocalUser()
+            //Save user in database
             FirestoreHandler.updateUser(user)
 
             //Display highscore
