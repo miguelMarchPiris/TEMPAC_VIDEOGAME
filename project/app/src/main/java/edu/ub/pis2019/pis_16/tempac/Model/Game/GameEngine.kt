@@ -9,7 +9,7 @@ import edu.ub.pis2019.pis_16.tempac.R
 import java.util.*
 
 
-class GameEngine(var context: Context) : Drawable {
+open class GameEngine(var context : Context) : Drawable {
 
     //Const values
     companion object {
@@ -26,7 +26,7 @@ class GameEngine(var context: Context) : Drawable {
         const val COLD_TEMPERATURE = 20f
     }
 
-    //Game variables
+    //Game variables. internal
     private var scrollSpeed = 3f
     private var ghostSpeed = 0f
     private var baseScrollSpeed = 3f
@@ -45,7 +45,7 @@ class GameEngine(var context: Context) : Drawable {
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     private var player : Player = Player(500f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf()
-    private var level : Level = Level(initBlockImages())
+    internal open var level : Level = Level(initBlockImages())
 
     //Play zone rects
     private val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
@@ -203,7 +203,6 @@ class GameEngine(var context: Context) : Drawable {
     private fun spawnGhost(){
         if(ghosts.size < MAX_GHOSTS){
 
-            //TODO FUNCTION TO DECIDE WHERE THE GHOST SHOULD SPAWN
             //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
             val lastArray= level.getLastArray() ?: return //same as (lastArray == null) {return}
             val pair=level.getPositionHoles(lastArray)
@@ -275,7 +274,6 @@ class GameEngine(var context: Context) : Drawable {
         }).toMutableList()
         */
 
-        //todo check best way to check is lastArray is out
         //Last array of the matrix
         val lastArray:Array<Block?>? = level.getLastArray()
 

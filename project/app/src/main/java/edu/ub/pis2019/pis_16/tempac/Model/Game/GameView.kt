@@ -8,12 +8,12 @@ import android.view.SurfaceView
 import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
 
-class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
+class GameView(var cntxt: Context, motor : GameEngine): SurfaceView(cntxt), SurfaceHolder.Callback{
     private var thread : GameThread
     private var engine : GameEngine
     init {
-        holder.addCallback(this) //Llamar a level i en level crea un game engine. Game engine deberia ser un singeltone
-        engine = GameEngine(context)
+        holder.addCallback(this)
+        engine = motor
         thread = GameThread(holder, this, engine)
         isFocusable = true
     }

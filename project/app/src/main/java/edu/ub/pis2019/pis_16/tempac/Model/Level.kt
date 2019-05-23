@@ -8,7 +8,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-class Level(blockImg : List<Bitmap>) : Drawable {
+open class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
         const val MAX_ORBS = 7
         //const val MAX_BLOCKS = 50
@@ -157,7 +157,7 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         //Then we create a new line on top
         newLineOnTop()
     }
-    fun newLineOnTop() {
+    internal open fun newLineOnTop() {
         val first=getFirstArray()
         val positionY=positionYArray.get(first)as Float
         if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
@@ -268,11 +268,13 @@ class Level(blockImg : List<Bitmap>) : Drawable {
             }
         }
     }
+
     fun createLevelBlocks(ancho : Int, alto: Int){
         //createTrivialLevelBlocks(ancho,alto)
         //generateNewLevel(ancho,alto)
         createArrayLevel(ancho,alto)
     }
+
     fun createArrayLevel(ancho: Int,alto: Int){
         var arrayVacio = BooleanArray(ancho)
         var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
