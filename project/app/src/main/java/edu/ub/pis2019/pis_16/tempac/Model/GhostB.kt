@@ -6,13 +6,26 @@ import android.graphics.Color
 import android.graphics.Paint
 
 class GhostB(image : Bitmap) : Ghost(image) {
+    override var onCorrectTemperature: Boolean = false
+    override var topCorrectTemperature: Float = 5.0f
+    override var lowerCorrectTemperature: Float = 0.0f
+
+
 
     //private var paint = Paint()
 
     init {
-        //paint.color = Color.BLUE
-        //setPosition(230f, 620f)
+
     }
 
+    override fun getOnCorrectTemperature(temperature : Float): Boolean {
+        return (temperature in lowerCorrectTemperature..(topCorrectTemperature+0.1f))
+    }
+
+    override fun setSpecialBehaviour() {
+        //todo
+        //this.behaviour=BehaviourB()
+        this.behaviour=BehaviourR()
+    }
 
 }

@@ -86,7 +86,7 @@ open class GameEngine(var context : Context) : Drawable {
         val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
-        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
         textPaint.textSize = 40f
@@ -137,6 +137,8 @@ open class GameEngine(var context : Context) : Drawable {
         //Process AI
         //choose WHERE have to spawn the ghosts.
         spawnGhost()
+
+
 
         //Process physics (cheking collisions)
         processPhysics()
