@@ -93,7 +93,6 @@ class TemperatureBar(): Object() {
             Orb.Operand.SUB -> temperature -= orb.number
             Orb.Operand.MUL -> temperature *= orb.number
             Orb.Operand.DIV -> temperature /= orb.number
-            else -> temperature = temperature //i didnt know what to put in here
         }
     }
     /*fun colorGradient(color1:Int, color2:Int, percentage: Float):Int{

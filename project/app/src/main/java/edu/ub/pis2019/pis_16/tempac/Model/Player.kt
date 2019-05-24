@@ -8,7 +8,7 @@ import android.graphics.*
 
 class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageList) {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
-    var direction = Direction.STATIC
+    var direction = Direction.UP
     var speed = 1.25f
     //private var speed = 5f
     private var h : Float = 0f
@@ -39,6 +39,7 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
             Direction.RIGHT -> image=super.imageList[1]
             Direction.DOWN -> image=super.imageList[2]
             Direction.LEFT -> image=super.imageList[3]
+            Direction.STATIC -> image=image
         }
         canvas?.drawBitmap(image,rectangle.left,rectangle.top,null)
 
@@ -56,6 +57,7 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
             Direction.LEFT -> x-=speed+scroll
             Direction.RIGHT -> x+=speed+scroll
             Direction.DOWN -> y+=scroll+speed
+            Direction.STATIC -> y=y
         }
         //these two lines are used if the image change his size. Are just a way to prevent random things to happen (the hitbox goes acord the image size)
         h = image.height.toFloat()
