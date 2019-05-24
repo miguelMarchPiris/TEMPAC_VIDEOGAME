@@ -11,9 +11,10 @@ import java.util.*
 open class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
         const val MAX_ORBS = 7
-        //const val MAX_BLOCKS = 50
-        //const val MAX_LINES = 0
     }
+    //IMAGE
+    var blockImages : List<Bitmap>
+
     //ORBS
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
@@ -22,107 +23,114 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
     //MATRIX
     //This is tha matrix of all the blocks
-    var filasA : MutableList<Array<Block?>>
+    var matrixBlocks : MutableList<Array<Block?>>
     //This hashmap relates every array (line of blocks) with the positionY of the blocks
     val positionYArray= hashMapOf<Array<Block?>,Float>()
     var nBlocksInLine: Int = 0
-    var nLinesToDraw : Int=0
+    var nLinesToDraw : Int = 0
 
     //PROBABILITIES OF THE BLOCK GENERATION ALGORITHM
-    //Probability that each place in the first line has a block
-    var probPrimeros : Float=0.3F
+    val r : Random=Random()
     //Probability that one HOLE is created afterwards the obligatory HOLES are created
     var probRandomHole : Float=0.2F
     //Probability that ONE line is repeated
     var probRepeatLine : Float=0.1F
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
-    //Probability of random hole
 
-    var r : Random=Random()
-    var blockImages : List<Bitmap>
+
+
 
     init{
-        filasA= mutableListOf<Array<Block?>>()
+        matrixBlocks= mutableListOf<Array<Block?>>()
 
         blockImages=blockImg
+        //How many lines, and how many blocks in one line.
         nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        //nLinesToDraw = GameEngine.PLAYFIELD_HEIGTH.div(Block.blockSide).toInt().plus(3)
         nLinesToDraw = (GameEngine.bottomPlayingField-GameEngine.topPlayingField).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
-    //DRAW AND UPDATE
-    override fun draw(canvas: Canvas?) {
-        for (array in filasA){
-            for (block in array){
-                if (block!=null){
-                    block.draw(canvas)
-                }
+    //Its just a shitty method yikes
+    fun createLevelBlocks(ancho : Int, alto: Int){
+        createArrayLevel(ancho,alto)
+    }
+    //Fills ths matrix with lines of nulls(so its empty), the top line is created with some blocks.
+    internal open fun createArrayLevel(ancho: Int,alto: Int){
+        var emptyArray = BooleanArray(ancho)
+        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
+        for(i in 0 until ancho){
+            emptyArray[i] = false
+            arrayIntermitenteBool[i] = i%2==0
+        }
+        for(i in 0 until alto){
+            if(i!=alto-1){
+                createNewBlockLine(emptyArray.copyOf(), i)
+            }else{
+                createNewBlockLine(arrayIntermitenteBool,i)
             }
         }
-        for (orb:Orb in orbs) { orb.draw(canvas) }
     }
-    fun update(scroll : Float){
-        for(orb in orbs){orb.update(scroll)}
-        for (array in filasA){
-            //update the float position Y of array
-            updateArrayPositionY(scroll,array)
-            for (block in array){
-                if (block!=null){
-                    block.update(scroll,temperature)
-                }
+    //IT CREATES A LINE WHEN GIVEN A BOOLEAN ARRAY. JUST IN THE INIT
+    fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
+        //first we add this so only one orb spawns in one line
+        orbInLastLine=false
+
+        var anchoBloque : Float= Block.blockSide
+        var desplazamiento : Float
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide.times(1.5F))
+        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
+
+        for (k in 0 until arrayBooleanos.size){
+            if(arrayBooleanos.get(k)){
+                //Calcular la posición que hay que pasarle al bloque
+                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
+
+                //HOW WE CHOOSE BREAKABLE BLOCKS HERE
+
+                var b =Block(desplazamiento,positionY, true, blockImages)
+                arrayBlocks.set(k,b)
             }
         }
-        spawnOrbs()
-
+        //We add the array in the fist position of FilasA
+        matrixBlocks.add(0,arrayBlocks)
+        //We introduce the value of the positionY of the array
+        positionYArray.put(arrayBlocks,positionY)
     }
-    fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
-        //This is the equivalent to the method update, but for the array positionY
-        positionYArray.set(array,positionYArray.getValue(array)+scroll)
-    }
+    //IT CREATES A LINE WHEN GIVEN A BOOLEAN ARRAY. WHEN CREATING A NEW LINE AFTER THE INIT
+    fun createNewBlockLine(arrayBooleanos : BooleanArray,posY : Float){
+        //first we add this so only one orb spawns in one line
+        orbInLastLine=false
 
-    //SPAWNER OF ORBS
-    fun spawnOrbs(){
-        val arrayBlocks=getFirstPositiveArray()
-        if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
-            return
-        }
-        val par=getPositionHoles(arrayBlocks)
-        val positionY=par.first as Float
-        val indexOfHoles=par.second
-        //We get any hole of the line.
-        var indiceDeLaLista=r.nextInt(indexOfHoles.size)
-        var indice=indexOfHoles.get(indiceDeLaLista)
+        var anchoBloque : Float= Block.blockSide
+        var desplazamiento : Float
+        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
-        var newOrb : Orb=ofactory.create(temperature)
-        newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
-        for (o in orbs){
-            if(RectF.intersects(o.rectangle,newOrb.rectangle)){
-                if (indiceDeLaLista==0){ indiceDeLaLista++ }
-                else{ indiceDeLaLista-- }
-                indice=indexOfHoles.get(indiceDeLaLista)
-                newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+        for (k in 0 until arrayBooleanos.size){
+            if(arrayBooleanos[k]){
+                //Calcular la posición que hay que pasarle al bloque
+                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
+                //Todo, see how we choose breakable blocks
+                arrayBlocks[k] = Block(desplazamiento,posY, r.nextFloat()<probBreakable, blockImages)
             }
         }
-        orbs.add(newOrb)
-        orbInLastLine=true
-        //TODO FUNCTION TO DECIDE WHERE THE orbs SHOULD SPAWN
-        //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
-
+        //We add the array in the fist position of FilasA
+        matrixBlocks.add(0,arrayBlocks)
+        //We introduce the value of the positionY of the array
+        positionYArray.put(arrayBlocks,posY)
     }
 
     //GET ARRAYS OF BLOCKS
     fun getLastArray(): Array<Block?>? {
-        if(filasA.lastIndex!=-1)
-            return filasA.get(filasA.lastIndex)
+        if(matrixBlocks.lastIndex!=-1)
+            return matrixBlocks.get(matrixBlocks.lastIndex)
         else
             return null
     }
     fun getFirstArray(): Array<Block?>? {
-        return filasA.get(0)
+        return matrixBlocks.get(0)
     }
     fun getFirstPositiveArray(): Array<Block?>? {
-        for (array in filasA){
+        for (array in matrixBlocks){
             if (positionYArray.get(array)!! >=0){
                 return array
             }
@@ -143,55 +151,36 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         return Pair(positionY,indexList)
     }
 
-    //
+    //DELETES THE LINE FROM THE MATRIX AND THE HASHMAP
     fun deleteLine(array : Array<Block?>){
-        //First we delete the line
+        //First we fill the array with nulls
         for(i in 0 until array.size){
             array.set(i,null)
         }
         //We remove it from the hasmap positionY
         positionYArray.remove(array)
-        //We remove the whole array from filasA
-        filasA.remove(array)
+        //We remove the whole array from matrixBlocks
+        matrixBlocks.remove(array)
 
         //Then we create a new line on top
         newLineOnTop()
     }
+    //ITS CALLED WHEN A LINE IS DELETED.
     internal open fun newLineOnTop() {
         val first=getFirstArray()
-        val positionY=positionYArray.get(first)as Float
+        val positionY= positionYArray[first] as Float
         if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
 
         var firstBArray= createBooleanArray(first as Array<Block?>)
         //Here we decide if the last line of blocks gets repeted
         if(!(r.nextFloat()<probRepeatLine)){
-            //getNewBooleanArray is the method that creates new lines(now is trivial)
-            //firstBArray = getNewBooleanArray(firstBArray)
-            firstBArray = getNewBooleanArray(firstBArray, true)
+            //algorithmNewBooleanArray is the method that creates new lines using the ALGORITHM
+            firstBArray = algorithmNewBooleanArray(firstBArray)
         }
         createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
     }
-
-    fun getNewBooleanArray(booleanArray: BooleanArray): BooleanArray{
-        //todo AQUÍ puedo poder el algoritmo para crear lineas y caminos
-        val diffLines= mutableListOf<BooleanArray>()
-        diffLines.add(0,BooleanArray(booleanArray.size))
-        diffLines.add(1,BooleanArray(booleanArray.size))
-        for (i in 0 until booleanArray.size){
-            diffLines.get(0).set(i,i%2==0)
-            if(r.nextFloat()<probRandomHole){
-                diffLines.get(0).set(i,false)
-            }
-            diffLines.get(1).set(i,false)
-        }
-        //return diffLines.get(r.nextInt(2))
-        if(r.nextFloat()<0.18f){
-            return diffLines.get(1)
-        }
-        return diffLines.get(0)
-    }
-    fun getNewBooleanArray(booleanArray: BooleanArray, j : Boolean): BooleanArray{
-        //todo AQUÍ puedo poder el algoritmo para crear lineas y caminos
+    //IT CONTAINS THE ALGORITHM FOR THE LEVEL GENERATION
+    fun algorithmNewBooleanArray(booleanArray: BooleanArray): BooleanArray{
         var nueva : BooleanArray= BooleanArray(booleanArray.size)
         for (i in 0 until nueva.size){nueva.set(i,true)} //We init the array to true
 
@@ -239,162 +228,12 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         }
         return nueva
     }
-
-    fun createBooleanArray(array: Array<Block?>):BooleanArray{
-        val booleanArray : BooleanArray= BooleanArray(array.size)
-        for (i in 0 until array.size){
-            booleanArray.set(i,!(array.get(i)==null))
-        }
-        return booleanArray
-    }
-
-    fun deleteBreakableBlock(b : Block){
-        //todo mirar la manera más eficiente(con array)
-        //if breakable block is a son class of block, we can make that it saves its array
-        //and the position it has in the array, so that way it goes directly to delete itself
-        //instead of running over the whole matrix
-
-        //por ahora un remove cutrillo
-        var block : Block?
-        for( array in filasA){
-            for (i in 0 until array.size){
-                block=array.get(i)
-                if(block !=null){
-                    if (block.equals(b)){
-                        array.set(i,null)
-                        return
-                    }
-                }
-            }
-        }
-    }
-
-    fun createLevelBlocks(ancho : Int, alto: Int){
-        //createTrivialLevelBlocks(ancho,alto)
-        //generateNewLevel(ancho,alto)
-        createArrayLevel(ancho,alto)
-    }
-
-    fun createArrayLevel(ancho: Int,alto: Int){
-        var arrayVacio = BooleanArray(ancho)
-        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
-        for(i in 0 until ancho){
-            arrayVacio.set(i,false)
-            arrayIntermitenteBool.set(i,i%2==0)
-        }
-        for(i in 0 until alto){
-            if(i!=alto-1){
-                createNewBlockLine(arrayVacio.copyOf(), i)
-            }else{
-                createNewBlockLine(arrayIntermitenteBool,i)
-            }
-        }
-    }
-
-    fun createNewBlockLine(arrayBooleanos : BooleanArray,posY : Float){
-        //first we add this so only one orb spawns in one line
-        orbInLastLine=false
-
-        var anchoBloque : Float= Block.blockSide
-        var desplazamiento : Float
-        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
-
-        for (k in 0 until arrayBooleanos.size){
-            if(arrayBooleanos.get(k)){
-                //Calcular la posición que hay que pasarle al bloque
-                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                var b =Block(desplazamiento,posY, r.nextFloat()<probBreakable, blockImages)
-                arrayBlocks.set(k,b)
-            }
-        }
-        //We add the array in the fist position of FilasA
-        filasA.add(0,arrayBlocks)
-        //We introduce the value of the positionY of the array
-        positionYArray.put(arrayBlocks,posY)
-    }
-    fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
-        //first we add this so only one orb spawns in one line
-        orbInLastLine=false
-
-        var anchoBloque : Float= Block.blockSide
-        var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide.times(1.5F))
-        val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
-        
-        for (k in 0 until arrayBooleanos.size){
-            if(arrayBooleanos.get(k)){
-                //Calcular la posición que hay que pasarle al bloque
-                desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                var b =Block(desplazamiento,positionY, true, blockImages)
-                arrayBlocks.set(k,b)
-            }
-        }
-        //We add the array in the fist position of FilasA
-        filasA.add(0,arrayBlocks)
-        //We introduce the value of the positionY of the array 
-        positionYArray.put(arrayBlocks,positionY)
-    }
-    //todo adaptar a array
-    fun generateNewLevel(ancho: Int, alto: Int){
-        var fila: MutableList<Boolean>? = null
-        for (i in 0 until alto) {
-            fila=generateNewLine(fila, ancho)
-            if (fila != null) { createNewBlockLine(fila,i) }
-        }
-    }
-    fun generateNewLine(filaAnterior : MutableList<Boolean>?, ancho : Int): MutableList<Boolean>? {
-        var nueva : MutableList<Boolean> = mutableListOf()
-        var holes : MutableList<Pair<Int,Int>>
-        var j = BooleanArray(3)
-        var prob : Float
-
-        var n: Int
-        //Si
-        if (filaAnterior == null) {
-            for (i in 0 until ancho){
-                prob = r.nextFloat()
-                if (prob <= probPrimeros) { nueva.add(i, true)}
-                else {                      nueva.add(i, false)}
-            }
-        }
-        else{
-            holes = getHoles(j)
-            for (i in 0 until ancho) {nueva.add(i, true)}//inicializamos la fila llena de bloques
-            var tupla: Pair<Int,Int>
-            var totalhuecos : Int
-
-            //Recorremos la lista y metemos huecos según los huecos de la fila anterior
-            for(i in 0 until holes.size){
-                tupla = holes.get(i)
-                totalhuecos = tupla.second
-                //Si el hueco
-                if (totalhuecos == 3) {
-                    nueva.set(tupla.first, false)
-                    nueva.set(tupla.first + (tupla.second.minus(1) ), false)
-                } else {
-                    n = (r.nextInt(tupla.second.minus(1)))
-                    nueva.set((tupla.first + n), false)
-                }
-
-            }
-
-            //Ponemos huecos aleatoriamente
-            for (i in 0 until ancho){
-                if (r.nextFloat()<=probRandomHole){ nueva.set(i,false)}
-            }
-
-        }
-
-        return nueva
-    }
-
-    //Returns a MutableList of Pairs.
-    // The first is the position (index) where its begins,
-    // the second is the width of the hole
-    // Examenple    XXX__XX would be (3,2)
+    //ITS USED FOR THE ALGORITHM
     fun getHoles(line : BooleanArray) : MutableList<Pair<Int, Int>> {
+        //Returns a MutableList of Pairs.
+        // The first is the position (index) where its begins,
+        // the second is the width of the hole
+        // Examenple    XXX__XX would be (3,2)
         var holeList : MutableList<Pair<Int,Int>> = mutableListOf<Pair<Int,Int>>()
         var prev : Boolean = true
         var position : Int=0
@@ -428,8 +267,33 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         return holeList
     }
 
-     fun createNewBlockLine(listaBooleanos : MutableList<Boolean>,indexLine : Int){
+    fun createBooleanArray(array: Array<Block?>):BooleanArray{
+        val booleanArray : BooleanArray= BooleanArray(array.size)
+        for (i in 0 until array.size){
+            booleanArray.set(i,!(array.get(i)==null))
+        }
+        return booleanArray
+    }
 
+    fun deleteBreakableBlock(b : Block){
+        //todo mirar la manera más eficiente(con array)
+        //if breakable block is a son class of block, we can make that it saves its array
+        //and the position it has in the array, so that way it goes directly to delete itself
+        //instead of running over the whole matrix
+
+        //por ahora un remove cutrillo
+        var block : Block?
+        for( array in matrixBlocks){
+            for (i in 0 until array.size){
+                block=array.get(i)
+                if(block !=null){
+                    if (block.equals(b)){
+                        array.set(i,null)
+                        return
+                    }
+                }
+            }
+        }
     }
 
     //Method to give the ghost info about where he can move next
@@ -443,17 +307,17 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
             var rowPosition : Float
             //Si lo haces con el índice es muuuucho más facil luego sacar las otras dos
             val halfBlock=Block.blockSide/2
-            for (i in 0 .. filasA.size){
+            for (i in 0 .. matrixBlocks.size){
                 rowPosition=lastArrayPosition-Block.blockSide.times(i)
                 //hay que mirar la lista por el final
-                val j = filasA.size - (i + 1)
+                val j = matrixBlocks.size - (i + 1)
                 if (ghostY in rowPosition-halfBlock .. rowPosition+halfBlock){
-                    //el filasA.get(índice) es el del medio
+                    //el matrixBlocks.get(índice) es el del medio
 
                     //Cuidado, revisa los casos en los extremos
-                    aboveRow=filasA.getOrNull(j-1)
-                    middleRow=filasA.getOrNull(j)
-                    downRow=filasA.getOrNull(j+1)
+                    aboveRow=matrixBlocks.getOrNull(j-1)
+                    middleRow=matrixBlocks.getOrNull(j)
+                    downRow=matrixBlocks.getOrNull(j+1)
                     break
                 }
             }
@@ -466,5 +330,62 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
     }
 
+    //SPAWNER OF ORBS
+    fun spawnOrbs(){
+        val arrayBlocks=getFirstPositiveArray()
+        if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
+            return
+        }
+        val par=getPositionHoles(arrayBlocks)
+        val positionY=par.first as Float
+        val indexOfHoles=par.second
+        //We get any hole of the line.
+        var indiceDeLaLista=r.nextInt(indexOfHoles.size)
+        var indice=indexOfHoles.get(indiceDeLaLista)
+
+        var newOrb : Orb=ofactory.create(temperature)
+        newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+        for (o in orbs){
+            if(RectF.intersects(o.rectangle,newOrb.rectangle)){
+                if (indiceDeLaLista==0){ indiceDeLaLista++ }
+                else{ indiceDeLaLista-- }
+                indice=indexOfHoles.get(indiceDeLaLista)
+                newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+            }
+        }
+        orbs.add(newOrb)
+        orbInLastLine=true
+
+    }
+
+    //DRAW AND UPDATE
+    override fun draw(canvas: Canvas?) {
+        for (array in matrixBlocks){
+            for (block in array){
+                if (block!=null){
+                    block.draw(canvas)
+                }
+            }
+        }
+        for (orb:Orb in orbs) { orb.draw(canvas) }
+    }
+    fun update(scroll : Float){
+        for(orb in orbs){orb.update(scroll)}
+        for (array in matrixBlocks){
+            //update the float position Y of array
+            updateArrayPositionY(scroll,array)
+            for (block in array){
+                if (block!=null){
+                    block.update(scroll,temperature)
+                }
+            }
+        }
+        spawnOrbs()
+
+    }
+    fun updateArrayPositionY(scroll: Float, array: Array<Block?>){
+        //This is the equivalent to the method update, but for the array positionY
+        positionYArray.set(array,positionYArray.getValue(array)+scroll)
+    }
 }
 

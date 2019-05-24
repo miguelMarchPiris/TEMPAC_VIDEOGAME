@@ -303,7 +303,7 @@ open class GameEngine(var context : Context) : Drawable {
         ghosts = (ghosts.filter {element -> element.y <= bottomPlayingField.plus(Block.blockSide.times(1.5f))}).toMutableList()
 
         //goes over the level matrix and checks the blocks collisions
-        for(array in level.filasA){
+        for(array in level.matrixBlocks){
             for(block in array){
                 //check collisions
                 if(block!=null){
