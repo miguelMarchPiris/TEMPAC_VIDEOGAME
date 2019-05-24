@@ -63,6 +63,7 @@
     <string name="signout">Sign Out</string>
     <string name="confirmation">OK!</string>
     <string name="chooseUsername">Choose a username</string>
+    <string name="changeUsername">Change Username</string>
 
     <!-- GOOGLE TOKEN: -->
 

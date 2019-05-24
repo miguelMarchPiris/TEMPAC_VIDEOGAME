@@ -7,10 +7,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.HighScoreActivity
 
-class HighScorePresenter(private val activity: HighScoreActivity): Presenter, DatabaseCallback {
+class HighScorePresenter(private val activity: HighScoreActivity): Presenter,
+    DatabaseCallback {
 
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -13,7 +13,7 @@ class ConfirmExitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        title = ""
 
         setContentView(R.layout.activity_confirm_exit)
 
