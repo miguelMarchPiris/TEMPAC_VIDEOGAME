@@ -231,7 +231,7 @@ class GameEngine(var context: Context) : Drawable {
             in 40f..60f ->{
                 ghosts = greens.union(yellows).toMutableList()
                 //Blues and reds died
-                dyingGhosts.addAll(yellows.union(blues))
+                dyingGhosts.addAll(reds.union(blues))
             }
             in 60f..80f ->{
                 ghosts = yellows.union(reds).toMutableList()
