@@ -92,7 +92,8 @@ class GameEngine(var context: Context) : Drawable {
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
-        textPaint.textSize = 40f
+        textPaint.setTypeface(Typeface.create("Droid Sans Mono", Typeface.ITALIC))
+        textPaint.textSize = 45f
         textPaint.textAlign = Paint.Align.CENTER
     }
 
