@@ -1,6 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-class BehaviourR : GhostBehaviour() {
+object BehaviourR : GhostBehaviour() {
     override lateinit var distances: Array<Float>
     override var row: Array<Block?>? = null
     override lateinit var ghost: Ghost

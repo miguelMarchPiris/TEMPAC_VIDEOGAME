@@ -22,6 +22,6 @@ class GhostY(yellow : Bitmap) : Ghost(yellow) {
         return (temperature in lowerCorrectTemperature..(topCorrectTemperature+0.1f))
     }
     override fun setSpecialBehaviour() {
-        this.behaviour=BehaviourDefault()
+        this.behaviour=BehaviourDefault
     }
 }

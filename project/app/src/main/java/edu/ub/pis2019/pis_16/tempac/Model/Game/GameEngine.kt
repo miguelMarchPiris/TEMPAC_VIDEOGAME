@@ -74,7 +74,7 @@ open class GameEngine(var context : Context) : Drawable {
         //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 35f
+        temperatureBar.temperature = 0f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
@@ -223,7 +223,7 @@ open class GameEngine(var context : Context) : Drawable {
         for(ghost in ghosts){
             val belowTheLine=ghost.y > bottomPlayingField
 
-            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine,temperatureBar.temperature)
         }
     }
 

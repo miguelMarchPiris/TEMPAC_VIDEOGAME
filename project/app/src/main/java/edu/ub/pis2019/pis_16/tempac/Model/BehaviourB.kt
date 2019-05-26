@@ -1,9 +1,10 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
+import android.util.Log
 import java.util.*
 import kotlin.math.absoluteValue
 
-class BehaviourB : GhostBehaviour() {
+object BehaviourB : GhostBehaviour() {
     override lateinit var distances: Array<Float>
     override var row: Array<Block?>? = null
     override lateinit var ghost: Ghost
@@ -36,28 +37,40 @@ class BehaviourB : GhostBehaviour() {
 
     fun moveRandom(){
         //If you can move up, go up
-        if(! (distances[0]== Float.MAX_VALUE)){
+        if(distances[0] != Float.MAX_VALUE){
             ghost.moveUp(scroll,up)
         }
         //If you cant, then:
         else{
-            getDirection()
+            if(rows.third==null){
+                ghost.moveDown(scroll, down)
+                return
+            }
+            //Get direction returns true if the closest top hole is in the left
+            var toTheLeft : Boolean = getDirection()
+            if (toTheLeft){
+                ghost.behaviour=BehaviourMoveLeft
+                ghost.moveLeft(scroll, left)
+            }
+            else{
+                ghost.behaviour=BehaviourMoveRight
+                ghost.moveRight(scroll, right)
+            }
         }
     }
-    fun getDirection(){
+
+    fun getDirection() : Boolean{
         //The above row
         row=rows.third
-        if(row==null){
-            return
-        }
+
         var minDistance= -1 to Float.MAX_VALUE
         var distanceToHole : Float
 
         val listOfHoles = getTheHole()
-
+        row=rows.third
 
         for ( i in listOfHoles){
-            //If its a hole
+            //If its a hole of the above row
             if(row!!.get(i)==null){
                 //We get the distance in absolute value
                 distanceToHole=((Block.blockSide.times(i + 0.5F))-ghost.x).absoluteValue
@@ -66,31 +79,39 @@ class BehaviourB : GhostBehaviour() {
                     //we set it as the minimum distance with the corresponding index
                     minDistance=i to distanceToHole
                 }
+                //If the distance is bigger than the previous one, we have finished (we already have the minimum)
+                else{
+                    break
+                }
             }
         }
+
+        //GET THE DISTANCE WITH NO ABSOLUTE VALUE, SO WE KNOW THE DIRECTION
         distanceToHole=((Block.blockSide.times(minDistance.first + 0.5F))-ghost.x)
-        //if distanceToHole  0 we need to move left
-        if (distanceToHole<0){
-            ghost.moveLeft(scroll,left)
-        }
-        else{
-            ghost.moveRight(scroll,right)
-        }
+
+        //if distanceToHole < 0 we need to move left
+        return (distanceToHole<0)
+
     }
 
     fun getTheHole(): MutableList<Int> {
         //The middle the row
         row=rows.second
         val listOfHoles= mutableListOf<Int>()
-        //We insert the index of every null in the list
+        val listOfIndex : MutableList<Int> = mutableListOf<Int>()
         var index : Int = -1
         for ( j in 0 until row!!.size){
-            if(ghost.x-(j+0.5).times(Block.blockSide)<=0.5.times(Block.blockSide)){
+            //We insert the index of every null in the listOfIndex
+            if(row!![j]==null && (ghost.x-(j+0.5).times(Block.blockSide)).absoluteValue<=0.5.times(Block.blockSide)){
                 index=j
-                break
             }
         }
 
+        //Something went wrong
+        if(index==-1){
+            return listOfHoles
+        }
+        //Here we take the consecutive indexs of the hole in which the ghost is
         var inTheCorrectHole : Boolean=false
         for (i in 0 until row!!.size){
             if(i==index){
@@ -104,7 +125,9 @@ class BehaviourB : GhostBehaviour() {
                 if(inTheCorrectHole){
                     return listOfHoles
                 }
-                listOfHoles.clear()
+                else{
+                    listOfHoles.clear()
+                }
             }
         }
         return listOfHoles

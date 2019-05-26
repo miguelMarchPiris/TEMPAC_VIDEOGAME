@@ -26,22 +26,22 @@ abstract class Ghost(image : Bitmap) : Actor(){
         h = im.height.toFloat()
         rectangle = RectF(x-w,y-h,x,y)
         r= Random()
-        behaviour = BehaviourBelowTheLine()
+        behaviour = BehaviourBelowTheLine
     }
 
     fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean, temperature : Float){
         super.update(scroll)
         onCorrectTemperature=getOnCorrectTemperature(temperature)
         this.belowTheLine=belowTheLine
-        if(belowTheLine){ behaviour=BehaviourBelowTheLine() }
-        else if(getOnCorrectTemperature(temperature)){
+        if(belowTheLine) {
+            behaviour=BehaviourBelowTheLine
+        }
+        else if (getOnCorrectTemperature(temperature)) {
             setSpecialBehaviour()
         }else{
-            behaviour=BehaviourDefault()
+            behaviour=BehaviourDefault
         }
         behaviour.chase(this,scroll,playerPosition,rows)
-
-
     }
     abstract fun getOnCorrectTemperature(temperature : Float) : Boolean
     abstract fun setSpecialBehaviour()

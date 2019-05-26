@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 
 class GhostB(image : Bitmap) : Ghost(image) {
     override var onCorrectTemperature: Boolean = false
@@ -23,9 +24,12 @@ class GhostB(image : Bitmap) : Ghost(image) {
     }
 
     override fun setSpecialBehaviour() {
-        //todo
-        //this.behaviour=BehaviourB()
-        this.behaviour=BehaviourR()
+        if (this.behaviour == BehaviourDefault || this.behaviour == BehaviourBelowTheLine){
+            //todo solo pa saber si funciona bien
+            Log.d("Behaviour blue", topCorrectTemperature.toString())
+            this.behaviour = BehaviourB
+            var jamon=0
+        }
     }
 
 }

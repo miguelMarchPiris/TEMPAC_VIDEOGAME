@@ -22,6 +22,6 @@ class GhostR(red : Bitmap) : Ghost(red) {
         return (temperature in lowerCorrectTemperature..(topCorrectTemperature+0.1f))
     }
     override fun setSpecialBehaviour() {
-        this.behaviour=BehaviourR()
+        this.behaviour=BehaviourR
     }
 }
