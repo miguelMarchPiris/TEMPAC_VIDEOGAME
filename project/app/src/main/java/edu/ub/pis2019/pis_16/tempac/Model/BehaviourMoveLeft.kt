@@ -1,6 +1,8 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-object BehaviourMoveLeft : GhostBehaviour(){
+object BehaviourMoveLeft : GhostBehaviour(), BehaviourHorizontal{
+
+
     override lateinit var distances: Array<Float>
     override var row: Array<Block?>? = null
     override lateinit var ghost: Ghost
@@ -27,21 +29,29 @@ object BehaviourMoveLeft : GhostBehaviour(){
 
         checkAll()
 
-        if(distances[0] != Float.MAX_VALUE){
+        //if its too high it will move horizontally
+        if (getTooHigh()){
+            return
+        }
+
+        if(distances[0] != Float.MAX_VALUE ){
             ghost.behaviour=BehaviourB
             ghost.moveUp(scroll, up)
         }
 
         else{
-            //If it can move left, move left
-            if(distances[1]!= Float.MAX_VALUE){
-                ghost.moveLeft(scroll, left)
-            }
-            else{
-                //If it can't move left, move right and change to BehaviourMoveRight
-                ghost.behaviour=BehaviourMoveRight
-                ghost.moveRight(scroll, right)
-            }
+            keepMovingHorizontally()
+        }
+    }
+    override fun keepMovingHorizontally() {
+        //If it can move left, move left
+        if(distances[1]!= Float.MAX_VALUE){
+            ghost.moveLeft(scroll, left)
+        }
+        else{
+            //If it can't move left, move right and change to BehaviourMoveRight
+            ghost.behaviour=BehaviourMoveRight
+            ghost.moveRight(scroll, right)
         }
     }
 }

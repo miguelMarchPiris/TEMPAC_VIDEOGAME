@@ -13,17 +13,20 @@ open class GameEngine(var context : Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 30
+
+        const val MAX_GHOSTS = 1
         const val MIN_DISTANCE = 105f
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
-        const val bottomPlayingField : Float = 1625F
-        const val leftPlayingField : Float = 0F
-        const val rightPlayingField : Float = 1080F
-        const val topPlayingField : Float = 225F
+        const val BOTTOM_PLAYING_FIELD : Float = 1625F
+        const val LEFT_PLAYING_FIELD : Float = 0F
+        const val RIGHT_PLAYING_FIELD : Float = 1080F
+        const val TOP_PLAYING_FIELD : Float = 225F
         const val BLOCK_BREAKABLE_TEMPERATURE = 80f
         const val HOT_TEMPERATURE = 80f
         const val COLD_TEMPERATURE = 20f
+        const val TOO_HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(5)
+        const val HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(10)
     }
 
     //Game variables. internal
@@ -48,7 +51,7 @@ open class GameEngine(var context : Context) : Drawable {
     internal open var level : Level = Level(initBlockImages())
 
     //Play zone rects
-    private val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
+    private val playingField = RectF(LEFT_PLAYING_FIELD, TOP_PLAYING_FIELD, RIGHT_PLAYING_FIELD, BOTTOM_PLAYING_FIELD)
     private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
     private val fieldLinePaint = Paint()
     private val fieldPaint = Paint()
@@ -221,7 +224,7 @@ open class GameEngine(var context : Context) : Drawable {
 
         //this push the ghosts up til are visible for the player.
         for(ghost in ghosts){
-            val belowTheLine=ghost.y > bottomPlayingField
+            val belowTheLine=ghost.y > BOTTOM_PLAYING_FIELD
 
             ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine,temperatureBar.temperature)
         }
@@ -302,7 +305,7 @@ open class GameEngine(var context : Context) : Drawable {
 
         //ghosts = (ghosts.filter { element -> !isOutOfPlayzone(element)}).toMutableList()
         //TODO Miguel/Carles explicad que hace esto porfa
-        ghosts = (ghosts.filter {element -> element.y <= bottomPlayingField.plus(Block.blockSide.times(1.5f))}).toMutableList()
+        ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
 
         //goes over the level matrix and checks the blocks collisions
         for(array in level.matrixBlocks){

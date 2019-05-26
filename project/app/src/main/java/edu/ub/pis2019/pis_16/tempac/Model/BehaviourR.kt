@@ -24,6 +24,11 @@ object BehaviourR : GhostBehaviour() {
         //in each movement
         checkAll()
 
+        //if its too high it will move horizontally
+        if (getTooHigh()){
+            return
+        }
+
         //Then we check which one is the closest to the player, and then move into that direction
         moveDefault(searchMinDistance())
 

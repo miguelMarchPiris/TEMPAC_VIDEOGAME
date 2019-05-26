@@ -47,7 +47,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         blockImages=blockImg
         //How many lines, and how many blocks in one line.
         nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        nLinesToDraw = (GameEngine.bottomPlayingField-GameEngine.topPlayingField).div(Block.blockSide).toInt()+4
+        nLinesToDraw = (GameEngine.BOTTOM_PLAYING_FIELD-GameEngine.TOP_PLAYING_FIELD).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
     //Its just a shitty method yikes
@@ -77,7 +77,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide.times(1.5F))
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.BOTTOM_PLAYING_FIELD+Block.blockSide.times(1.5F))
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
         for (k in 0 until arrayBooleanos.size){

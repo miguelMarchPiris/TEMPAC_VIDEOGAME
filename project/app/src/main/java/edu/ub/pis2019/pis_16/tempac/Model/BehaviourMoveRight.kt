@@ -1,6 +1,9 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-object BehaviourMoveRight : GhostBehaviour(){
+import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import java.util.*
+
+object BehaviourMoveRight : GhostBehaviour(), BehaviourHorizontal{
     override lateinit var distances: Array<Float>
     override var row: Array<Block?>? = null
     override lateinit var ghost: Ghost
@@ -26,6 +29,12 @@ object BehaviourMoveRight : GhostBehaviour(){
         setData(ghost,scroll,playerPosition,rows)
 
         checkAll()
+
+        //if its too high it will move horizontally
+        if (getTooHigh()){
+            return
+        }
+
         //If the ghost can move up, move up and change behaviour to BehaviourB
         if(distances[0] != Float.MAX_VALUE){
             ghost.behaviour=BehaviourB
@@ -33,16 +42,18 @@ object BehaviourMoveRight : GhostBehaviour(){
         }
 
         else{
-
-            if(distances[2]!= Float.MAX_VALUE){
-                //If it can move right, then move right
-                ghost.moveRight(scroll, right)
-            }
-            else{
-                //If it can't move right, move left and change to BehaviourMoveLeft
-                ghost.behaviour=BehaviourMoveLeft
-                ghost.moveLeft(scroll, left)
-            }
+            keepMovingHorizontally()
+        }
+    }
+    override fun keepMovingHorizontally() {
+        if(distances[2]!= Float.MAX_VALUE){
+            //If it can move right, then move right
+            ghost.moveRight(scroll, right)
+        }
+        else{
+            //If it can't move right, move left and change to BehaviourMoveLeft
+            ghost.behaviour=BehaviourMoveLeft
+            ghost.moveLeft(scroll, left)
         }
     }
 }

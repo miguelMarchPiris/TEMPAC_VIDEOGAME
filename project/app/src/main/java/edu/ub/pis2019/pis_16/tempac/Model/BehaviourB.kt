@@ -1,6 +1,5 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.util.Log
 import java.util.*
 import kotlin.math.absoluteValue
 
@@ -14,13 +13,10 @@ object BehaviourB : GhostBehaviour() {
 
     override val left : Float = 1F
     override val right : Float = 1F
-    override val up : Float = 1F
+    override val up : Float = 8F
     override val down : Float = 1F
 
-    var invertedXAxis : Boolean = false
-    val probInvertedXAxis : Float = 0.5F
     init {
-        invertedXAxis=(Random().nextFloat()<probInvertedXAxis)
     }
 
     override fun chase(
@@ -32,10 +28,17 @@ object BehaviourB : GhostBehaviour() {
         setData(ghost,scroll,playerPosition,rows)
 
         checkAll()
+
+        //if its too high it will move horizontally
+        if (getTooHigh()){
+            return
+        }
+
         moveRandom()
     }
 
     fun moveRandom(){
+
         //If you can move up, go up
         if(distances[0] != Float.MAX_VALUE){
             ghost.moveUp(scroll,up)

@@ -5,10 +5,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
+import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 
 class GhostB(image : Bitmap) : Ghost(image) {
     override var onCorrectTemperature: Boolean = false
-    override var topCorrectTemperature: Float = 5.0f
+    override var topCorrectTemperature: Float = GameEngine.COLD_TEMPERATURE
     override var lowerCorrectTemperature: Float = 0.0f
 
 

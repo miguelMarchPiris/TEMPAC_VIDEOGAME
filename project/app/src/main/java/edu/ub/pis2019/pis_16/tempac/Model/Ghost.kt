@@ -12,6 +12,9 @@ abstract class Ghost(image : Bitmap) : Actor(){
     }
     private var w : Float = 0f
     private var h : Float = 0f
+    fun getH(): Float {
+        return h
+    }
     var speed = 0.75f
     var im = image
 
@@ -19,6 +22,7 @@ abstract class Ghost(image : Bitmap) : Actor(){
     abstract var topCorrectTemperature : Float
     abstract var lowerCorrectTemperature : Float
     var belowTheLine : Boolean = true
+    var tooHigh : Boolean = false
     abstract var onCorrectTemperature : Boolean
 
     init {
