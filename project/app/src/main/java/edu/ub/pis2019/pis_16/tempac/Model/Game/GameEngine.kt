@@ -27,6 +27,12 @@ open class GameEngine(var context : Context) : Drawable {
         const val COLD_TEMPERATURE = 20f
         const val TOO_HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(5)
         const val HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(10)
+
+        //Overlay rectangles
+        lateinit var overlayRect0 : RectF
+        lateinit var overlayRect1 : RectF
+        lateinit var overlayRect2 : RectF
+        lateinit var overlayRect3 : RectF
     }
 
     //Game variables. internal
@@ -58,6 +64,8 @@ open class GameEngine(var context : Context) : Drawable {
     private val overlay : List<RectF>
     private val overlayPaint = Paint()
 
+
+
     //Score text paint
     private val textPaint = Paint()
 
@@ -83,10 +91,10 @@ open class GameEngine(var context : Context) : Drawable {
         fieldLinePaint.color = Color.WHITE
 
         //playfield
-        val overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom) //Left
-        val overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
-        val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
-        val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
+        overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom) //Left
+        overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
+        overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
+        overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = Color.BLACK
         overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
