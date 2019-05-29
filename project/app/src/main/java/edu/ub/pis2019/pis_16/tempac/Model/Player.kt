@@ -9,7 +9,8 @@ import android.graphics.*
 class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageList) {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     var direction = Direction.UP
-    var speed = 1.25f
+    var ySpeed = 1.25f
+    var xSpeed = 1.75f
     //private var speed = 5f
     private var h : Float = 0f
     private var w : Float = 0f
@@ -58,11 +59,11 @@ class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageLis
                 if (screenCatchUp) {
                     y -= scroll
                 } else
-                    y -= scroll + speed
+                    y -= scroll +ySpeed
             }
-            Direction.LEFT -> x-=speed+scroll
-            Direction.RIGHT -> x+=speed+scroll
-            Direction.DOWN -> y+=scroll+speed
+            Direction.LEFT -> x-=xSpeed+scroll
+            Direction.RIGHT -> x+=xSpeed+scroll
+            Direction.DOWN -> y+=scroll+ySpeed
             Direction.STATIC -> y=y
         }
         //these two lines are used if the image change his size. Are just a way to prevent random things to happen (the hitbox goes acord the image size)
