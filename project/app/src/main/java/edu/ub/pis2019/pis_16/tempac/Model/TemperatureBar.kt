@@ -43,6 +43,7 @@ class TemperatureBar(): Object() {
         paintCenter.style = Paint.Style.FILL
         paintCenter.textSize = 50f
         paintCenter.textAlign =Paint.Align.RIGHT
+        paintCenter.setTypeface(Typeface.create("Droid Sans Mono", Typeface.BOLD))
     }
     override fun draw(canvas: Canvas?){
         val rect = RectF(x+height/2f,y,x+width-height*0.7f,y+height)

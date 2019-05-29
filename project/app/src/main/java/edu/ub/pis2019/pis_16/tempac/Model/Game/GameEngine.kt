@@ -92,7 +92,8 @@ class GameEngine(var context: Context) : Drawable {
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
-        textPaint.textSize = 40f
+        textPaint.setTypeface(Typeface.create("Droid Sans Mono", Typeface.ITALIC))
+        textPaint.textSize = 45f
         textPaint.textAlign = Paint.Align.CENTER
     }
 
@@ -231,7 +232,7 @@ class GameEngine(var context: Context) : Drawable {
             in 40f..60f ->{
                 ghosts = greens.union(yellows).toMutableList()
                 //Blues and reds died
-                dyingGhosts.addAll(yellows.union(blues))
+                dyingGhosts.addAll(reds.union(blues))
             }
             in 60f..80f ->{
                 ghosts = yellows.union(reds).toMutableList()

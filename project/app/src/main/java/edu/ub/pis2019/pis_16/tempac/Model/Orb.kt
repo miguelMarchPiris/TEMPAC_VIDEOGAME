@@ -14,9 +14,10 @@ abstract class Orb(var number: Int): Actor() {
         paint.color = Color.WHITE
         textPaint.color = Color.BLACK
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.textSize = 22f
+        textPaint.textSize = 25f
         textPaint.style = Paint.Style.FILL_AND_STROKE
-        textPaint.strokeWidth = 2f
+        //textPaint.strokeWidth = 1.5f
+        textPaint.setTypeface(Typeface.create("Droid Sans Mono", Typeface.BOLD))
     }
 
     override fun draw(canvas: Canvas?) {
@@ -26,7 +27,7 @@ abstract class Orb(var number: Int): Actor() {
 
     override fun update(scroll: Float) {
         super.update(scroll)
-        rectangle.set(x-25,y-25,x+25,y+25)
+        rectangle.set(x-28,y-28,x+28,y+28)
 
     }
 }
