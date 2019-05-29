@@ -11,7 +11,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.ub.pis2019.pis_16.tempac.View.MainMenuActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.SignInButton
-import edu.ub.pis2019.pis_16.tempac.R
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.firebase.FirebaseApp
@@ -21,7 +20,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import edu.ub.pis2019.pis_16.tempac.Model.User
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
-
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import android.content.ComponentName
+import android.os.IBinder
+import android.content.ServiceConnection
+import android.content.Context
+import edu.ub.pis2019.pis_16.tempac.R
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
 
@@ -32,8 +36,11 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private val RC_USERNAME = 420
     private var customUsername = ""
     private lateinit var app :TempacApplication
+
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (mService != null) {
+            mService?.resumeMusic()
+        }
     }
 
     override fun onPause() {
@@ -49,12 +56,22 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        doUnbindService()
+        val music = Intent()
+        music.setClass(this.activity, MusicService::class.java)
+        mService?.stopService(music)
     }
 
     override fun onCreate() {
         //Save app instance
         app = (activity.application as TempacApplication)
+
+        //Music service start
+        doBindService()
+        val music = Intent()
+        music.setClass(this.activity, MusicService::class.java)
+        mService?.startService(music)
+
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
         // Configure sign-in to request the user's ID, email address, and basic
@@ -80,6 +97,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             skipLogin()
         }
     }
+
     fun onStart(){
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
@@ -88,11 +106,13 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             login(account)
         }
     }
+
     fun askForlogin(){
         mGoogleSignInClient.signOut()
         val signInIntent = mGoogleSignInClient.signInIntent
         activity.startActivityForResult(signInIntent,RC_SIGN)
     }
+
     //This is called after the user selects the account to log in
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
@@ -130,6 +150,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 }
         }
     }
+
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d("FB LOGIN", "firebaseAuthWithGoogle:" + acct.id!!)
 
@@ -148,9 +169,11 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 }
             }
     }
+
     private fun loginFailed(){
         Toast.makeText(activity,"Login failed, try again", Toast.LENGTH_SHORT).show()
     }
+
     private fun login(account: FirebaseUser?) {
         if(account!=null){
             app.user = User(account.uid, account.displayName!!, account.email!!)
@@ -161,6 +184,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             changeActivity(MainMenuActivity())
         }
     }
+
     private fun skipLogin(){
         //We try to load the user from disk
         if(app.loadLocalUser()) {
@@ -179,8 +203,35 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
         }
 
     }
+
     private fun changeActivity(activity: AppCompatActivity){
         val intent = Intent(this.activity, activity::class.java)
         this.activity.startActivity(intent)
+    }
+
+    //Music Service
+    private var mIsBound = false
+    private var mService : MusicService? = null
+    private val serviceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
+            mService = (binder as MusicService.ServiceBinder).service
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            mService = null
+        }
+    }
+
+    fun doBindService() {
+        mService?.bindService(Intent(this.activity, MusicService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        mIsBound = true
+    }
+
+    fun doUnbindService() {
+        if (mIsBound) {
+            mService?.unbindService(serviceConnection)
+            mIsBound = false
+        }
     }
 }

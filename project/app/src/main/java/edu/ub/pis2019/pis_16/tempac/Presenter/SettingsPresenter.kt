@@ -15,8 +15,10 @@ import java.lang.Exception
 
 
 class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
+
     private val RC_USERNAME = 420
     private lateinit var app:TempacApplication
+
     override fun onResume() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
