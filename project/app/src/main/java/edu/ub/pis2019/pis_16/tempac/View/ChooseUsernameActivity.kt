@@ -34,5 +34,6 @@ class ChooseUsernameActivity : AppCompatActivity() {
                 finish()
             }
         }
+        editText.requestFocus()
     }
 }
