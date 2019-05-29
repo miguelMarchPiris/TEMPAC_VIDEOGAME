@@ -12,10 +12,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <service android:name=".Model.MusicService"
-                 android:enabled="true">
-            
-        </service>
         <activity
                 android:name=".View.ChooseUsernameActivity"
                 android:windowSoftInputMode="stateVisible"

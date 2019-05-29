@@ -50,12 +50,12 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
         }
 
         shareButton.setOnClickListener{
-            //Menu Button Action
+            //Share Button Action
             share()
         }
 
         backgroundLayout.setOnClickListener{
-            //Menu Button Action
+            //Background Button Action
             playAgain()
         }
     }

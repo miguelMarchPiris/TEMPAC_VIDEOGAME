@@ -21,10 +21,6 @@ import edu.ub.pis2019.pis_16.tempac.Model.User
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
-import android.content.ComponentName
-import android.os.IBinder
-import android.content.ServiceConnection
-import android.content.Context
 import edu.ub.pis2019.pis_16.tempac.R
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
@@ -38,9 +34,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private lateinit var app :TempacApplication
 
     override fun onResume() {
-        if (mService != null) {
-            mService?.resumeMusic()
-        }
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPause() {
@@ -56,21 +50,12 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onDestroy() {
-        doUnbindService()
-        val music = Intent()
-        music.setClass(this.activity, MusicService::class.java)
-        mService?.stopService(music)
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onCreate() {
         //Save app instance
         app = (activity.application as TempacApplication)
-
-        //Music service start
-        doBindService()
-        val music = Intent()
-        music.setClass(this.activity, MusicService::class.java)
-        mService?.startService(music)
 
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
@@ -207,31 +192,5 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private fun changeActivity(activity: AppCompatActivity){
         val intent = Intent(this.activity, activity::class.java)
         this.activity.startActivity(intent)
-    }
-
-    //Music Service
-    private var mIsBound = false
-    private var mService : MusicService? = null
-    private val serviceConnection = object : ServiceConnection {
-
-        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            mService = (binder as MusicService.ServiceBinder).service
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            mService = null
-        }
-    }
-
-    fun doBindService() {
-        mService?.bindService(Intent(this.activity, MusicService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
-        mIsBound = true
-    }
-
-    fun doUnbindService() {
-        if (mIsBound) {
-            mService?.unbindService(serviceConnection)
-            mIsBound = false
-        }
     }
 }

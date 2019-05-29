@@ -6,6 +6,7 @@ import android.provider.MediaStore
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameActivity
 import edu.ub.pis2019.pis_16.tempac.View.HighScoreActivity
@@ -32,26 +33,28 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.buttonPlayerDestroyer()
     }
 
     override fun onCreate() {
         app = (activity.application as TempacApplication)
 
-        var buttonPlayer : MediaPlayer? = MediaPlayer.create(this.activity, R.raw.btn_sound)
+        //Music service start
+        MusicService.startMusicMenu(this.activity)
 
         activity.findViewById<Button>(R.id.btn_play).setOnClickListener {
-            buttonPlayer?.start()
+            MusicService.buttonSoundPlay(this.activity)
+            MusicService.destroyReproducer()
             changeActivityPlay()
         }
 
         activity.findViewById<Button>(R.id.btn_highscores).setOnClickListener {
-            buttonPlayer?.start()
+            MusicService.buttonSoundPlay(this.activity)
             changeActivityHighscores()
         }
 
         activity.findViewById<Button>(R.id.btn_settings).setOnClickListener {
-            buttonPlayer?.start()
+            MusicService.buttonSoundPlay(this.activity)
             changeActivitySettings()
         }
     }
