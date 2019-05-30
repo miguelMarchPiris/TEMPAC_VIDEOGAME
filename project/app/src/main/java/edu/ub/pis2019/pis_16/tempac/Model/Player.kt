@@ -3,13 +3,13 @@ package edu.ub.pis2019.pis_16.tempac.Model
 import android.graphics.*
 
 /*IMPORTANT COMMENTS
-* PacMan hitbox is rectangular and varies depending the image that is insered
+* PacMan hitbox is rectangular and varies depending the image inserted
 * */
 
 class Player(posx: Float, posy: Float, imageList: List<Bitmap>) : Actor(imageList) {
     enum class Direction { STATIC, UP, LEFT, RIGHT, DOWN }
     var direction = Direction.UP
-    var ySpeed = 1.25f
+    var ySpeed = 1.50f
     var xSpeed = 1.75f
     //private var speed = 5f
     private var h : Float = 0f

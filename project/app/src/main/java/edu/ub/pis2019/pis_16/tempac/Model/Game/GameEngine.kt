@@ -29,7 +29,6 @@ class GameEngine(var context: Context) : Drawable {
 
     //Game variables
     private var scrollSpeed = 0f
-    private var ghostSpeed = 0f
     private var baseScrollSpeed = 3f
     private var bonusScrollSpeed = 0f
     private var extremeWeather = false //used to control the score. When its cold or hot it activates
@@ -45,7 +44,7 @@ class GameEngine(var context: Context) : Drawable {
 
     //Actors
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
-    private var player : Player = Player(500f,1000f, initPacmanImages())
+    private var player : Player = Player(PLAYFIELD_WIDTH/2f+35f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf()
     private var dyingGhosts : MutableList<Ghost> = mutableListOf()
     private var level : Level = Level(initBlockImages())
@@ -173,19 +172,26 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun gameState(temperature : Float){
-        //Increment scroll as time goes on
-        baseScrollSpeed +=0.0005f
+
+
 
         //On extreme temps we also change the scroll
-        if(temperature >= HOT_TEMPERATURE) {
-            bonusScrollSpeed = 0.75f
-            extremeWeather = true
-        }else if(temperature <= COLD_TEMPERATURE) {
-            bonusScrollSpeed = -0.75f
-            extremeWeather = true
-        }else{
-            bonusScrollSpeed = 0f
-            extremeWeather = false
+        when {
+            temperature >= HOT_TEMPERATURE -> {
+                baseScrollSpeed +=0.00025f //Increment scroll as time goes on
+                bonusScrollSpeed = 1.5f
+                extremeWeather = true
+            }
+            temperature <= COLD_TEMPERATURE -> {
+                baseScrollSpeed +=0.00025f //Increment scroll as time goes on
+                bonusScrollSpeed = -0.5f
+                extremeWeather = true
+            }
+            else -> {
+                baseScrollSpeed +=0.0005f //Increment scroll as time goes on
+                bonusScrollSpeed = 0f
+                extremeWeather = false
+            }
         }
 
         scrollSpeed = baseScrollSpeed + bonusScrollSpeed
