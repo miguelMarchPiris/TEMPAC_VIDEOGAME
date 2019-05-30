@@ -118,7 +118,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         orbs.add(newOrb)
         orbInLastLine=true
-        //TODO FUNCTION TO DECIDE WHERE THE orbs SHOULD SPAWN
         //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
 
     }
