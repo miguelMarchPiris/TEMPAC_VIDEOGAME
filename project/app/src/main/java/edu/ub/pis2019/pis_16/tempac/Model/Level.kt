@@ -53,13 +53,25 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
     //DRAW AND UPDATE
     override fun draw(canvas: Canvas?) {
+        val breakableBlocks = mutableListOf<Block>()
+        val blocks = mutableListOf<Block>()
         for (array in filasA){
             for (block in array){
-                if (block!=null){
-                    block.draw(canvas)
+                if( block!=null && block.breakable){
+                    breakableBlocks.add(block)
                 }
+                else if( block != null)
+                    blocks.add(block)
             }
         }
+        //We have to draw them in order
+        //Draw all block shades
+        for(block in blocks){block.drawShade(canvas)}
+        for(block in breakableBlocks){block.drawShade(canvas)}
+        //Draw non-breakable then breakable borders
+        for(block in blocks){block.draw(canvas)}
+        for(block in breakableBlocks){block.draw(canvas)}
+
         for (orb:Orb in orbs) { orb.draw(canvas) }
     }
     fun update(scroll : Float){
@@ -106,7 +118,6 @@ class Level(blockImg : List<Bitmap>) : Drawable {
         }
         orbs.add(newOrb)
         orbInLastLine=true
-        //TODO FUNCTION TO DECIDE WHERE THE orbs SHOULD SPAWN
         //we could make the function return a Par<Float, Float> and pass each one for parameter or we could change the set position to redive a par.
 
     }
