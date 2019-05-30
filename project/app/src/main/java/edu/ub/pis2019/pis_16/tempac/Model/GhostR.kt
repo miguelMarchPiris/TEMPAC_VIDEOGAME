@@ -19,7 +19,7 @@ class GhostR(red : Bitmap) : Ghost(red) {
 
     }
 
-    override fun getOnCorrectTemperature(temperature : Float): Boolean {
+    override fun getIfCorrectTemperature(): Boolean {
         return (temperature in lowerCorrectTemperature..(topCorrectTemperature+0.1f))
     }
     override fun setSpecialBehaviour() {

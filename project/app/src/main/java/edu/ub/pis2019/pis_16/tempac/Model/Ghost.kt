@@ -24,6 +24,7 @@ abstract class Ghost(image : Bitmap) : Actor(){
     var belowTheLine : Boolean = true
     var tooHigh : Boolean = false
     abstract var onCorrectTemperature : Boolean
+    var temperature : Float
 
     init {
         w = im.width.toFloat()
@@ -31,25 +32,39 @@ abstract class Ghost(image : Bitmap) : Actor(){
         rectangle = RectF(x-w,y-h,x,y)
         r= Random()
         behaviour = BehaviourBelowTheLine
+        temperature = 50F
     }
 
     fun update(scroll: Float, playerPosition: Pair<Float,Float>,rows: Triple<Array<Block?>?,Array<Block?>?,Array<Block?>?>,belowTheLine : Boolean, temperature : Float){
         super.update(scroll)
-        onCorrectTemperature=getOnCorrectTemperature(temperature)
+        this.temperature=temperature
+        onCorrectTemperature=getIfCorrectTemperature()
         this.belowTheLine=belowTheLine
         if(belowTheLine) {
             behaviour=BehaviourBelowTheLine
         }
-        else if (getOnCorrectTemperature(temperature)) {
+        else if (getIfCorrectTemperature()) {
             setSpecialBehaviour()
         }else{
             behaviour=BehaviourDefault
         }
         behaviour.chase(this,scroll,playerPosition,rows)
     }
-    abstract fun getOnCorrectTemperature(temperature : Float) : Boolean
+    abstract fun getIfCorrectTemperature() : Boolean
+    //abstract fun getIfCorrectTemperature() : Boolean
     abstract fun setSpecialBehaviour()
-
+    fun setNonHorizontalBehaviour(){
+        if(getIfCorrectTemperature()){
+            setSpecialBehaviour()
+        }
+        else{
+            if(belowTheLine){
+                behaviour=BehaviourBelowTheLine
+            }else{
+                behaviour=BehaviourDefault
+            }
+        }
+    }
     fun calculateDistanceToPlayer(playerPosition: Pair<Float, Float>):Float{
         return Math.hypot((playerPosition.first - x).toDouble(), (playerPosition.second - y).toDouble()).toFloat()
     }

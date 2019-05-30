@@ -72,7 +72,7 @@ abstract class GhostBehaviour {
         checkRight()
         checkDown()
     }
-    internal fun checkUp(){
+    internal fun checkUp() : Boolean{
         /***************************************
          *           CHECK UP
          **************************************/
@@ -86,8 +86,9 @@ abstract class GhostBehaviour {
         }
         //Deshacemos el movimiento
         ghost.moveDown(scroll, up)
+        return (distances[0] != Float.MAX_VALUE)
     }
-    internal fun checkLeft(){
+    internal fun checkLeft() : Boolean{
         /***************************************
          *           CHECK LEFT
          **************************************/
@@ -101,8 +102,9 @@ abstract class GhostBehaviour {
         }
         //Deshacemos el movimiento
         ghost.moveRight(scroll, left)
+        return (distances[1] != Float.MAX_VALUE)
     }
-    internal fun checkRight(){
+    internal fun checkRight() : Boolean{
         /***************************************
          *           CHECK RIGHT
          **************************************/
@@ -111,13 +113,14 @@ abstract class GhostBehaviour {
         ghost.moveRight(scroll, right)
         ghost.updateRect()
         //If the movement is valid, we calculate distance to the player
-        if(row==null || (!ghost.collidesWithBlock(row!!) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect0) )){
+        if(row==null || (!ghost.collidesWithBlock(row!!) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect2) ))){
             distances[2] = ghost.calculateDistanceToPlayer(playerPosition)
         }
         //Deshacemos el movimiento
         ghost.moveLeft(scroll, right)
+        return (distances[2] != Float.MAX_VALUE)
     }
-    internal fun checkDown(){
+    internal fun checkDown() : Boolean{
         /***************************************
          *           CHECK DOWN
          **************************************/
@@ -131,6 +134,7 @@ abstract class GhostBehaviour {
         }
         //Deshacemos el movimiento
         ghost.moveUp(scroll, down)
+        return (distances[3] != Float.MAX_VALUE)
     }
     internal fun searchMinDistance(): Int {
 
@@ -143,21 +147,6 @@ abstract class GhostBehaviour {
             }
         }
         return minIndex
-    }
-    internal fun searchMinDistanceNOTWORKING(): MutableList<Int> {
-        var sortedValues = mutableListOf(
-            0 to distances[0],
-            1 to distances[1],
-            2 to distances[2],
-            3 to distances[3]
-        )
-        sortedValues.sortBy {it.second}
-        val sortedIndex = mutableListOf<Int>()
-        for (i in 0 until sortedValues.size){
-            sortedIndex.add(i, sortedValues.get(i).first)
-        }
-        return sortedIndex
-
     }
 
     internal fun moveDefault(minIndex : Int){

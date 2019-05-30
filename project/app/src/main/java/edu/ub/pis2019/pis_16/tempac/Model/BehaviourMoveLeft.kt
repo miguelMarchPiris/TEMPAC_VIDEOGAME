@@ -35,10 +35,9 @@ object BehaviourMoveLeft : GhostBehaviour(), BehaviourHorizontal{
         }
 
         if(distances[0] != Float.MAX_VALUE ){
-            ghost.behaviour=BehaviourB
+            ghost.setNonHorizontalBehaviour()
             ghost.moveUp(scroll, up)
         }
-
         else{
             keepMovingHorizontally()
         }

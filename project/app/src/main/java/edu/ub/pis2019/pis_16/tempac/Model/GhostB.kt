@@ -20,7 +20,7 @@ class GhostB(image : Bitmap) : Ghost(image) {
 
     }
 
-    override fun getOnCorrectTemperature(temperature : Float): Boolean {
+    override fun getIfCorrectTemperature(): Boolean {
         return (temperature in lowerCorrectTemperature..(topCorrectTemperature+0.1f))
     }
 

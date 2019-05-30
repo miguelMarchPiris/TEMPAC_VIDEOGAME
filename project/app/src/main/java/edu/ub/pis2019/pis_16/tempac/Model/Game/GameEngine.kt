@@ -25,8 +25,8 @@ open class GameEngine(var context : Context) : Drawable {
         const val BLOCK_BREAKABLE_TEMPERATURE = 80f
         const val HOT_TEMPERATURE = 80f
         const val COLD_TEMPERATURE = 20f
-        const val TOO_HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(5)
-        const val HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(10)
+        const val TOO_HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(1)
+        const val HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(2)
 
         //Overlay rectangles
         lateinit var overlayRect0 : RectF

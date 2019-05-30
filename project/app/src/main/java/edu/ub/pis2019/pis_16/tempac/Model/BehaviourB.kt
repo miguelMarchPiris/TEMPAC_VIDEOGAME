@@ -53,11 +53,15 @@ object BehaviourB : GhostBehaviour() {
             var toTheLeft : Boolean = getDirection()
             if (toTheLeft){
                 ghost.behaviour=BehaviourMoveLeft
-                ghost.moveLeft(scroll, left)
+                if(checkLeft()){
+                    ghost.moveLeft(scroll, left)
+                }
             }
             else{
                 ghost.behaviour=BehaviourMoveRight
-                ghost.moveRight(scroll, right)
+                if(checkRight()){
+                    ghost.moveRight(scroll, right)
+                }
             }
         }
     }

@@ -37,8 +37,10 @@ object BehaviourMoveRight : GhostBehaviour(), BehaviourHorizontal{
 
         //If the ghost can move up, move up and change behaviour to BehaviourB
         if(distances[0] != Float.MAX_VALUE){
-            ghost.behaviour=BehaviourB
-            ghost.moveUp(scroll, up)
+            ghost.setNonHorizontalBehaviour()
+            if(checkUp()){
+                ghost.moveUp(scroll, up)
+            }
         }
 
         else{
@@ -49,8 +51,9 @@ object BehaviourMoveRight : GhostBehaviour(), BehaviourHorizontal{
         if(distances[2]!= Float.MAX_VALUE){
             //If it can move right, then move right
             ghost.moveRight(scroll, right)
+            return
         }
-        else{
+        else if(distances[1]!= Float.MAX_VALUE){
             //If it can't move right, move left and change to BehaviourMoveLeft
             ghost.behaviour=BehaviourMoveLeft
             ghost.moveLeft(scroll, left)
