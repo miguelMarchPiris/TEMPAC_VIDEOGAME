@@ -29,7 +29,6 @@ class GameEngine(var context: Context) : Drawable {
 
     //Game variables
     private var scrollSpeed = 0f
-    private var ghostSpeed = 0f
     private var baseScrollSpeed = 3f
     private var bonusScrollSpeed = 0f
     private var extremeWeather = false //used to control the score. When its cold or hot it activates
@@ -45,7 +44,7 @@ class GameEngine(var context: Context) : Drawable {
 
     //Actors
     private var gfactory : GhostFactory = GhostFactory(initGhostImages())
-    private var player : Player = Player(500f,1000f, initPacmanImages())
+    private var player : Player = Player(PLAYFIELD_WIDTH/2f+35f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf()
     private var dyingGhosts : MutableList<Ghost> = mutableListOf()
     private var level : Level = Level(initBlockImages())
@@ -77,7 +76,7 @@ class GameEngine(var context: Context) : Drawable {
         //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 35f
+        temperatureBar.temperature = 50f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
@@ -174,19 +173,26 @@ class GameEngine(var context: Context) : Drawable {
     }
 
     private fun gameState(temperature : Float){
-        //Increment scroll as time goes on
-        baseScrollSpeed +=0.0005f
+
+
 
         //On extreme temps we also change the scroll
-        if(temperature >= HOT_TEMPERATURE) {
-            bonusScrollSpeed = 0.75f
-            extremeWeather = true
-        }else if(temperature <= COLD_TEMPERATURE) {
-            bonusScrollSpeed = -0.75f
-            extremeWeather = true
-        }else{
-            bonusScrollSpeed = 0f
-            extremeWeather = false
+        when {
+            temperature >= HOT_TEMPERATURE -> {
+                baseScrollSpeed +=0.00025f //Increment scroll as time goes on
+                bonusScrollSpeed = 1.5f
+                extremeWeather = true
+            }
+            temperature <= COLD_TEMPERATURE -> {
+                baseScrollSpeed +=0.00025f //Increment scroll as time goes on
+                bonusScrollSpeed = -1f
+                extremeWeather = true
+            }
+            else -> {
+                baseScrollSpeed +=0.0005f //Increment scroll as time goes on
+                bonusScrollSpeed = 0f
+                extremeWeather = false
+            }
         }
 
         scrollSpeed = baseScrollSpeed + bonusScrollSpeed
@@ -206,7 +212,7 @@ class GameEngine(var context: Context) : Drawable {
         screenCatchUp = player.y < playingField.top + (playingField.bottom-playingField.top)/2f*0.8f
         //If the player is near the top, we make the scroll go faster
         if(screenCatchUp)
-            scrollSpeed += player.speed
+            scrollSpeed += player.ySpeed
         Log.v ("SCROLL", scrollSpeed.toString())
     }
 
@@ -377,7 +383,7 @@ class GameEngine(var context: Context) : Drawable {
 
                 val deltaX = touchEndX-touchStartX
                 val deltaY = touchEndY-touchStartY
-                Log.println(Log.VERBOSE,"TOUCH INPUT", deltaX.toString() + " - " + deltaY.toString())
+                //Log.println(Log.VERBOSE,"TOUCH INPUT", deltaX.toString() + " - " + deltaY.toString())
                 if (Math.abs(deltaY) > MIN_DISTANCE && Math.abs(deltaY) > Math.abs(deltaX))//swipe up-down
                 {
                     if(deltaY < 0)//UP
@@ -413,10 +419,10 @@ class GameEngine(var context: Context) : Drawable {
             else{
                 //If we change the player image we may change the numbers for the collisions
                 when (player.direction) {
-                    Player.Direction.UP -> player.setPosition(player.x, player.y + player.speed + scrollSpeed)
-                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.speed - scrollSpeed)
-                    Player.Direction.LEFT -> player.setPosition(player.x + player.speed + scrollSpeed, player.y)
-                    Player.Direction.RIGHT -> player.setPosition(player.x - player.speed - scrollSpeed, player.y)
+                    Player.Direction.UP -> player.setPosition(player.x, player.y + player.ySpeed + scrollSpeed)
+                    Player.Direction.DOWN -> player.setPosition(player.x, player.y - player.ySpeed - scrollSpeed)
+                    Player.Direction.LEFT -> player.setPosition(player.x + player.xSpeed + scrollSpeed, player.y)
+                    Player.Direction.RIGHT -> player.setPosition(player.x - player.xSpeed - scrollSpeed, player.y)
                     Player.Direction.STATIC -> player.setPosition(player.x, player.y)
                 }
                 player.direction = Player.Direction.STATIC
@@ -447,17 +453,17 @@ class GameEngine(var context: Context) : Drawable {
     private fun isOutOfPlayzone(player: Player): Boolean{
         //Si toca  a l'esquerra col·lisio
         if(RectF.intersects(overlay[0], player.rectangle)){
-            player.setPosition(player.x + player.speed, player.y)
+            player.setPosition(player.x + player.xSpeed, player.y)
             player.direction = Player.Direction.STATIC
         }
         //Si toca a la dreta col·lisio
         else if(RectF.intersects(overlay[2], player.rectangle)){
-            player.setPosition(player.x - player.speed, player.y)
+            player.setPosition(player.x - player.xSpeed, player.y)
             player.direction = Player.Direction.STATIC
         }
         //Si toca a la adalt col·lisio
         else if(RectF.intersects(overlay[1], player.rectangle)){
-            player.setPosition(player.x, player.y + player.speed + scrollSpeed)
+            player.setPosition(player.x, player.y + player.ySpeed + scrollSpeed)
             player.direction = Player.Direction.STATIC
         }
         //Si toca surt per baix esta mort
