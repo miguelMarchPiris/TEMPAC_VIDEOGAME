@@ -53,21 +53,25 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
     //DRAW AND UPDATE
     override fun draw(canvas: Canvas?) {
-        //Draw non-breakable then breakable
-        for (array in filasA){
-            for (block in array){
-                if( block!=null && !block.breakable){
-                    block.draw(canvas)
-                }
-            }
-        }
+        val breakableBlocks = mutableListOf<Block>()
+        val blocks = mutableListOf<Block>()
         for (array in filasA){
             for (block in array){
                 if( block!=null && block.breakable){
-                    block.draw(canvas)
+                    breakableBlocks.add(block)
                 }
+                else if( block != null)
+                    blocks.add(block)
             }
         }
+        //We have to draw them in order
+        //Draw all block shades
+        for(block in blocks){block.drawShade(canvas)}
+        for(block in breakableBlocks){block.drawShade(canvas)}
+        //Draw non-breakable then breakable borders
+        for(block in blocks){block.draw(canvas)}
+        for(block in breakableBlocks){block.draw(canvas)}
+
         for (orb:Orb in orbs) { orb.draw(canvas) }
     }
     fun update(scroll : Float){
