@@ -6,8 +6,8 @@ import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
     private var paint = Paint()
     private var paintInside = Paint()
-    private val width = blockSide
-    private val height  = blockSide
+    private val width = blockSide +10f
+    private val height  = blockSide + 10f
     private var w = 0f
     private var h = 0f
     private var rectangleInside = RectF(x-width/2f+15f,y-height/2f+15f,x+width/2f-15,y+height/2f-15)

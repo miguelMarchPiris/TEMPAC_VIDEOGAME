@@ -53,9 +53,17 @@ class Level(blockImg : List<Bitmap>) : Drawable {
     }
     //DRAW AND UPDATE
     override fun draw(canvas: Canvas?) {
+        //Draw non-breakable then breakable
         for (array in filasA){
             for (block in array){
-                if (block!=null){
+                if( block!=null && !block.breakable){
+                    block.draw(canvas)
+                }
+            }
+        }
+        for (array in filasA){
+            for (block in array){
+                if( block!=null && block.breakable){
                     block.draw(canvas)
                 }
             }
