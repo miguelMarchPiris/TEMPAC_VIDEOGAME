@@ -10,6 +10,10 @@ import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+
+
 
 class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
     DatabaseCallback {
@@ -63,7 +67,12 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
         fragment.activity?.finish()
     }
     fun share(){
-
+        val scoreText = fragment.inflatedView.findViewById<TextView>(R.id.yourScoreResultText).text.toString()
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "My new score in Tempac is "+scoreText+" can you beat it?")
+        sendIntent.type = "text/plain"
+        fragment.activity?.startActivity(sendIntent)
     }
     fun playAgain(){
         var nav = Navigation.findNavController(fragment.view!!)
