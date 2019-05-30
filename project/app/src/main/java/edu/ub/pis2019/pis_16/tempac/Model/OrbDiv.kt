@@ -6,7 +6,7 @@ class OrbDiv(number : Int) : Orb(number) {
 
     init{
         //setPosition(800f,250f)
-        paint.color = Color.parseColor("#ffffff")
+        paint.color = Color.parseColor("#999999")
         operand = Orb.Operand.DIV
     }
 
