@@ -184,7 +184,7 @@ class GameEngine(var context: Context) : Drawable {
             }
             temperature <= COLD_TEMPERATURE -> {
                 baseScrollSpeed +=0.00025f //Increment scroll as time goes on
-                bonusScrollSpeed = -0.5f
+                bonusScrollSpeed = -1f
                 extremeWeather = true
             }
             else -> {
