@@ -3,19 +3,19 @@ package edu.ub.pis2019.pis_16.tempac.Model.Game
 import android.content.Context
 import android.graphics.Canvas
 import android.widget.Toast
-import edu.ub.pis2019.pis_16.tempac.Model.Ghost
-import edu.ub.pis2019.pis_16.tempac.Model.LevelTutorial
+import edu.ub.pis2019.pis_16.tempac.Model.GameLevel
+import edu.ub.pis2019.pis_16.tempac.Model.Level
+import edu.ub.pis2019.pis_16.tempac.Model.TutorialLevel
 import edu.ub.pis2019.pis_16.tempac.Model.Player
-import edu.ub.pis2019.pis_16.tempac.View.GameActivity
-import java.util.logging.Level
 
-class GameEngineTutorial(context : Context) : Engine(context){
-    override var level = LevelTutorial() as edu.ub.pis2019.pis_16.tempac.Model.Level
+class TutorialEngine(context : Context) : Engine(context){
     override var scrollSpeed: Float = 0f
     override var baseScrollSpeed: Float = 0f
 
     var currentLevel = 0
-    private var tutorialLevel : LevelTutorial
+    override var level: Level = TutorialLevel(initBlockImages())
+    private var tutorialLevel : TutorialLevel
+
     init {
         player.direction = Player.Direction.STATIC
         player.setPosition(550f,1500f)
@@ -23,7 +23,7 @@ class GameEngineTutorial(context : Context) : Engine(context){
 
         temperatureBar.temperature = 50f
 
-        tutorialLevel = level as LevelTutorial
+        tutorialLevel = level as TutorialLevel
     }
 
     override fun update() {
@@ -58,18 +58,29 @@ class GameEngineTutorial(context : Context) : Engine(context){
         changeTutorialPart()
     }
 
+    override fun draw(canvas: Canvas?) {
+        super.draw(canvas)
 
-    fun playerReachedTop(): Boolean{
+        if(dead)
+            canvas!!.drawText("Tutorial has finished!\nNow you are ready for real game!", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
+        canvas!!.drawText(temporaryMessage, 1080 / 2f, PLAYFIELD_HEIGTH + 400f, textPaint)
+    }
+
+
+    private fun playerReachedTop(): Boolean{
         return  player.y < playingField.top + (playingField.bottom-playingField.top)*0.05f
     }
 
-    fun displayMessage(){
+    var temporaryMessage : String = ""
+    private fun displayMessage(){
         val tutorialMessage = tutorialLevel.getMessage(player.y)
-        if(tutorialMessage != null)
+        if(tutorialMessage != null) {
             Toast.makeText(context.applicationContext, tutorialMessage, Toast.LENGTH_LONG).show()
-    }
+            temporaryMessage = tutorialMessage //only temporary(?) solution
+        }
+        }
 
-    fun changeTutorialPart(){
+    private fun changeTutorialPart(){
         if (!playerReachedTop()) return
 
         currentLevel++
@@ -79,7 +90,7 @@ class GameEngineTutorial(context : Context) : Engine(context){
             dead = true
     }
 
-    fun reinitializeVariables(){
+    private fun reinitializeVariables(){
         when(currentLevel){
             0 -> {
                 player.setPosition(550f,1500f)

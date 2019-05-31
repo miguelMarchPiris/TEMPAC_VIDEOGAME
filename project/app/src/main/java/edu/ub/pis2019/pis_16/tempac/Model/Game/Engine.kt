@@ -40,32 +40,32 @@ abstract class Engine(var context : Context): Drawable{
     protected var score = Score()
 
     //Actors
-    protected var gfactory : GhostFactory = GhostFactory(initGhostImages())
+    private var gfactory : GhostFactory = GhostFactory(initGhostImages())
     protected var player : Player = Player(500f,1000f, initPacmanImages())
     protected var ghosts : MutableList<Ghost> = mutableListOf()
-    protected open var level : Level = Level(initBlockImages())
+    abstract  var level : Level
 
     //Play zone rects
     protected val playingField = RectF(leftPlayingField, topPlayingField, rightPlayingField, bottomPlayingField)
-    protected val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
-    protected val fieldLinePaint = Paint()
+    private val playingFieldLine = RectF(playingField.left-2.5f, playingField.top-2.5f,playingField.right+2.5f,playingField.bottom+2.5f)
+    private val fieldLinePaint = Paint()
     protected val fieldPaint = Paint()
-    protected val overlay : List<RectF>
-    protected val overlayPaint = Paint()
+    private val overlay : List<RectF>
+    private val overlayPaint = Paint()
 
     //Score text paint
     protected val textPaint = Paint()
 
     //Input variables
-    protected var touchStartX = 0f
-    protected var touchStartY = 0f
-    protected var touchEndX = 0f
-    protected var touchEndY = 0f
+    private var touchStartX = 0f
+    private var touchStartY = 0f
+    private var touchEndX = 0f
+    private var touchEndY = 0f
 
     //Screen variables
-    protected var metrics = context.resources.displayMetrics
-    protected var w = metrics.widthPixels
-    protected var h = metrics.heightPixels
+    private var metrics = context.resources.displayMetrics
+    private var w = metrics.widthPixels
+    private var h = metrics.heightPixels
 
     init {
 
@@ -91,7 +91,7 @@ abstract class Engine(var context : Context): Drawable{
         textPaint.textAlign = Paint.Align.CENTER
     }
 
-    protected fun initPacmanImages() : List<Bitmap>{
+    private fun initPacmanImages() : List<Bitmap>{
         val pacman_open_up : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_up)
         val pacman_open_rigth : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_right)
         val pacman_open_down : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.pacman_open_down)
@@ -106,7 +106,7 @@ abstract class Engine(var context : Context): Drawable{
         return blockImages
     }
 
-    protected fun initGhostImages() : List<Bitmap>{
+    private fun initGhostImages() : List<Bitmap>{
         val ghost_red : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_red)
         val ghost_blue : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_blue)
         val ghost_green : Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ghost_green)
@@ -150,7 +150,7 @@ abstract class Engine(var context : Context): Drawable{
         //Log.v("SCROLL", "SCROLL: " + scrollSpeed)
     }
 
-    protected fun deleteGhosts(temperature : Float){
+    private fun deleteGhosts(temperature : Float){
         var sizeBeggining = ghosts.size
 
         val blues : MutableList<Ghost> = (ghosts.filterIsInstance<GhostB>()).toMutableList()
@@ -326,7 +326,7 @@ abstract class Engine(var context : Context): Drawable{
         }
     }
 
-    protected fun checkCollisionsBlock(block: Block){
+    private fun checkCollisionsBlock(block: Block){
 
 
         if(RectF.intersects(block.rectangle, player.rectangle)) {
@@ -349,7 +349,7 @@ abstract class Engine(var context : Context): Drawable{
         }
     }
 
-    protected fun checkCollisionsOrb(orb: Orb):Boolean{
+    private fun checkCollisionsOrb(orb: Orb):Boolean{
         val collides = RectF.intersects(orb.rectangle,player.rectangle)
         if(collides)
             temperatureBar.changeTemperature(orb)
@@ -357,7 +357,7 @@ abstract class Engine(var context : Context): Drawable{
         return collides
     }
 
-    protected fun checkCollisionsGhost(ghost : Ghost){
+    private fun checkCollisionsGhost(ghost : Ghost){
 
         if(RectF.intersects(ghost.rectangle,player.rectangle)){
             player.direction = Player.Direction.STATIC
@@ -365,11 +365,11 @@ abstract class Engine(var context : Context): Drawable{
         }
     }
 
-    protected fun isOutOfPlayzone(actor: Actor):Boolean{
+    private fun isOutOfPlayzone(actor: Actor):Boolean{
         return RectF.intersects(actor.rectangle,overlay[3]) && !RectF.intersects(actor.rectangle,playingField)
     }
 
-    protected fun isOutOfPlayzone(player: Player): Boolean{
+    private fun isOutOfPlayzone(player: Player): Boolean{
         //Si toca  a l'esquerra col·lisio
         if(RectF.intersects(overlay[0], player.rectangle)){
             player.setPosition(player.x + player.speed, player.y)

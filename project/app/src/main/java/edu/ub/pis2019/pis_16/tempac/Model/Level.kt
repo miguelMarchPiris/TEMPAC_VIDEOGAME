@@ -9,7 +9,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-open class Level(blockImg : List<Bitmap>) : Drawable {
+abstract class Level(blockImg : List<Bitmap>) : Drawable {
     companion object{
         const val MAX_ORBS = 7
     }
@@ -55,21 +55,8 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         createArrayLevel(ancho,alto)
     }
     //Fills ths matrix with lines of nulls(so its empty), the top line is created with some blocks.
-    internal open fun createArrayLevel(ancho: Int,alto: Int){
-        var emptyArray = BooleanArray(ancho)
-        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
-        for(i in 0 until ancho){
-            emptyArray[i] = false
-            arrayIntermitenteBool[i] = i%2==0
-        }
-        for(i in 0 until alto){
-            if(i!=alto-1){
-                createNewBlockLine(emptyArray.copyOf(), i)
-            }else{
-                createNewBlockLine(arrayIntermitenteBool,i)
-            }
-        }
-    }
+    abstract fun createArrayLevel(ancho: Int,alto: Int)
+
     //IT CREATES A LINE WHEN GIVEN A BOOLEAN ARRAY. JUST IN THE INIT
     fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
         //first we add this so only one orb spawns in one line
@@ -166,7 +153,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         newLineOnTop()
     }
     //ITS CALLED WHEN A LINE IS DELETED.
-    internal open fun newLineOnTop() {
+    open fun newLineOnTop() {
         val first=getFirstArray()
         val positionY= positionYArray[first] as Float
         if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }

@@ -1,35 +1,30 @@
 package edu.ub.pis2019.pis_16.tempac.Model
+import android.graphics.Bitmap
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
-import java.util.*
 
-class LevelTutorial : Level(listOf()) {
-
-    override fun newLineOnTop() {
-        //FIRST WE GET THE TOP ARRAY AND ITS Y POSITION
-        val first=getFirstArray()
-        val positionY= positionYArray[first] as Float
-        if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
-
-        //READ THE NEW LINE FROM WHEREVER AND CALL createNewBlockLine
-        var firstBArray= readNewLine()
-
-
-        //dejalo tal cual y solo haz cosas con firstBArray
-        createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
-    }
-
+class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
     fun changeTutorialPart(part: Int){
         matrixBlocks= mutableListOf()
         when(part){
+            0 -> generateFirstTutorialPart(nBlocksInLine, nLinesToDraw)
             1 -> generateSecondTutorialPart(nBlocksInLine, nLinesToDraw)
             2 -> generateThirdTutorialPart(nBlocksInLine, nLinesToDraw)
         }
     }
+
     override fun createArrayLevel(width: Int, height: Int){
         generateFirstTutorialPart(width, height)
     }
 
+    override fun newLineOnTop() {
+        val first=getFirstArray()
+        val positionY= positionYArray[first] as Float
+        if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
+        var firstBArray= createBooleanArray(first as Array<Block?>)
+
+        createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
+    }
 
     private fun generateFirstTutorialPart(width: Int, height: Int){
          var fullLine = BooleanArray(width)
