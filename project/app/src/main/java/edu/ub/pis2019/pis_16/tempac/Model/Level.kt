@@ -39,6 +39,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
 
+    var messages  = mutableListOf<Pair<Float,String>>()
 
     init{
         matrixBlocks= mutableListOf<Array<Block?>>()

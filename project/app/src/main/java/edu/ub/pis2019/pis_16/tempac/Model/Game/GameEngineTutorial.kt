@@ -3,8 +3,10 @@ package edu.ub.pis2019.pis_16.tempac.Model.Game
 import android.content.Context
 import android.graphics.Canvas
 import android.widget.Toast
+import edu.ub.pis2019.pis_16.tempac.Model.Ghost
 import edu.ub.pis2019.pis_16.tempac.Model.LevelTutorial
 import edu.ub.pis2019.pis_16.tempac.Model.Player
+import edu.ub.pis2019.pis_16.tempac.View.GameActivity
 import java.util.logging.Level
 
 class GameEngineTutorial(context : Context) : Engine(context){
@@ -13,7 +15,7 @@ class GameEngineTutorial(context : Context) : Engine(context){
     override var baseScrollSpeed: Float = 0f
 
     var currentLevel = 0
-    lateinit var tutorialLevel :LevelTutorial
+    private var tutorialLevel : LevelTutorial
     init {
         player.direction = Player.Direction.STATIC
         player.setPosition(550f,1500f)
@@ -24,48 +26,74 @@ class GameEngineTutorial(context : Context) : Engine(context){
         tutorialLevel = level as LevelTutorial
     }
 
-    fun playerReachedTop(): Boolean{
-        return  player.y < playingField.top + (playingField.bottom-playingField.top)*0.05f
-    }
-
     override fun update() {
         //Changes the boolean extreme temperature and changes the screen speed
         gameState(temperatureBar.temperature)
-
-
         //actualizes the temperature of the game
-        //level.temperature = temperatureBar.temperature
-        //makes the level move downwards
-        //level.update(scrollSpeed)
+        level.temperature = temperatureBar.temperature
 
-        //makes the player not catching the top of the screen
-        //playerCatchingTop()
+        if(currentLevel >= 2) {
+            //makes the level move downwards
+            level.update(scrollSpeed)
 
-        //manages how the score is added
-        //scoreManagement(extremeWeather)
+            //makes the player not catching the top of the screen
+            playerCatchingTop()
+            //manages how the score is added
+            scoreManagement(extremeWeather)
+        }
 
         //Process inputs
         player.update(scrollSpeed, screenCatchUp)
 
         //Process AI
         //choose WHERE have to spawn the ghosts.
-        //spawnGhost()
+        if(currentLevel >= 1)
+            spawnGhost()
 
         //Process physics (cheking collisions)
         processPhysics()
-        //Process animations
-
-
-
+        //display tutorial message
+        displayMessage()
         //if player reached the top of tutorial level
-        if(playerReachedTop())
-        {
-            currentLevel++
-            tutorialLevel.changeTutorialPart(currentLevel)
-            player.setPosition(550f,1500f)
-            player.direction = Player.Direction.STATIC
-            if(currentLevel > 2)
-                dead = true
+        changeTutorialPart()
+    }
+
+
+    fun playerReachedTop(): Boolean{
+        return  player.y < playingField.top + (playingField.bottom-playingField.top)*0.05f
+    }
+
+    fun displayMessage(){
+        val tutorialMessage = tutorialLevel.getMessage(player.y)
+        if(tutorialMessage != null)
+            Toast.makeText(context.applicationContext, tutorialMessage, Toast.LENGTH_LONG).show()
+    }
+
+    fun changeTutorialPart(){
+        if (!playerReachedTop()) return
+
+        currentLevel++
+        tutorialLevel.changeTutorialPart(currentLevel)
+        reinitializeVariables()
+        if(currentLevel > 2)
+            dead = true
+    }
+
+    fun reinitializeVariables(){
+        when(currentLevel){
+            0 -> {
+                player.setPosition(550f,1500f)
+                player.direction = Player.Direction.STATIC
+            }
+            1 -> {
+                player.setPosition(550f,1500f)
+                player.direction = Player.Direction.UP
+            }
+            2 -> {
+                player.setPosition(550f,1500f)
+                player.direction = Player.Direction.UP
+                ghosts = mutableListOf()
+            }
         }
     }
 

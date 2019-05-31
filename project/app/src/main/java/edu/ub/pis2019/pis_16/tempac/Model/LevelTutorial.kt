@@ -31,7 +31,7 @@ class LevelTutorial : Level(listOf()) {
     }
 
 
-    fun generateFirstTutorialPart(width: Int, height: Int){
+    private fun generateFirstTutorialPart(width: Int, height: Int){
          var fullLine = BooleanArray(width)
         fullLine.fill(true)
 
@@ -55,10 +55,12 @@ class LevelTutorial : Level(listOf()) {
             createNewBlockLine(line, i)
         }
 
-
+        messages.add(Pair(1500f, "Swipe up!"))
+        messages.add(Pair(pathLength*3f*Block.blockSide, "Swipe right!"))
+        messages.add(Pair(pathLength*2f*Block.blockSide, "Swipe left!"))
      }
 
-     fun generateSecondTutorialPart(width: Int, height: Int){
+     private fun generateSecondTutorialPart(width: Int, height: Int){
         var fullLine = BooleanArray(width)
         fullLine.fill(true)
         var emptyLine = BooleanArray(width)
@@ -80,9 +82,12 @@ class LevelTutorial : Level(listOf()) {
             createNewBlockLine(line, i)
         }
 
+         messages.clear()
+         messages.add(Pair(1500f, "Watch out for the ghosts!"))
+         messages.add(Pair(Engine.PLAYFIELD_HEIGTH - pathLength*0.95f, "Look how the ghosts are chasing you!"))
     }
 
-     fun generateThirdTutorialPart(width: Int, height: Int){
+     private fun generateThirdTutorialPart(width: Int, height: Int){
         var fullLine = BooleanArray(width)
         fullLine.fill(true)
         var startX = width/2
@@ -94,6 +99,10 @@ class LevelTutorial : Level(listOf()) {
             line[startX+1] = false
             createNewBlockLine(line, i)
         }
+
+         messages.clear()
+         messages.add(Pair(1500f, "The scroll speed changes with the temperature!"))
+         messages.add(Pair(1200f, "Collecting orbs changes the temperature!"))
     }
 
     fun readNewLine() : BooleanArray{
