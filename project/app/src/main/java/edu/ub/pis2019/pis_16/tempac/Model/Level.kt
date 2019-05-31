@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.Log
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
@@ -39,15 +40,13 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
     var probBreakable : Float= 0.3F
 
 
-
-
     init{
         matrixBlocks= mutableListOf<Array<Block?>>()
 
         blockImages=blockImg
         //How many lines, and how many blocks in one line.
-        nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        nLinesToDraw = (GameEngine.bottomPlayingField-GameEngine.topPlayingField).div(Block.blockSide).toInt()+4
+        nBlocksInLine= Engine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
+        nLinesToDraw = (Engine.bottomPlayingField-Engine.topPlayingField).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
     //Its just a shitty method yikes
@@ -77,7 +76,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.bottomPlayingField+Block.blockSide.times(1.5F))
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(Engine.bottomPlayingField+Block.blockSide.times(1.5F))
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
         for (k in 0 until arrayBooleanos.size){

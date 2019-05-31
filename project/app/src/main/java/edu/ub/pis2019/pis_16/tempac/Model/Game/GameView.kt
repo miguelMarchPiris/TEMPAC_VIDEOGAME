@@ -8,9 +8,9 @@ import android.view.SurfaceView
 import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
 
-class GameView(var cntxt: Context, motor : GameEngine): SurfaceView(cntxt), SurfaceHolder.Callback{
+class GameView(var cntxt: Context, motor : Engine): SurfaceView(cntxt), SurfaceHolder.Callback{
     private var thread : GameThread
-    private var engine : GameEngine
+    private var engine : Engine
     init {
         holder.addCallback(this)
         engine = motor

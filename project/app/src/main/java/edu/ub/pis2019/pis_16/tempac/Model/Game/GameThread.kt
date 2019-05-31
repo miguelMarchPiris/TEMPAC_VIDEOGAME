@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import java.lang.Exception
 
-class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView: GameView, private var gameEngine: GameEngine) : Thread() {
+class GameThread(private var surfaceHolder: SurfaceHolder, private var gameView: GameView, private var gameEngine: Engine) : Thread() {
 
     private var fps = 30
     private var avgFps = 0.0
