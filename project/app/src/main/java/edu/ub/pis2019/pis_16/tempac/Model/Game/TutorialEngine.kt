@@ -3,12 +3,10 @@ package edu.ub.pis2019.pis_16.tempac.Model.Game
 import android.content.Context
 import android.graphics.Canvas
 import android.widget.Toast
-import edu.ub.pis2019.pis_16.tempac.Model.GameLevel
-import edu.ub.pis2019.pis_16.tempac.Model.Level
-import edu.ub.pis2019.pis_16.tempac.Model.TutorialLevel
-import edu.ub.pis2019.pis_16.tempac.Model.Player
+import edu.ub.pis2019.pis_16.tempac.Model.*
 
 class TutorialEngine(context : Context) : Engine(context){
+
     override var scrollSpeed: Float = 0f
     override var baseScrollSpeed: Float = 0f
 
@@ -21,7 +19,7 @@ class TutorialEngine(context : Context) : Engine(context){
         player.setPosition(550f,1500f)
         player.speed = 2.5f
 
-        temperatureBar.temperature = 50f
+        temperatureBar.temperature = 0f
 
         tutorialLevel = level as TutorialLevel
     }
@@ -31,6 +29,14 @@ class TutorialEngine(context : Context) : Engine(context){
         gameState(temperatureBar.temperature)
         //actualizes the temperature of the game
         level.temperature = temperatureBar.temperature
+
+        //Process inputs
+        player.update(scrollSpeed, screenCatchUp)
+
+        //Process physics (cheking collisions)
+        processPhysics()
+        //display tutorial message
+
 
         if(currentLevel >= 2) {
             //makes the level move downwards
@@ -42,20 +48,15 @@ class TutorialEngine(context : Context) : Engine(context){
             scoreManagement(extremeWeather)
         }
 
-        //Process inputs
-        player.update(scrollSpeed, screenCatchUp)
 
-        //Process AI
-        //choose WHERE have to spawn the ghosts.
-        if(currentLevel >= 1)
+        if(currentLevel >= 1) {
             spawnGhost()
+        }
 
-        //Process physics (cheking collisions)
-        processPhysics()
-        //display tutorial message
-        displayMessage()
         //if player reached the top of tutorial level
         changeTutorialPart()
+
+        displayMessage()
     }
 
     override fun draw(canvas: Canvas?) {
@@ -76,9 +77,9 @@ class TutorialEngine(context : Context) : Engine(context){
         val tutorialMessage = tutorialLevel.getMessage(player.y)
         if(tutorialMessage != null) {
             Toast.makeText(context.applicationContext, tutorialMessage, Toast.LENGTH_LONG).show()
-            temporaryMessage = tutorialMessage //only temporary(?) solution
+            temporaryMessage = temporaryMessage //only temporary(?) solution
         }
-        }
+    }
 
     private fun changeTutorialPart(){
         if (!playerReachedTop()) return
