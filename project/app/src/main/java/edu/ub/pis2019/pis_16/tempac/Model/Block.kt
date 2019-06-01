@@ -4,7 +4,7 @@ import android.graphics.*
 import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 
-class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
+class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
     private var paint = Paint()
     private var paintInside = Paint()
     private val width = blockSide

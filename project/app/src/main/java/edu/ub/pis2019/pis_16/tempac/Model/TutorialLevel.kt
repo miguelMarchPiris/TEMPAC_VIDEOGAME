@@ -1,9 +1,12 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 import android.graphics.Bitmap
+import android.graphics.RectF
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 
-class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
+class TutorialLevel : Level(){
+
+
     fun changeTutorialPart(part: Int){
         matrixBlocks= mutableListOf()
         when(part){
@@ -50,9 +53,13 @@ class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
             createNewBlockLine(line, i)
         }
 
-        messages.add(Pair(1500f, "Swipe up!"))
-        messages.add(Pair(pathLength*3f*Block.blockSide, "Swipe right!"))
-        messages.add(Pair(pathLength*2f*Block.blockSide, "Swipe left!"))
+        messages.add(Pair(RectF(400f,1400f,620f,1700f), "Swipe up!"))
+        messages.add(Pair(RectF(400f,200f,620f,1090f), "Swipe left!"))
+        messages.add(Pair(RectF(0f,200f,40f,1090f), "Swipe up!"))
+        messages.add(Pair(RectF(0f,710f,40f,730f), "Swipe right!"))
+        messages.add(Pair(RectF(540f,710f,620f,780f), "Swipe up!"))
+
+
      }
 
      private fun generateSecondTutorialPart(width: Int, height: Int){
@@ -78,8 +85,7 @@ class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
         }
 
          messages.clear()
-         messages.add(Pair(1500f, "Watch out for the ghosts!"))
-         messages.add(Pair(Engine.PLAYFIELD_HEIGTH - pathLength*0.95f, "Look how the ghosts are chasing you!"))
+         messages.add(Pair(RectF(0f,1400f,1080f,1500f), "Watch out for the ghosts!"))
     }
 
      private fun generateThirdTutorialPart(width: Int, height: Int){
@@ -96,8 +102,10 @@ class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
         }
 
          messages.clear()
-         messages.add(Pair(1500f, "The scroll speed changes with the temperature!"))
-         messages.add(Pair(1200f, "Collecting orbs changes the temperature!"))
+         messages.add(Pair(RectF(0f,1400f,1080f,1500f), "Picking orbs changes the temperature"))
+         messages.add(Pair(RectF(0f,1200f,1080f,1400f), "Certain ghosts can only survive at certain temperatures"))
+         messages.add(Pair(RectF(0f,1000f,1080f,1200f), "Have fun!"))
+
     }
 
     fun readNewLine() : BooleanArray{
@@ -110,12 +118,12 @@ class TutorialLevel(blockImg : List<Bitmap>) : Level(blockImg){
         return newLine
     }
 
-    fun getMessage(y: Float): String? {
+    fun getMessage(rectPlayer: RectF): String? {
         if(messages.isEmpty())
             return null
 
         var message = messages.first()
-        if(message.first >= y) {
+        if(RectF.intersects(message.first,rectPlayer)) {
             messages.remove(message)
             return message.second
         }
