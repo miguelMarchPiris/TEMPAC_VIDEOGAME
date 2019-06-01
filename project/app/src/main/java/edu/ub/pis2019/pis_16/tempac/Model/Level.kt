@@ -9,18 +9,19 @@ import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-abstract class Level(blockImg : List<Bitmap>) : Drawable {
+abstract class Level : Drawable {
     companion object{
         const val MAX_ORBS = 5
     }
-    //IMAGE
-    var blockImages : List<Bitmap>
 
     //ORBS
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
     var orbInLastLine : Boolean = false
     var temperature = 0f
+
+    //MESSAGES
+    protected val messages = mutableListOf<Pair<RectF,String>>()
 
     //MATRIX
     //This is tha matrix of all the blocks
@@ -39,12 +40,11 @@ abstract class Level(blockImg : List<Bitmap>) : Drawable {
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
 
-    var messages  = mutableListOf<Pair<Float,String>>()
+
 
     init{
         matrixBlocks= mutableListOf<Array<Block?>>()
 
-        blockImages=blockImg
         //How many lines, and how many blocks in one line.
         nBlocksInLine= Engine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
         nLinesToDraw = (Engine.bottomPlayingField-Engine.topPlayingField).div(Block.blockSide).toInt()+4
@@ -74,7 +74,7 @@ abstract class Level(blockImg : List<Bitmap>) : Drawable {
 
                 //HOW WE CHOOSE BREAKABLE BLOCKS HERE
 
-                var b =Block(desplazamiento,positionY, true, blockImages)
+                var b =Block(desplazamiento,positionY, true)
                 arrayBlocks.set(k,b)
             }
         }
@@ -96,8 +96,7 @@ abstract class Level(blockImg : List<Bitmap>) : Drawable {
             if(arrayBooleanos[k]){
                 //Calcular la posición que hay que pasarle al bloque
                 desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                arrayBlocks[k] = Block(desplazamiento,posY, r.nextFloat()<probBreakable, blockImages)
+                arrayBlocks[k] = Block(desplazamiento,posY, r.nextFloat()<probBreakable)
             }
         }
         //We add the array in the fist position of FilasA

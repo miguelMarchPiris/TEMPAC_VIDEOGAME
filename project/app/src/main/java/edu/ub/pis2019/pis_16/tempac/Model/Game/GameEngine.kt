@@ -6,7 +6,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.Level
 
 
 class GameEngine(context: Context) : Engine(context) {
-    override var level: Level = GameLevel(initBlockImages())
+    override var level: Level = GameLevel()
 
     override fun update() {
         //Changes the boolean extreme temperature and changes the screen speed

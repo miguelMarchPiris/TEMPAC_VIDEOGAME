@@ -288,7 +288,7 @@ abstract class Engine(var context : Context): Drawable{
 
     }
 
-    fun processInput(event: MotionEvent){
+    open fun processInput(event: MotionEvent){
 
         val action = event.action
         when (action) {

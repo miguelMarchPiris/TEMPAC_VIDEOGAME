@@ -9,7 +9,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-open class GameLevel(blockImg : List<Bitmap>) : Level(blockImg) {
+open class GameLevel : Level() {
 
     override fun createArrayLevel(ancho: Int,alto: Int){
         var emptyArray = BooleanArray(ancho)
