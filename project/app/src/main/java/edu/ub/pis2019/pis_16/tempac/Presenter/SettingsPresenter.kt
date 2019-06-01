@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.CreditsActivity
 import edu.ub.pis2019.pis_16.tempac.View.LogInActivity
@@ -15,18 +18,20 @@ import java.lang.Exception
 
 
 class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
+
     private val RC_USERNAME = 420
     private lateinit var app:TempacApplication
+
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -39,19 +44,38 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
 
     override fun onCreate() {
         app = (activity.application as TempacApplication)
+
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
+
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
+
         activity.findViewById<Button>(R.id.replay_tutorial_button).setOnClickListener {
+            MusicService.buttonSoundPlay(this.activity)
             changeTutorial()
         }
 
         activity.findViewById<Button>(R.id.credits_button).setOnClickListener{
+            MusicService.buttonSoundPlay(this.activity)
             changeActivityCredits()
         }
         val signOutButton = activity.findViewById<Button>(R.id.signOut_button)
         signOutButton.setOnClickListener{
+            MusicService.buttonSoundPlay(this.activity)
             signOut()
         }
         val changeUsernameButton = activity.findViewById<Button>(R.id.changeUsername_button)
         changeUsernameButton.setOnClickListener{
+            MusicService.buttonSoundPlay(this.activity)
             changeUsername()
         }
         if(!app.user.isGoogleUser())
@@ -61,10 +85,12 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
         }
 
     }
+
     private fun changeUsername(){
         val intent = Intent(activity, ChooseUsernameActivity::class.java)
         activity.startActivityForResult(intent, RC_USERNAME)
     }
+
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         //Result returned form launching intent ChooseUsername
         var customUsername = ""
@@ -84,6 +110,7 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
             }
         }
     }
+
     private fun signOut(){
         var msg = "Succesfully logged out "
         try {
@@ -107,10 +134,12 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
         activity.startActivity(intent)
 
     }
+
     private fun changeActivityCredits(){
         val intent = Intent(activity, CreditsActivity::class.java)
         activity.startActivity(intent)
     }
+
     private fun changeTutorial(){
         Toast.makeText(activity, "Ahora llamaríamos al tutorial", Toast.LENGTH_LONG).show()
     }

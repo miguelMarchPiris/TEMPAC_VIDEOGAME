@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameView
 import android.support.constraint.ConstraintSet
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.ViewIdGenerator
 
 
@@ -55,14 +56,19 @@ class InGameFragment : Fragment() {
 
         //add back button action
         backButton.setOnClickListener{
+            MusicService.buttonSoundPlay(activity)
+            MusicService.destroyReproducer()
+            MusicService.startMusicMenu(this.activity)
             activity?.finish()
         }
         //add pause button action
         pauseButton.setOnClickListener{
+            MusicService.buttonSoundPlay(activity)
             togglePauseGame()
         }
         //add continue button action
         continueButton.setOnClickListener{
+            MusicService.buttonSoundPlay(activity)
             togglePauseGame()
         }
 
@@ -76,6 +82,11 @@ class InGameFragment : Fragment() {
         }
         backButton.visibility = continueButton.visibility
         view.togglePauseThread()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {

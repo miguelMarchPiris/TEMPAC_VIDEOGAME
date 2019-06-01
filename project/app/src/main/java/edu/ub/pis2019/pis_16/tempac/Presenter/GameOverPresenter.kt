@@ -6,6 +6,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.Navigation
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
@@ -19,15 +20,15 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
     DatabaseCallback {
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -49,17 +50,19 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
         var backgroundLayout = inflatedView.findViewById<ConstraintLayout>(R.id.backgroundLayout)
 
         menuButton.setOnClickListener{
+            MusicService.buttonSoundPlay(fragment.context)
             //Menu Button Action
             changeActivityMenu()
         }
 
         shareButton.setOnClickListener{
-            //Menu Button Action
+            MusicService.buttonSoundPlay(fragment.context)
+            //Share Button Action
             share()
         }
 
         backgroundLayout.setOnClickListener{
-            //Menu Button Action
+            //Background Button Action
             playAgain()
         }
     }

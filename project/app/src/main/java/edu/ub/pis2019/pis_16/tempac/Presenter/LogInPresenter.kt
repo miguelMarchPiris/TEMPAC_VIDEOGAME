@@ -11,17 +11,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.ub.pis2019.pis_16.tempac.View.MainMenuActivity
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.SignInButton
-import edu.ub.pis2019.pis_16.tempac.R
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.User
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
-
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
+import edu.ub.pis2019.pis_16.tempac.R
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
 
@@ -32,16 +34,17 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private val RC_USERNAME = 420
     private var customUsername = ""
     private lateinit var app :TempacApplication
+
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -55,6 +58,24 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     override fun onCreate() {
         //Save app instance
         app = (activity.application as TempacApplication)
+
+        //Music service start
+        MusicService.startMusicMenu(this.activity)
+
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
+
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
+
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
         // Configure sign-in to request the user's ID, email address, and basic
@@ -80,6 +101,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             skipLogin()
         }
     }
+
     fun onStart(){
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
@@ -88,11 +110,13 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             login(account)
         }
     }
+
     fun askForlogin(){
         mGoogleSignInClient.signOut()
         val signInIntent = mGoogleSignInClient.signInIntent
         activity.startActivityForResult(signInIntent,RC_SIGN)
     }
+
     //This is called after the user selects the account to log in
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
@@ -106,7 +130,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 firebaseAuthWithGoogle(account!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("GOOGLE EROR", "Google sign in failed", e)
+                Log.w("GOOGLE ERROR", "Google sign in failed", e)
                 // ...
             }
 
@@ -130,6 +154,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 }
         }
     }
+
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d("FB LOGIN", "firebaseAuthWithGoogle:" + acct.id!!)
 
@@ -148,9 +173,11 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
                 }
             }
     }
+
     private fun loginFailed(){
         Toast.makeText(activity,"Login failed, try again", Toast.LENGTH_SHORT).show()
     }
+
     private fun login(account: FirebaseUser?) {
         if(account!=null){
             app.user = User(account.uid, account.displayName!!, account.email!!)
@@ -161,6 +188,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
             changeActivity(MainMenuActivity())
         }
     }
+
     private fun skipLogin(){
         //We try to load the user from disk
         if(app.loadLocalUser()) {
@@ -179,6 +207,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
         }
 
     }
+
     private fun changeActivity(activity: AppCompatActivity){
         val intent = Intent(this.activity, activity::class.java)
         this.activity.startActivity(intent)
