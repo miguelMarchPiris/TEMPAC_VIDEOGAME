@@ -70,7 +70,7 @@ class TutorialEngine(context : Context) : Engine(context){
         canvas!!.drawText(player.x.toString() + " - " + player.y.toString(), 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
         if(dead)
             canvas!!.drawText("Tutorial has finished!\nNow you are ready for real game!", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
-        
+
         if(waitingForInput && displayMessage!= ""){
             canvas!!.drawPaint(transPaint)
             canvas!!.drawText(displayMessage, 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
