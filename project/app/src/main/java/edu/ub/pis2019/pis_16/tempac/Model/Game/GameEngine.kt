@@ -9,7 +9,7 @@ import edu.ub.pis2019.pis_16.tempac.R
 import java.util.*
 
 
-class GameEngine(var context: Context) : Drawable {
+open class GameEngine(var context : Context) : Drawable {
 
     //Const values
     companion object {
@@ -25,6 +25,14 @@ class GameEngine(var context: Context) : Drawable {
         const val HOT_TEMPERATURE = 80f
         const val COLD_TEMPERATURE = 20f
         const val BACKGROUND_COLOR = Color.BLACK
+        const val TOO_HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(1)
+        const val HIGH_LINE_GHOSTS = TOP_PLAYING_FIELD+Block.blockSide.times(2)
+
+        //Overlay rectangles
+        lateinit var overlayRect0 : RectF
+        lateinit var overlayRect1 : RectF
+        lateinit var overlayRect2 : RectF
+        lateinit var overlayRect3 : RectF
     }
 
     //Game variables
@@ -47,7 +55,7 @@ class GameEngine(var context: Context) : Drawable {
     private var player : Player = Player(PLAYFIELD_WIDTH/2f+35f,1000f, initPacmanImages())
     private var ghosts : MutableList<Ghost> = mutableListOf()
     private var dyingGhosts : MutableList<Ghost> = mutableListOf()
-    private var level : Level = Level(initBlockImages())
+    internal open var level : Level = Level(initBlockImages())
 
     //Play zone rects
     private val playingField = RectF(LEFT_PLAYING_FIELD, TOP_PLAYING_FIELD, RIGHT_PLAYING_FIELD, BOTTOM_PLAYING_FIELD)
@@ -76,16 +84,16 @@ class GameEngine(var context: Context) : Drawable {
         //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 50f
+        temperatureBar.temperature = 0f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
 
         //playfield
-        val overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom) //Left
-        val overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
-        val overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
-        val overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
+        overlayRect0 = RectF(0f,0f,playingField.left,playingField.bottom) //Left
+        overlayRect1 = RectF(0f,0f,playingField.right,playingField.top) //Top
+        overlayRect2 = RectF(playingField.right,0f,playingField.right,playingField.bottom) //Right
+        overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = BACKGROUND_COLOR
         //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
@@ -354,7 +362,7 @@ class GameEngine(var context: Context) : Drawable {
         ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
 
         //goes over the level matrix and checks the blocks collisions
-        for(array in level.filasA){
+        for(array in level.matrixBlocks){
             for(block in array){
                 //check collisions
                 if(block!=null){
