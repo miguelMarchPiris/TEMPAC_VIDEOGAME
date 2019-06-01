@@ -24,11 +24,6 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
     override fun onRestart() {
         //MusicService.resumeMusic()
     }
-
-    override fun onStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onDestroy() {
         MusicService.buttonPlayerDestroyer()
     }
