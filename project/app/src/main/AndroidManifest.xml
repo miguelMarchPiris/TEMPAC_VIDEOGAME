@@ -23,9 +23,6 @@
                 android:name=".View.ConfirmExitActivity"
                 android:theme="@style/AppTheme.PopUpTheme">
         </activity>
-        <activity android:name=".View.SignUpActivity"
-                  android:screenOrientation="portrait">
-        </activity>
         <activity
                 android:name=".View.GameActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"

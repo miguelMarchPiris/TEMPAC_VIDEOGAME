@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.CreditsActivity
 import edu.ub.pis2019.pis_16.tempac.View.LogInActivity
@@ -21,15 +23,15 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
     private lateinit var app:TempacApplication
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -42,6 +44,21 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
 
     override fun onCreate() {
         app = (activity.application as TempacApplication)
+
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
+
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
+
         activity.findViewById<Button>(R.id.replay_tutorial_button).setOnClickListener {
             MusicService.buttonSoundPlay(this.activity)
             changeTutorial()

@@ -1,12 +1,11 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
 import android.content.Intent
-import android.media.MediaPlayer
-import android.provider.MediaStore
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameActivity
 import edu.ub.pis2019.pis_16.tempac.View.HighScoreActivity
@@ -14,18 +13,16 @@ import edu.ub.pis2019.pis_16.tempac.View.SettingsActivity
 
 class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
 
-    private lateinit var app : TempacApplication
-
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -37,10 +34,20 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onCreate() {
-        app = (activity.application as TempacApplication)
 
-        //Music service start
-        MusicService.startMusicMenu(this.activity)
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
+
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
 
         activity.findViewById<Button>(R.id.btn_play).setOnClickListener {
             MusicService.buttonSoundPlay(this.activity)

@@ -17,10 +17,12 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.User
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
 import edu.ub.pis2019.pis_16.tempac.R
 
 class LogInPresenter(val activity: AppCompatActivity) : Presenter {
@@ -34,15 +36,15 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private lateinit var app :TempacApplication
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onStop() {
@@ -56,6 +58,23 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     override fun onCreate() {
         //Save app instance
         app = (activity.application as TempacApplication)
+
+        //Music service start
+        MusicService.startMusicMenu(this.activity)
+
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
+
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
 
         //INCIALIZE FIREBASE
         FirebaseApp.initializeApp(activity)
