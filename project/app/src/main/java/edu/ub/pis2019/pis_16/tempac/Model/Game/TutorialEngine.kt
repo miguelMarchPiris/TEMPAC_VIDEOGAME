@@ -67,7 +67,6 @@ class TutorialEngine(context : Context) : Engine(context){
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        canvas!!.drawText(player.x.toString() + " - " + player.y.toString(), 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
         if(dead)
             canvas!!.drawText("Tutorial has finished!\nNow you are ready for real game!", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
 
