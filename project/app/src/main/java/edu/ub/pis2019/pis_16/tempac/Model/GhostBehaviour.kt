@@ -97,7 +97,7 @@ abstract class GhostBehaviour {
         ghost.moveLeft(scroll, left)
         ghost.updateRect()
         //If the movement is valid, we calculate distance to the player
-        if(row==null || (!ghost.collidesWithBlock(row!!) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect0) ))){
+        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect0) ))){
             distances[1] = ghost.calculateDistanceToPlayer(playerPosition)
         }
         //Deshacemos el movimiento
@@ -113,7 +113,7 @@ abstract class GhostBehaviour {
         ghost.moveRight(scroll, right)
         ghost.updateRect()
         //If the movement is valid, we calculate distance to the player
-        if(row==null || (!ghost.collidesWithBlock(row!!) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect2) ))){
+        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect2) ))){
             distances[2] = ghost.calculateDistanceToPlayer(playerPosition)
         }
         //Deshacemos el movimiento
