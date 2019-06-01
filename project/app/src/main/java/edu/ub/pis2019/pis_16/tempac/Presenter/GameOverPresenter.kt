@@ -30,15 +30,6 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
     override fun onRestart() {
         //MusicService.resumeMusic()
     }
-
-    override fun onStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onCreate() {
         val inflatedView = fragment.inflatedView
         var animBounce = AnimationUtils.loadAnimation(fragment.context, R.anim.bounce)
