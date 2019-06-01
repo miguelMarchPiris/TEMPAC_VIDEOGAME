@@ -23,7 +23,6 @@ abstract class Ghost(image : Bitmap) : Actor(){
     //Tells if the death animation is over
     var deathAnimEnded = false
     private var alphaPaint = Paint()
-    var belowTheLineSpeed = speed.times(5)
     var im = image
 
     var behaviour : GhostBehaviour
@@ -62,6 +61,26 @@ abstract class Ghost(image : Bitmap) : Actor(){
             behaviour.chase(this,scroll,playerPosition,rows)
         }
 
+    }
+    fun animate(){
+        if(!dead && !spawnAnimEnded){
+            //We animate the alpha channel in the paint
+            if((alphaPaint.alpha+255/60) > 255)
+                alphaPaint.alpha+= 255/60
+            else {
+                spawnAnimEnded = true
+                alphaPaint.alpha = 255
+            }
+        }
+        //If its dying we do death animation
+        if(dead && !deathAnimEnded){
+            //We animate the alpha channel in the paint
+            //If the ghost is invisible the animation has ended
+            if((alphaPaint.alpha-255/60) > 0)
+                alphaPaint.alpha-= 255/60
+            else
+                deathAnimEnded = true
+        }
     }
     abstract fun getIfCorrectTemperature() : Boolean
     //abstract fun getIfCorrectTemperature() : Boolean

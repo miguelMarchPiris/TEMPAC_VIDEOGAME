@@ -13,7 +13,7 @@ open class GameEngine(var context : Context) : Drawable {
 
     //Const values
     companion object {
-        const val MAX_GHOSTS = 30
+        const val MAX_GHOSTS = 15
         const val MIN_DISTANCE = 105f
         const val PLAYFIELD_HEIGTH = 1400
         const val PLAYFIELD_WIDTH = 1080
@@ -84,7 +84,7 @@ open class GameEngine(var context : Context) : Drawable {
         //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 0f
+        temperatureBar.temperature = 15f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
@@ -152,11 +152,11 @@ open class GameEngine(var context : Context) : Drawable {
         for(ghost in ghosts){
             //this push the ghosts up til are visible for the player.
             val belowTheLine=ghost.y > BOTTOM_PLAYING_FIELD
-            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine)
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine, temperatureBar.temperature)
         }
         //Update dying ghosts
         for(ghost in dyingGhosts){
-            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),false)
+            ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),false, temperatureBar.temperature)
         }
 
 

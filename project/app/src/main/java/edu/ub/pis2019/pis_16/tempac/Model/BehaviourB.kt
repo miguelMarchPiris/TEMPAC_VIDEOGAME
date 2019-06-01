@@ -13,7 +13,7 @@ object BehaviourB : GhostBehaviour() {
 
     override val left : Float = 1F
     override val right : Float = 1F
-    override val up : Float = 8F
+    override val up : Float = 1F
     override val down : Float = 1F
 
     init {

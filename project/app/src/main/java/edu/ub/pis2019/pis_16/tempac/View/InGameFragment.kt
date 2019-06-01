@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameView
 import android.support.constraint.ConstraintSet
+import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.ViewIdGenerator
 
@@ -37,7 +38,8 @@ class InGameFragment : Fragment() {
         //We add the game view from the layout (Cant be done in xml because of the GameView's constructor
         val layout = inflatedLayout.findViewById<ConstraintLayout>(edu.ub.pis2019.pis_16.tempac.R.id.constraintLayout)
         val set = ConstraintSet()
-        view = GameView(context!!)
+        val engine = GameEngine(context!!)
+        view = GameView(context!!, engine)
         view.id = ViewIdGenerator.generateViewId()
         layout.addView(view, 0)
         set.clone(layout)
