@@ -60,6 +60,7 @@ abstract class Ghost(image : Bitmap) : Actor(){
             }
             behaviour.chase(this,scroll,playerPosition,rows)
         }
+        updateRect()
 
     }
     fun animate(){
