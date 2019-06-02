@@ -6,37 +6,34 @@
     <application
             android:name=".Presenter.TempacApplication"
             android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/icon"
+            android:roundIcon="@mipmap/icon_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="GoogleAppIndexingWarning">
+
         <activity
                 android:name=".View.ChooseUsernameActivity"
+                android:windowSoftInputMode="stateVisible"
                 android:theme="@style/AppTheme.PopUpTheme">
+
         </activity>
         <activity
-                android:name=".View.ConfirmExitActivity"
                 android:label="@string/app_name"
+                android:name=".View.ConfirmExitActivity"
                 android:theme="@style/AppTheme.PopUpTheme">
-        </activity>
-        <activity
-                android:name=".View.SignUpActivity"
-                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".View.GameActivity"
-                android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+                android:screenOrientation="portrait"
                 tools:ignore="ExtraText">
         </activity>
         <activity
                 android:name=".View.LogInActivity"
-                android:allowBackup="true"
-                android:icon="@mipmap/ic_launcher"
-                android:label="@string/app_name"
-                android:roundIcon="@mipmap/ic_launcher_round"
                 android:screenOrientation="portrait"
+                android:allowBackup="true"
+                android:label="@string/app_name"
                 android:supportsRtl="true"
                 android:theme="@style/AppTheme"
                 tools:ignore="ExtraText">
@@ -46,24 +43,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".View.CreditsActivity"
-                android:screenOrientation="portrait">
+        <activity android:name=".View.CreditsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".View.SettingsActivity"
-                android:screenOrientation="portrait">
+        <activity android:name=".View.SettingsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".View.MainMenuActivity"
-                android:screenOrientation="portrait">
+        <activity android:name=".View.MainMenuActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name=".View.HighScoreActivity"
-                android:screenOrientation="portrait">
+        <activity android:name=".View.HighScoreActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".View.TutorialActivity">
+        <activity android:name=".View.TutorialActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
+
+
 
 </manifest>

@@ -7,36 +7,46 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.HighScoreActivity
 
-class HighScorePresenter(private val activity: HighScoreActivity): Presenter, DatabaseCallback {
+class HighScorePresenter(private val activity: HighScoreActivity): Presenter,
+    DatabaseCallback {
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
 
     override fun onCreate() {
 
         FirestoreHandler.getHighscoreTable(this)
 
+        //Home Button Watcher
+        val mHomeWatcher = HomeWatcher(this.activity)
 
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MusicService.pauseMusic()
+            }
+
+            override fun onHomeLongPressed() {
+                MusicService.pauseMusic()
+            }
+        })
+        mHomeWatcher.startWatch()
     }
     override fun handleHighscoreTable(highscoreTable: ArrayList<Pair<String, Int>>) {
         activity.findViewById<View>(R.id.loadingPanel).visibility=View.GONE

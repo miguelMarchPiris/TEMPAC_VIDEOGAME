@@ -1,7 +1,9 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
+import java.io.*
 
-class User() {
+
+class User():Serializable {
     private var highscore = 0
     private var email = ""
     var uid = ""
@@ -24,4 +26,9 @@ class User() {
     fun getHighscore():Int{
         return highscore
     }
+    fun isGoogleUser():Boolean{
+        val googleUser = (email != "")
+        return googleUser
+    }
+
 }

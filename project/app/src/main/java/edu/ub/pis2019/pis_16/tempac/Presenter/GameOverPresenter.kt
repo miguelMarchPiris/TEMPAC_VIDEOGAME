@@ -6,31 +6,30 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.Navigation
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
 
-class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,DatabaseCallback {
+
+
+class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
+    DatabaseCallback {
 
     override fun onResume() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        MusicService.resumeMusic()
     }
 
     override fun onPause() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.pauseMusic()
     }
 
     override fun onRestart() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //MusicService.resumeMusic()
     }
-
-    override fun onStop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun onCreate() {
         val inflatedView = fragment.inflatedView
         var animBounce = AnimationUtils.loadAnimation(fragment.context, R.anim.bounce)
@@ -42,17 +41,19 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,Datab
         var backgroundLayout = inflatedView.findViewById<ConstraintLayout>(R.id.backgroundLayout)
 
         menuButton.setOnClickListener{
+            MusicService.buttonSoundPlay(fragment.context)
             //Menu Button Action
             changeActivityMenu()
         }
 
         shareButton.setOnClickListener{
-            //Menu Button Action
+            MusicService.buttonSoundPlay(fragment.context)
+            //Share Button Action
             share()
         }
 
         backgroundLayout.setOnClickListener{
-            //Menu Button Action
+            //Background Button Action
             playAgain()
         }
     }
@@ -60,14 +61,20 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,Datab
         fragment.activity?.finish()
     }
     fun share(){
-
+        val scoreText = fragment.inflatedView.findViewById<TextView>(R.id.yourScoreResultText).text.toString()
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "My new score in Tempac is "+scoreText+" can you beat it?")
+        sendIntent.type = "text/plain"
+        fragment.activity?.startActivity(sendIntent)
     }
     fun playAgain(){
         var nav = Navigation.findNavController(fragment.view!!)
         nav.navigate(R.id.inGameFragment)
     }
     fun processArgs(arguments: Bundle?){
-        val user = (fragment.activity!!.application as TempacApplication).user
+        val app = (fragment.activity!!.application as TempacApplication)
+        val user = app.user
 
         val score = arguments?.getInt("score")
         if(score!=null) {
@@ -77,6 +84,9 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,Datab
 
             //We add the highscore to the user (if the new score is lower it wont change)
             user.setHighscore(score)
+            //Save user locally
+            app.saveLocalUser()
+            //Save user in database
             FirestoreHandler.updateUser(user)
 
             //Display highscore

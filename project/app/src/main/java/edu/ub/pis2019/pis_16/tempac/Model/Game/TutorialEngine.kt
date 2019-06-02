@@ -20,8 +20,9 @@ class TutorialEngine(context : Context) : Engine(context){
     private val transPaint = Paint()
     init {
         player.direction = Player.Direction.STATIC
-        player.setPosition(550f,1500f)
-        player.speed = 2.5f
+        player.setPosition(570f,1500f)
+        player.xSpeed = 2.5f
+        player.ySpeed = 2.5f
         transPaint.color = Color.BLACK
         transPaint.alpha = 100
         temperatureBar.temperature = 50f
@@ -30,12 +31,13 @@ class TutorialEngine(context : Context) : Engine(context){
 
     override fun update() {
         if(!waitingForInput) {
-            //Changes the boolean extreme temperature and changes the screen speed
-            gameState(temperatureBar.temperature)
-            //actualizes the temperature of the game
-            level.temperature = temperatureBar.temperature
-
             if (currentLevel >= 2) {
+                //Changes the boolean extreme temperature and changes the screen speed
+                gameState(temperatureBar.temperature)
+                //actualizes the temperature of the game
+                level.temperature = temperatureBar.temperature
+
+
                 //makes the level move downwards
                 level.update(scrollSpeed)
 
@@ -50,11 +52,22 @@ class TutorialEngine(context : Context) : Engine(context){
 
             //Process AI
             //choose WHERE have to spawn the ghosts.
-            if (currentLevel >= 1)
+            if (currentLevel >= 1) {
                 spawnGhost()
-
+                for(ghost in ghosts){
+                    //this push the ghosts up til are visible for the player.
+                    val belowTheLine=ghost.y > BOTTOM_PLAYING_FIELD
+                    ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),belowTheLine, temperatureBar.temperature)
+                }
+                //Update dying ghosts
+                for(ghost in dyingGhosts){
+                    ghost.update(scrollSpeed, Pair(player.x,player.y), level.get3RowsAtY(ghost.y+scrollSpeed),false, temperatureBar.temperature)
+                }
+            }
             //Process physics (cheking collisions)
             processPhysics()
+            //Process animations
+            processAnimations()
             //display tutorial message
             displayMessage()
             //if player reached the top of tutorial level
@@ -64,7 +77,7 @@ class TutorialEngine(context : Context) : Engine(context){
 
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        canvas!!.drawText(player.x.toString() + " - " + player.y.toString(), 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
+        //canvas!!.drawText(player.x.toString() + " - " + player.y.toString(), 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
         if(dead)
             canvas!!.drawText("Tutorial has finished!\nNow you are ready for real game!", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
         if(waitingForInput && displayMessage!= ""){
@@ -105,15 +118,15 @@ class TutorialEngine(context : Context) : Engine(context){
     private fun reinitializeVariables(){
         when(currentLevel){
             0 -> {
-                player.setPosition(550f,1500f)
+                player.setPosition(570f,1500f)
                 player.direction = Player.Direction.STATIC
             }
             1 -> {
-                player.setPosition(550f,1500f)
+                player.setPosition(570f,1500f)
                 player.direction = Player.Direction.UP
             }
             2 -> {
-                player.setPosition(550f,1500f)
+                player.setPosition(570f,1500f)
                 player.direction = Player.Direction.UP
                 ghosts = mutableListOf()
             }

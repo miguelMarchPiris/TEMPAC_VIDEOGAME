@@ -8,15 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameView
-import android.R.layout
-import android.R
-import android.opengl.Visibility
 import android.support.constraint.ConstraintSet
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.ViewIdGenerator
-import kotlin.concurrent.thread
 
 
 /**
@@ -27,18 +23,21 @@ class InGameFragment : Fragment() {
 
     lateinit var view: GameView
 
+    private lateinit var continueButton: Button
+    private lateinit var pauseButton: Button
+    private lateinit var backButton: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         // Inflate the layout for this fragment
-        var inflatedLayout = inflater.inflate(edu.ub.pis2019.pis_16.tempac.R.layout.fragment_in_game_alternate, container, false)
+        var inflatedLayout = inflater.inflate(edu.ub.pis2019.pis_16.tempac.R.layout.fragment_in_game, container, false)
 
         //We add the game view from the layout (Cant be done in xml because of the GameView's constructor
         val layout = inflatedLayout.findViewById<ConstraintLayout>(edu.ub.pis2019.pis_16.tempac.R.id.constraintLayout)
         val set = ConstraintSet()
-
         val engine = GameEngine(context!!)
         view = GameView(context!!, engine)
         view.id = ViewIdGenerator.generateViewId()
@@ -50,34 +49,51 @@ class InGameFragment : Fragment() {
         set.connect(view.id, ConstraintSet.RIGHT, layout.id, ConstraintSet.RIGHT, 0)
         set.applyTo(layout)
 
-
-
-        val continueButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonContinue)
+        continueButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonContinue)
         continueButton.visibility = Button.GONE
-        val pauseButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonPause)
-        val backButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonBack)
+        pauseButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonPause)
+        backButton = inflatedLayout.findViewById<Button>(edu.ub.pis2019.pis_16.tempac.R.id.buttonBack)
+
         backButton.visibility = Button.GONE
 
         //add back button action
         backButton.setOnClickListener{
+            MusicService.buttonSoundPlay(activity)
+            MusicService.destroyReproducer()
+            MusicService.startMusicMenu(this.activity)
             activity?.finish()
         }
         //add pause button action
         pauseButton.setOnClickListener{
-            when(continueButton.visibility){
-                Button.GONE -> continueButton.visibility = Button.VISIBLE
-                Button.VISIBLE -> continueButton.visibility = Button.GONE
-            }
-            backButton.visibility = continueButton.visibility
-            view.tooglePauseThread()
+            MusicService.buttonSoundPlay(activity)
+            togglePauseGame()
         }
         //add continue button action
         continueButton.setOnClickListener{
-            pauseButton.performClick()
+            MusicService.buttonSoundPlay(activity)
+            togglePauseGame()
         }
 
-
         return inflatedLayout
+    }
+
+    private fun togglePauseGame() {
+        when (continueButton.visibility) {
+            Button.GONE -> continueButton.visibility = Button.VISIBLE
+            Button.VISIBLE -> continueButton.visibility = Button.GONE
+        }
+        backButton.visibility = continueButton.visibility
+        view.togglePauseThread()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        MusicService.resumeMusic()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        togglePauseGame()
     }
 
 }

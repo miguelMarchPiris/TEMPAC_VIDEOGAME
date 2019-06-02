@@ -1,11 +1,9 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
-import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
@@ -42,12 +40,13 @@ abstract class Level : Drawable {
 
 
 
+
     init{
         matrixBlocks= mutableListOf<Array<Block?>>()
 
         //How many lines, and how many blocks in one line.
         nBlocksInLine= Engine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        nLinesToDraw = (Engine.bottomPlayingField-Engine.topPlayingField).div(Block.blockSide).toInt()+4
+        nLinesToDraw = (Engine.BOTTOM_PLAYING_FIELD-Engine.TOP_PLAYING_FIELD).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
     //Its just a shitty method yikes
@@ -64,7 +63,7 @@ abstract class Level : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(Engine.bottomPlayingField+Block.blockSide.times(1.5F))
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(Engine.BOTTOM_PLAYING_FIELD+Block.blockSide.times(1.5F))
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
         for (k in 0 until arrayBooleanos.size){
@@ -152,7 +151,7 @@ abstract class Level : Drawable {
         newLineOnTop()
     }
     //ITS CALLED WHEN A LINE IS DELETED.
-    open fun newLineOnTop() {
+    internal open fun newLineOnTop() {
         val first=getFirstArray()
         val positionY= positionYArray[first] as Float
         if(first==null){ Log.println(Log.VERBOSE,"ERROR", "NULL first array of Blocks") }
@@ -346,13 +345,25 @@ abstract class Level : Drawable {
 
     //DRAW AND UPDATE
     override fun draw(canvas: Canvas?) {
+        val breakableBlocks = mutableListOf<Block>()
+        val blocks = mutableListOf<Block>()
         for (array in matrixBlocks){
             for (block in array){
-                if (block!=null){
-                    block.draw(canvas)
+                if( block!=null && block.breakable){
+                    breakableBlocks.add(block)
                 }
+                else if( block != null)
+                    blocks.add(block)
             }
         }
+        //We have to draw them in order
+        //Draw all block shades
+        for(block in blocks){block.drawShade(canvas)}
+        for(block in breakableBlocks){block.drawShade(canvas)}
+        //Draw non-breakable then breakable borders
+        for(block in blocks){block.draw(canvas)}
+        for(block in breakableBlocks){block.draw(canvas)}
+
         for (orb:Orb in orbs) { orb.draw(canvas) }
     }
     fun update(scroll : Float){

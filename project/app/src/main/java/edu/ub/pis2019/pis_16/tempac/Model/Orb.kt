@@ -11,22 +11,19 @@ abstract class Orb(var number: Int): Actor() {
     lateinit var operand : Operand
 
     init{
-        paint.color = Color.WHITE
         textPaint.color = Color.BLACK
         textPaint.textAlign = Paint.Align.CENTER
-        textPaint.textSize = 22f
+        textPaint.textSize = 25f
         textPaint.style = Paint.Style.FILL_AND_STROKE
-        textPaint.strokeWidth = 2f
+        //textPaint.strokeWidth = 1.5f
+        textPaint.setTypeface(Typeface.create("Droid Sans Mono", Typeface.BOLD))
     }
 
-    override fun draw(canvas: Canvas?) {
-        canvas?.drawCircle(x,y,(rectangle.right-rectangle.left)/2f,paint)
-        canvas?.drawText(operand.text+" "+number.toString(),x,y+7.5f,textPaint)
-    }
+
 
     override fun update(scroll: Float) {
         super.update(scroll)
-        rectangle.set(x-25,y-25,x+25,y+25)
+        rectangle.set(x-28,y-28,x+28,y+28)
 
     }
 }

@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -19,6 +20,11 @@ class GameView(var cntxt: Context, motor : Engine): SurfaceView(cntxt), SurfaceH
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
+        if(!engine.dead) {
+            thread.pauseGame = true
+            return
+        }
+
         var retry = true
         while (retry) {
             try {
@@ -64,8 +70,9 @@ class GameView(var cntxt: Context, motor : Engine): SurfaceView(cntxt), SurfaceH
         nav.navigate(R.id.gameOverFragment, bundle)
 
     }
-    fun tooglePauseThread(){
+    fun togglePauseThread(){
         thread.pauseGame = !thread.pauseGame
     }
+
 
 }
