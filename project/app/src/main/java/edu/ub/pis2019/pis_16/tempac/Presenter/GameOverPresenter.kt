@@ -1,5 +1,6 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
+import android.content.Context
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.animation.AnimationUtils
@@ -14,7 +15,7 @@ import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
 import android.content.Intent
 import android.view.View
 import android.widget.LinearLayout
-import edu.ub.pis2019.pis_16.tempac.View.GameOverTutorialFragment
+import android.os.PowerManager
 
 
 class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
@@ -25,7 +26,15 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
     }
 
     override fun onPause() {
-        //MusicService.pauseMusic()
+        val pm = fragment.activity!!.getSystemService(Context.POWER_SERVICE) as PowerManager?
+        var isScreenOn = false
+        if (pm != null) {
+            isScreenOn = pm.isScreenOn
+        }
+
+        if (!isScreenOn) {
+            MusicService.pauseMusic()
+        }
     }
 
     override fun onRestart() {
@@ -43,6 +52,7 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
 
         menuButton.setOnClickListener{
             MusicService.buttonSoundPlay(fragment.context)
+            MusicService.destroyReproducer()
             //Menu Button Action
             changeActivityMenu()
         }

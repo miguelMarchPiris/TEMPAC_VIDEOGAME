@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
 import android.content.Context
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,15 @@ class HighScorePresenter(private val activity: HighScoreActivity): Presenter,
     }
 
     override fun onPause() {
-        //MusicService.pauseMusic()
+        val pm = activity.getSystemService(Context.POWER_SERVICE) as PowerManager?
+        var isScreenOn = false
+        if (pm != null) {
+            isScreenOn = pm.isScreenOn
+        }
+
+        if (!isScreenOn) {
+            MusicService.pauseMusic()
+        }
     }
 
     override fun onRestart() {

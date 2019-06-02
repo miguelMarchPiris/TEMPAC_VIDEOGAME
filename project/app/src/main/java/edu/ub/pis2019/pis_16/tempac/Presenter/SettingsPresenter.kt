@@ -1,9 +1,12 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
@@ -16,6 +19,10 @@ import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
 import edu.ub.pis2019.pis_16.tempac.View.TutorialActivity
 import java.lang.Exception
+import android.os.PowerManager
+
+
+
 
 
 class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
@@ -28,7 +35,15 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onPause() {
-        //MusicService.pauseMusic()
+        val pm = activity.getSystemService(Context.POWER_SERVICE) as PowerManager?
+        var isScreenOn = false
+        if (pm != null) {
+            isScreenOn = pm.isScreenOn
+        }
+
+        if (!isScreenOn) {
+            MusicService.pauseMusic()
+        }
     }
 
     override fun onRestart() {
@@ -54,6 +69,7 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
 
         activity.findViewById<Button>(R.id.replay_tutorial_button).setOnClickListener {
             MusicService.buttonSoundPlay(this.activity)
+            MusicService.destroyReproducer()
             changeTutorial()
         }
 
@@ -64,6 +80,7 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
         val signOutButton = activity.findViewById<Button>(R.id.signOut_button)
         signOutButton.setOnClickListener{
             MusicService.buttonSoundPlay(this.activity)
+            MusicService.destroyReproducer()
             signOut()
         }
         val changeUsernameButton = activity.findViewById<Button>(R.id.changeUsername_button)
@@ -77,6 +94,19 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
             changeUsernameButton.invalidate()
         }
 
+        val audioManager : AudioManager = activity.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val volumeSeekbar : SeekBar = activity.findViewById(R.id.sB_volume)
+
+        volumeSeekbar.max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+        volumeSeekbar.progress = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+
+        volumeSeekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(arg0 : SeekBar) {}
+            override fun onStartTrackingTouch(arg0: SeekBar) {}
+            override fun onProgressChanged(arg0: SeekBar, progress: Int, arg2: Boolean) {
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0)
+            }
+        })
     }
 
     private fun changeUsername(){

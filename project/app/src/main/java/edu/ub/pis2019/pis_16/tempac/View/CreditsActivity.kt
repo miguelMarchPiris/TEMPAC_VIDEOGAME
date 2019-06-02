@@ -2,12 +2,12 @@ package edu.ub.pis2019.pis_16.tempac.View
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import edu.ub.pis2019.pis_16.tempac.Presenter.ConfirmExitPresenter
+import edu.ub.pis2019.pis_16.tempac.Presenter.CreditsPresenter
 import edu.ub.pis2019.pis_16.tempac.R
 
 class CreditsActivity : AppCompatActivity() {
 
-    private val presenter = ConfirmExitPresenter(this)
+    private val presenter = CreditsPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

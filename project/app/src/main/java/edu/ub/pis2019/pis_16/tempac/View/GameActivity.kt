@@ -6,12 +6,14 @@ import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
+import edu.ub.pis2019.pis_16.tempac.Presenter.GamePresenter
 import edu.ub.pis2019.pis_16.tempac.R
 import kotlinx.android.synthetic.main.activity_game.*
 
 
-//
 open class GameActivity : AppCompatActivity() {
+
+    private val presenter = GamePresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +22,7 @@ open class GameActivity : AppCompatActivity() {
         var bundle = Bundle()
         bundle.putInt("endGameFragmentId",R.id.gameOverFragment)
         nav.navigate(R.id.inGameFragment, bundle)
+
         //Home Button Watcher
         val mHomeWatcher = HomeWatcher(this)
 
@@ -34,13 +37,28 @@ open class GameActivity : AppCompatActivity() {
         })
         mHomeWatcher.startWatch()
 
-        MusicService.startMusicGame(this)
+        presenter.onCreate()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         MusicService.destroyReproducer()
         MusicService.startMusicMenu(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        presenter.onRestart()
     }
 
     override fun onBackPressed() {

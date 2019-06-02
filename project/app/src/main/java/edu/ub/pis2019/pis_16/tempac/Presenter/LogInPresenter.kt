@@ -1,6 +1,8 @@
 package edu.ub.pis2019.pis_16.tempac.Presenter
 
+import android.content.Context
 import android.content.Intent
+import android.os.PowerManager
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
@@ -40,7 +42,15 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onPause() {
-        //MusicService.pauseMusic()
+        val pm = activity.getSystemService(Context.POWER_SERVICE) as PowerManager?
+        var isScreenOn = false
+        if (pm != null) {
+            isScreenOn = pm.isScreenOn
+        }
+
+        if (!isScreenOn) {
+            MusicService.pauseMusic()
+        }
     }
 
     override fun onRestart() {
