@@ -2,17 +2,18 @@ package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.Level
+import android.graphics.Color
+import android.view.MotionEvent
 import edu.ub.pis2019.pis_16.tempac.Model.TutorialLevel
 import edu.ub.pis2019.pis_16.tempac.Model.Player
 
 class TutorialEngine(context : Context) : Engine(context){
+
     override var scrollSpeed: Float = 0f
     override var baseScrollSpeed: Float = 0f
-    var currentLevel = 0
+    private var currentLevel = 0
     private var waitingForInput = false
     override var level: Level = TutorialLevel()
     private var tutorialLevel : TutorialLevel
@@ -25,18 +26,18 @@ class TutorialEngine(context : Context) : Engine(context){
         player.ySpeed = 2.5f
         transPaint.color = Color.BLACK
         transPaint.alpha = 100
-        temperatureBar.temperature = 50f
+        temperatureBar.temperature = 0f
         tutorialLevel = level as TutorialLevel
     }
 
     override fun update() {
+
         if(!waitingForInput) {
             if (currentLevel >= 2) {
                 //Changes the boolean extreme temperature and changes the screen speed
                 gameState(temperatureBar.temperature)
                 //actualizes the temperature of the game
                 level.temperature = temperatureBar.temperature
-
 
                 //makes the level move downwards
                 level.update(scrollSpeed)
@@ -74,12 +75,11 @@ class TutorialEngine(context : Context) : Engine(context){
             changeTutorialPart()
         }
     }
-
     override fun draw(canvas: Canvas?) {
         super.draw(canvas)
-        //canvas!!.drawText(player.x.toString() + " - " + player.y.toString(), 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
         if(dead)
             canvas!!.drawText("Tutorial has finished!\nNow you are ready for real game!", 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
+
         if(waitingForInput && displayMessage!= ""){
             canvas!!.drawPaint(transPaint)
             canvas!!.drawText(displayMessage, 1080 / 2f, PLAYFIELD_HEIGTH/2f, textPaint)
@@ -126,6 +126,7 @@ class TutorialEngine(context : Context) : Engine(context){
                 player.direction = Player.Direction.UP
             }
             2 -> {
+                baseScrollSpeed = 3f
                 player.setPosition(570f,1500f)
                 player.direction = Player.Direction.UP
                 ghosts = mutableListOf()

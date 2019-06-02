@@ -264,8 +264,11 @@ abstract class Engine(var context : Context): Drawable{
         for(ghost in dyingGhosts)
             ghost.animate()
     }
-    protected fun processPhysics(){
-
+    protected open fun processPhysics(){
+        checkOutOfPlayzone()
+        checkCollisions()
+    }
+    protected fun checkOutOfPlayzone(){
         //check if player is out of the game
         if(isOutOfPlayzone(player))
             dead = true
@@ -274,21 +277,8 @@ abstract class Engine(var context : Context): Drawable{
         //this is like a list comprehension in python, super fast and is the only clean way to delete elements
         //we also check breakable blocks that need to be deleted
 
-        /*
-        level.blocks = (level.blocks.filter { block ->
-            !isOutOfPlayzone(block) &&
-            !(RectF.intersects(block.rectangle, player.rectangle) && block.breakable && (temperatureBar.temperature>=BLOCK_BREAKABLE_TEMPERATURE))
-        }).toMutableList()
-        */
-
         //Last array of the matrix
         val lastArray:Array<Block?>? = level.getLastArray()
-
-        /*
-        if (lastArray==null){
-            Log.d("LastArray","Null")
-        }
-        */
 
         //This returns the positionY of every block on the line(even if there are no blocks
         var positionYLastArray : Float?= level.positionYArray[lastArray]
@@ -304,11 +294,10 @@ abstract class Engine(var context : Context): Drawable{
                     !checkCollisionsOrb(element) // or the player collides with them
         }).toMutableList()
 
-
-
         //Deletes the ghost if they are below the screen
         ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
-
+    }
+    protected fun checkCollisions(){
         //goes over the level matrix and checks the blocks collisions
         for(array in level.matrixBlocks){
             for(block in array){
@@ -322,9 +311,7 @@ abstract class Engine(var context : Context): Drawable{
         for(ghost in ghosts){
             checkCollisionsGhost(ghost)
         }
-
     }
-
     open fun processInput(event: MotionEvent){
 
         val action = event.action

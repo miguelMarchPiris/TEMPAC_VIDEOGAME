@@ -4,7 +4,8 @@ import android.graphics.RectF
 import android.util.Log
 import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 
-class TutorialLevel : Level(){
+class TutorialLevel() : Level(){
+
 
 
     fun changeTutorialPart(part: Int){
@@ -28,6 +29,35 @@ class TutorialLevel : Level(){
 
         createNewBlockLine(firstBArray,positionY.minus(Block.blockSide))
     }
+
+
+    override fun spawnOrbs() {
+        val arrayBlocks=getFirstPositiveArray()
+        if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
+            return
+        }
+        val par= Pair(positionYArray[arrayBlocks], mutableListOf(4))
+        val positionY=par.first as Float
+        val indexOfHoles=par.second
+        //We get any hole of the line.
+        var indiceDeLaLista=r.nextInt(indexOfHoles.size)
+        var indice=indexOfHoles[indiceDeLaLista]
+
+        var newOrb = OrbAdd(2)
+        newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+        for (o in orbs){
+            if(RectF.intersects(o.rectangle,newOrb.rectangle)){
+                if (indiceDeLaLista==0){ indiceDeLaLista++ }
+                else{ indiceDeLaLista-- }
+                indice=indexOfHoles[indiceDeLaLista]
+                newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
+            }
+        }
+        orbs.add(newOrb)
+        orbInLastLine=true
+
+    }
+
 
     private fun generateFirstTutorialPart(width: Int, height: Int){
          var fullLine = BooleanArray(width)

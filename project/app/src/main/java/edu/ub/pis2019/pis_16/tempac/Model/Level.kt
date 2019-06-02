@@ -9,7 +9,7 @@ import java.util.*
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
 abstract class Level : Drawable {
     companion object{
-        const val MAX_ORBS = 7
+        const val MAX_ORBS = 5
     }
 
     //ORBS
@@ -125,7 +125,7 @@ abstract class Level : Drawable {
 
     //Given an array of blocks, returns the positionY of that array
     //and the index of the holes in it
-    fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
+    open fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
         val positionY:Float?=positionYArray.get(array)
         val indexList= mutableListOf<Int>()
         for (i in 0 until array.size){
@@ -316,7 +316,7 @@ abstract class Level : Drawable {
     }
 
     //SPAWNER OF ORBS
-    fun spawnOrbs(){
+    open fun spawnOrbs(){
         val arrayBlocks=getFirstPositiveArray()
         if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
             return
