@@ -11,9 +11,10 @@ import edu.ub.pis2019.pis_16.tempac.Presenter.database.DatabaseCallback
 import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameOverFragment
-import android.support.v4.content.ContextCompat.startActivity
 import android.content.Intent
-
+import android.view.View
+import android.widget.LinearLayout
+import edu.ub.pis2019.pis_16.tempac.View.GameOverTutorialFragment
 
 
 class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
@@ -101,7 +102,23 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
             nameText.text = user.username
         }
     }
+    fun setUpTutorial(){
+        val layoutScores = fragment.inflatedView.findViewById<LinearLayout>(R.id.layoutScores)
+        layoutScores.visibility = View.INVISIBLE
+        layoutScores.invalidate()
 
+        val gameOverText = fragment.inflatedView.findViewById<TextView>(R.id.gameOverText)
+        gameOverText.text = "You are now ready to play!"
+        gameOverText.invalidate()
+
+        val shareButton = fragment.inflatedView.findViewById<Button>(R.id.shareButton)
+        shareButton.visibility = View.INVISIBLE
+        shareButton.invalidate()
+
+        val playAgainText = fragment.inflatedView.findViewById<TextView>(R.id.playAgainText)
+        playAgainText.text = "Tap the screem to play"
+        playAgainText.invalidate()
+    }
     override fun handleHighscore(highscore: Pair<String, Int>) {
         fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText).text = highscore.second.toString()
         fragment.inflatedView.findViewById<TextView>(R.id.overallHighScoreResultText).invalidate()

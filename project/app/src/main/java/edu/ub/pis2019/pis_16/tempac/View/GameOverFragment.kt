@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import edu.ub.pis2019.pis_16.tempac.Presenter.GameOverPresenter
 import edu.ub.pis2019.pis_16.tempac.R
 
-class GameOverFragment : Fragment() {
+open class GameOverFragment : Fragment() {
 
     lateinit var inflatedView: View
-    private val presenter = GameOverPresenter(this)
+    protected open var presenter = GameOverPresenter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

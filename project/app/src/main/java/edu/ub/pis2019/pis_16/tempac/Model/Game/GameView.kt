@@ -9,12 +9,10 @@ import android.view.SurfaceView
 import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
 
-class GameView(var cntxt: Context, motor : Engine): SurfaceView(cntxt), SurfaceHolder.Callback{
+class GameView(context: Context,private val engine : Engine, private val endGameFragmentId:Int? ): SurfaceView(context), SurfaceHolder.Callback{
     private var thread : GameThread
-    private var engine : Engine
     init {
         holder.addCallback(this)
-        engine = motor
         thread = GameThread(holder, this, engine)
         isFocusable = true
     }
@@ -64,10 +62,14 @@ class GameView(var cntxt: Context, motor : Engine): SurfaceView(cntxt), SurfaceH
             }
             retry = false
         }
+
         var nav = Navigation.findNavController(this)
         var bundle = Bundle()
         bundle.putInt("score",score)
-        nav.navigate(R.id.gameOverFragment, bundle)
+        if(endGameFragmentId == null)
+            nav.navigate(R.id.gameOverFragment, bundle)
+        else
+            nav.navigate(endGameFragmentId, bundle)
 
     }
     fun togglePauseThread(){

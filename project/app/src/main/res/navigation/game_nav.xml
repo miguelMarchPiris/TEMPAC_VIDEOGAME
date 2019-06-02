@@ -5,12 +5,23 @@
             app:startDestination="@id/inGameFragment">
 
     <fragment android:id="@+id/inGameFragment" android:name="edu.ub.pis2019.pis_16.tempac.View.InGameFragment"
-              android:label="fragment_in_game" tools:layout="@layout/fragment_in_game">
+              android:label="fragment_in_game">
         <action android:id="@+id/action_inGameFragment_to_gameOverFragment" app:destination="@id/gameOverFragment"/>
+        <argument android:name="isTutorial" app:argType="boolean" android:defaultValue="false"/>
+        <action android:id="@+id/action_inGameFragment_to_gameOverTutorialFragment"
+                app:destination="@id/gameOverTutorialFragment"/>
     </fragment>
     <fragment android:id="@+id/gameOverFragment" android:name="edu.ub.pis2019.pis_16.tempac.View.GameOverFragment"
               android:label="fragment_game_over" tools:layout="@layout/fragment_game_over">
         <action android:id="@+id/action_gameOverFragment_to_inGameFragment" app:destination="@id/inGameFragment"/>
         <argument android:name="score" app:argType="integer"/>
+    </fragment>
+    <fragment android:id="@+id/gameOverTutorialFragment"
+              android:name="edu.ub.pis2019.pis_16.tempac.View.GameOverTutorialFragment"
+              android:label="GameOverTutorialFragment">
+        <action android:id="@+id/action_gameOverTutorialFragment_to_inGameFragment"
+                app:destination="@id/inGameFragment">
+            <argument android:defaultValue="true" android:name="isTutorial"/>
+        </action>
     </fragment>
 </navigation>
