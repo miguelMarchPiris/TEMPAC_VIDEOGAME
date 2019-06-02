@@ -23,7 +23,9 @@ object FirestoreHandler: DatabaseHandler {
                     if(it.isSuccessful) {
                         val userDB = it.result!!.toObject(User::class.java!!)
                         //If the highscore on the database is higher, we conserve the db highscore
-                        if (userDB != null && userDB!!.getHighscore() > user.getHighscore()) {
+                        if(userDB!= null && !userDB!!.firstTry)
+                            user.firstTry  = false
+                        if (userDB != null && userDB!!.getHighscore() >= user.getHighscore()) {
                             user.setHighscore(userDB!!.getHighscore())
                         }
                         usersCollection.document(user.uid).set(user)

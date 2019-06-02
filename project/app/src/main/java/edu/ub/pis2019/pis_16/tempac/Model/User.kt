@@ -8,7 +8,7 @@ class User():Serializable {
     private var email = ""
     var uid = ""
     var username = ""
-    var fistTry = true
+    var firstTry = true
 
     constructor(uid: String, username: String):this(){
         this.uid = uid

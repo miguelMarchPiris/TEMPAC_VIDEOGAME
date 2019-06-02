@@ -5,11 +5,10 @@ import android.content.Intent
 import android.os.PowerManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
-import android.widget.Toast
 import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
-import edu.ub.pis2019.pis_16.tempac.Model.User
+import edu.ub.pis2019.pis_16.tempac.Presenter.database.FirestoreHandler
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.GameActivity
 import edu.ub.pis2019.pis_16.tempac.View.HighScoreActivity
@@ -64,9 +63,10 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
         activity.findViewById<Button>(R.id.btn_play).setOnClickListener {
             //we check if the user is in the app.
             //if(app.loadLocalUser()){
-                if(app.user.fistTry){
-                    app.user.fistTry = false //we set the variable to false to skip the tutorial the second time
-
+                if(app.user.firstTry){
+                    app.user.firstTry = false //we set the variable to false to skip the tutorial the second time
+                    FirestoreHandler.updateUser(app.user)
+                    app.saveLocalUser()
                     //changing activity
                     MusicService.buttonSoundPlay(this.activity)
                     MusicService.destroyReproducer()
