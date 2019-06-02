@@ -33,7 +33,7 @@ class LogInPresenter(val activity: AppCompatActivity) : Presenter {
     private val RC_SIGN = 69
     private val RC_USERNAME = 420
     private var customUsername = ""
-    private lateinit var app :TempacApplication
+    private lateinit var app : TempacApplication
 
     override fun onResume() {
         MusicService.resumeMusic()
