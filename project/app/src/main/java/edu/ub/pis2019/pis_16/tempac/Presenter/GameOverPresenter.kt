@@ -116,7 +116,7 @@ class GameOverPresenter(private val fragment:GameOverFragment) : Presenter,
         shareButton.invalidate()
 
         val playAgainText = fragment.inflatedView.findViewById<TextView>(R.id.playAgainText)
-        playAgainText.text = "Tap the screem to play"
+        playAgainText.text = "Tap the screen to play"
         playAgainText.invalidate()
     }
     override fun handleHighscore(highscore: Pair<String, Int>) {
