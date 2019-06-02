@@ -51,26 +51,9 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
 
         app = activity.application as TempacApplication
 
-        /*
-        if(app.loadLocalUser()) {
-            Toast.makeText(
-                activity,
-                "Logged in with device ID, username: " + app.user.username,
-                Toast.LENGTH_LONG
-            ).show()
-            changeActivity(MainMenuActivity())
-        }
-        else{
-            //If we couldn't open the user we create a new one
-            //We ask for a username
-            val intent = Intent(activity, ChooseUsernameActivity::class.java)
-            activity.startActivityForResult(intent, RC_USERNAME)
-        }
-        */
-
         activity.findViewById<Button>(R.id.btn_play).setOnClickListener {
             //we check if the user is in the app.
-            if(app.loadLocalUser()){
+            //if(app.loadLocalUser()){
                 if(app.user.fistTry){
                     app.user.fistTry = false //we set the variable to false to skip the tutorial the second time
 
@@ -84,7 +67,7 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
                     MusicService.destroyReproducer()
                     changeActivityPlay()
                 }
-            }else{ //user error, this should never happen xD
+            /*}else{ //user error, this should never happen xD
                 Toast.makeText(
                     activity,
                     "Problem with the user; the score will not be saved",
@@ -93,7 +76,9 @@ class MainMenuPresenter(val activity: AppCompatActivity) : Presenter {
                 MusicService.buttonSoundPlay(this.activity)
                 MusicService.destroyReproducer()
                 changeActivityPlay()
-            }
+            }*/
+
+
         }
 
         activity.findViewById<Button>(R.id.btn_highscores).setOnClickListener {
