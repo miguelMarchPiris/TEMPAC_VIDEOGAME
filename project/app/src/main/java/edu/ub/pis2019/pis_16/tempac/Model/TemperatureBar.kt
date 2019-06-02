@@ -2,7 +2,7 @@ package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.*
 import android.support.v4.graphics.ColorUtils
-import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 
 class TemperatureBar(): Object() {
     private var oldTemp = 0f
@@ -35,7 +35,7 @@ class TemperatureBar(): Object() {
         paintShape.style = Paint.Style.FILL_AND_STROKE
         paintShape.strokeWidth = 15f
 
-        paintEdge.color = GameEngine.BACKGROUND_COLOR
+        paintEdge.color = Engine.BACKGROUND_COLOR
         paintEdge.style = Paint.Style.FILL_AND_STROKE
         paintEdge.strokeWidth = 45f
         paintEdge.maskFilter = BlurMaskFilter(40f,BlurMaskFilter.Blur.NORMAL)
@@ -70,17 +70,17 @@ class TemperatureBar(): Object() {
     fun animate(){
         edgeColorRatio = edgeColorRatio.rem(1f)
         //Animate borders if temperature is extreme
-        if(drawTemp < GameEngine.COLD_TEMPERATURE) {
+        if(drawTemp < Engine.COLD_TEMPERATURE) {
             edgeColorRatio += 1/80f
-            paintEdge.color = ColorUtils.blendARGB(GameEngine.BACKGROUND_COLOR, Color.BLUE, edgeColorRatio)
+            paintEdge.color = ColorUtils.blendARGB(Engine.BACKGROUND_COLOR, Color.BLUE, edgeColorRatio)
         }
-        else if (drawTemp > GameEngine.HOT_TEMPERATURE) {
+        else if (drawTemp > Engine.HOT_TEMPERATURE) {
             edgeColorRatio += 1/60f
-            paintEdge.color = ColorUtils.blendARGB(GameEngine.BACKGROUND_COLOR, Color.RED, edgeColorRatio)
+            paintEdge.color = ColorUtils.blendARGB(Engine.BACKGROUND_COLOR, Color.RED, edgeColorRatio)
         }
         else {
             edgeColorRatio = 0f
-            paintEdge.color = GameEngine.BACKGROUND_COLOR
+            paintEdge.color = Engine.BACKGROUND_COLOR
         }
         //We animate the temperature
         if(!(drawTemp in temperature -0.01 .. temperature+0.01))

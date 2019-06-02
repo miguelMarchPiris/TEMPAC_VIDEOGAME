@@ -14,6 +14,7 @@ import edu.ub.pis2019.pis_16.tempac.View.CreditsActivity
 import edu.ub.pis2019.pis_16.tempac.View.LogInActivity
 import edu.ub.pis2019.pis_16.tempac.R
 import edu.ub.pis2019.pis_16.tempac.View.ChooseUsernameActivity
+import edu.ub.pis2019.pis_16.tempac.View.TutorialActivity
 import java.lang.Exception
 
 
@@ -133,6 +134,7 @@ class SettingsPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     private fun changeTutorial(){
-        Toast.makeText(activity, "Ahora llamaríamos al tutorial", Toast.LENGTH_LONG).show()
+        val intent = Intent(activity,TutorialActivity::class.java)
+        activity.startActivity(intent)
     }
 }

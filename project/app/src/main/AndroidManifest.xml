@@ -55,6 +55,10 @@
         <activity android:name=".View.HighScoreActivity"
                   android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".View.TutorialActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+                  android:screenOrientation="portrait">
+        </activity>
     </application>
 
 

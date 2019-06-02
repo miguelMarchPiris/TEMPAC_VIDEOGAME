@@ -1,7 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
 import android.graphics.RectF
-import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 import java.util.*
 
 abstract class GhostBehaviour {
@@ -36,7 +36,7 @@ abstract class GhostBehaviour {
 
         //If its over the high line and also the tooHigh is true
         //we call the algorithm
-        if(ghost.y < GameEngine.HIGH_LINE_GHOSTS && ghost.tooHigh){
+        if(ghost.y < Engine.HIGH_LINE_GHOSTS && ghost.tooHigh){
             //It its already using a horizontla behaviour ( BehaviourMoveLeft/right)
             if(ghost.behaviour is BehaviourHorizontal){
                 //keep moving horizontally
@@ -56,7 +56,7 @@ abstract class GhostBehaviour {
             return true
         }
         //If it gets to the top
-        else if(ghost.y < GameEngine.TOO_HIGH_LINE_GHOSTS){
+        else if(ghost.y < Engine.TOO_HIGH_LINE_GHOSTS){
             ghost.tooHigh=true
             return true
         }
@@ -97,7 +97,7 @@ abstract class GhostBehaviour {
         ghost.moveLeft(scroll, left)
         ghost.updateRect()
         //If the movement is valid, we calculate distance to the player
-        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect0) ))){
+        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, Engine.overlayRect0) ))){
             distances[1] = ghost.calculateDistanceToPlayer(playerPosition)
         }
         //Deshacemos el movimiento
@@ -113,7 +113,7 @@ abstract class GhostBehaviour {
         ghost.moveRight(scroll, right)
         ghost.updateRect()
         //If the movement is valid, we calculate distance to the player
-        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, GameEngine.overlayRect2) ))){
+        if(row==null || (!ghost.collidesWithBlock(row!!) && (! ghost.collidesWithBlock(rows.third!!)) && !(RectF.intersects(ghost.rectangle, Engine.overlayRect2) ))){
             distances[2] = ghost.calculateDistanceToPlayer(playerPosition)
         }
         //Deshacemos el movimiento

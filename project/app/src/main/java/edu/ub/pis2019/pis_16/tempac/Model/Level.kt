@@ -1,24 +1,25 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.util.Log
-import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 import java.util.*
 
 //clase colisionable (los objetos con los que chocas i no pasa nada) i class no colisionable (los objetos no colisionables que no pasa nada cuando xocan.)
-open class Level(blockImg : List<Bitmap>) : Drawable {
+abstract class Level : Drawable {
     companion object{
-        const val MAX_ORBS = 7
-        //const val MAX_BLOCKS = 50
-        //const val MAX_LINES = 0
+        const val MAX_ORBS = 5
     }
+
     //ORBS
     var ofactory : OrbFactory = OrbFactory()
     var orbs : MutableList<Orb> = mutableListOf<Orb>()
     var orbInLastLine : Boolean = false
     var temperature = 0f
+
+    //MESSAGES
+    protected val messages = mutableListOf<Pair<RectF,String>>()
 
     //MATRIX
     //This is tha matrix of all the blocks
@@ -37,17 +38,15 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
     //Probability that one block is breakable
     var probBreakable : Float= 0.3F
 
-    val blockImages : List<Bitmap>
 
 
 
     init{
         matrixBlocks= mutableListOf<Array<Block?>>()
 
-        blockImages=blockImg
         //How many lines, and how many blocks in one line.
-        nBlocksInLine= GameEngine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
-        nLinesToDraw = (GameEngine.BOTTOM_PLAYING_FIELD-GameEngine.TOP_PLAYING_FIELD).div(Block.blockSide).toInt()+4
+        nBlocksInLine= Engine.PLAYFIELD_WIDTH.div(Block.blockSide).toInt()
+        nLinesToDraw = (Engine.BOTTOM_PLAYING_FIELD-Engine.TOP_PLAYING_FIELD).div(Block.blockSide).toInt()+4
         createLevelBlocks(nBlocksInLine,nLinesToDraw)
     }
     //Its just a shitty method yikes
@@ -55,21 +54,8 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
         createArrayLevel(ancho,alto)
     }
     //Fills ths matrix with lines of nulls(so its empty), the top line is created with some blocks.
-    internal open fun createArrayLevel(ancho: Int,alto: Int){
-        var emptyArray = BooleanArray(ancho)
-        var arrayIntermitenteBool: BooleanArray = BooleanArray(ancho)
-        for(i in 0 until ancho){
-            emptyArray[i] = false
-            arrayIntermitenteBool[i] = i%2==0
-        }
-        for(i in 0 until alto){
-            if(i!=alto-1){
-                createNewBlockLine(emptyArray.copyOf(), i)
-            }else{
-                createNewBlockLine(arrayIntermitenteBool,i)
-            }
-        }
-    }
+    abstract fun createArrayLevel(ancho: Int,alto: Int)
+
     //IT CREATES A LINE WHEN GIVEN A BOOLEAN ARRAY. JUST IN THE INIT
     fun createNewBlockLine(arrayBooleanos : BooleanArray,indexLine : Int){
         //first we add this so only one orb spawns in one line
@@ -77,7 +63,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
         var anchoBloque : Float= Block.blockSide
         var desplazamiento : Float
-        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(GameEngine.BOTTOM_PLAYING_FIELD+Block.blockSide.times(1.5F))
+        val positionY : Float=anchoBloque.times(indexLine.times(-1))+(Engine.BOTTOM_PLAYING_FIELD+Block.blockSide.times(1.5F))
         val arrayBlocks = arrayOfNulls<Block?>(arrayBooleanos.size)
 
         for (k in 0 until arrayBooleanos.size){
@@ -87,7 +73,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
                 //HOW WE CHOOSE BREAKABLE BLOCKS HERE
 
-                var b =Block(desplazamiento,positionY, true, blockImages)
+                var b =Block(desplazamiento,positionY, true)
                 arrayBlocks.set(k,b)
             }
         }
@@ -109,8 +95,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
             if(arrayBooleanos[k]){
                 //Calcular la posición que hay que pasarle al bloque
                 desplazamiento=anchoBloque.times(k).plus(anchoBloque.div(2))
-                //Todo, see how we choose breakable blocks
-                arrayBlocks[k] = Block(desplazamiento,posY, r.nextFloat()<probBreakable, blockImages)
+                arrayBlocks[k] = Block(desplazamiento,posY, r.nextFloat()<probBreakable)
             }
         }
         //We add the array in the fist position of FilasA
@@ -140,7 +125,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
 
     //Given an array of blocks, returns the positionY of that array
     //and the index of the holes in it
-    fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
+    open fun getPositionHoles(array: Array<Block?>): Pair<Float?, MutableList<Int>> {
         val positionY:Float?=positionYArray.get(array)
         val indexList= mutableListOf<Int>()
         for (i in 0 until array.size){
@@ -331,7 +316,7 @@ open class Level(blockImg : List<Bitmap>) : Drawable {
     }
 
     //SPAWNER OF ORBS
-    fun spawnOrbs(){
+    open fun spawnOrbs(){
         val arrayBlocks=getFirstPositiveArray()
         if(arrayBlocks==null || orbs.size >= MAX_ORBS || orbInLastLine){
             return

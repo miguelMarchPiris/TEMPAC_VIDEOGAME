@@ -4,12 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 
 class GhostR(red : Bitmap) : Ghost(red) {
     override var onCorrectTemperature: Boolean = false
     override var topCorrectTemperature: Float = 100.0f
-    override var lowerCorrectTemperature: Float = GameEngine.HOT_TEMPERATURE
+    override var lowerCorrectTemperature: Float = Engine.HOT_TEMPERATURE
 
 
 
