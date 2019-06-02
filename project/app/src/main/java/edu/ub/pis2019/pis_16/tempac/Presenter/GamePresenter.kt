@@ -7,7 +7,7 @@ import edu.ub.pis2019.pis_16.tempac.Model.HomeWatcher
 import edu.ub.pis2019.pis_16.tempac.Model.MusicService
 import edu.ub.pis2019.pis_16.tempac.Model.OnHomePressedListener
 
-class CreditsPresenter(val activity: AppCompatActivity) : Presenter {
+class GamePresenter(val activity: AppCompatActivity) : Presenter {
     override fun onResume() {
         MusicService.resumeMusic()
     }
@@ -25,7 +25,7 @@ class CreditsPresenter(val activity: AppCompatActivity) : Presenter {
     }
 
     override fun onRestart() {
-        //MusicService.resumeMusic()
+
     }
 
     override fun onCreate() {
@@ -43,5 +43,7 @@ class CreditsPresenter(val activity: AppCompatActivity) : Presenter {
             }
         })
         mHomeWatcher.startWatch()
+
+        MusicService.startMusicGame(this.activity)
     }
 }

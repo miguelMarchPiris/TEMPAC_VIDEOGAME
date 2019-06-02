@@ -1,10 +1,8 @@
 package edu.ub.pis2019.pis_16.tempac.Model
-import android.graphics.Bitmap
 import android.graphics.RectF
 import android.util.Log
-import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 
-class TutorialLevel() : Level(){
+class TutorialLevel : Level(){
 
 
 
