@@ -12,6 +12,9 @@ abstract class Ghost(image : Bitmap) : Actor(){
         const val BASESPEED = 0.75F
     }
     private var w : Float = 0f
+    fun getW() :Float{
+        return w
+    }
     private var h : Float = 0f
     fun getH(): Float {
         return h

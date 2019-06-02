@@ -93,7 +93,7 @@ abstract class Engine(var context : Context): Drawable{
         overlayRect3 = RectF(0f,playingField.bottom,playingField.right,h.toFloat()+500f)    //Bottom
         overlay = listOf(overlayRect0,overlayRect1,overlayRect2,overlayRect3)
         overlayPaint.color = BACKGROUND_COLOR
-        //overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
+        overlayPaint.alpha = 100 //This makes it so we can se what its outside the playzone
 
         textPaint.color = Color.WHITE
         textPaint.setTypeface(Typeface.create("Droid Sans Mono", Typeface.ITALIC))
@@ -214,8 +214,8 @@ abstract class Engine(var context : Context): Drawable{
             var positionInTheLine:Int= listOfHoles.get(Random().nextInt(listOfHoles.size))
 
             var g=gfactory.create(temperatureBar.temperature)
-            g.setPosition((0.5f+positionInTheLine)*(Block.blockSide),(pair.first as Float))
-            //g.setPosition(1.times(Block.blockSide.times(1.5f)),(pair.first as Float))
+            //We spawn the ghost just above the line
+            g.setPosition((0.5f+positionInTheLine)*(Block.blockSide)+g.getW().div(2),(pair.first as Float).minus(scrollSpeed.plus(g.getH().div(2))))
 
             ghosts.add(g)
         }
@@ -296,6 +296,7 @@ abstract class Engine(var context : Context): Drawable{
 
         //Deletes the ghost if they are below the screen
         ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
+
     }
     protected fun checkCollisions(){
         //goes over the level matrix and checks the blocks collisions
