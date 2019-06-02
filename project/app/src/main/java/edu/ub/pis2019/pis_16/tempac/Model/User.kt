@@ -8,14 +8,17 @@ class User():Serializable {
     private var email = ""
     var uid = ""
     var username = ""
+    var fistTry = true
 
     constructor(uid: String, username: String):this(){
         this.uid = uid
         this.username = username
     }
+
     constructor(uid:String, username:String,email:String):this(uid,username){
         this.email = email
     }
+
     fun setHighscore(value:Int):Boolean{
         if(value > highscore) {
             highscore = value
@@ -23,9 +26,11 @@ class User():Serializable {
         }
         return false
     }
+
     fun getHighscore():Int{
         return highscore
     }
+
     fun isGoogleUser():Boolean{
         val googleUser = (email != "")
         return googleUser

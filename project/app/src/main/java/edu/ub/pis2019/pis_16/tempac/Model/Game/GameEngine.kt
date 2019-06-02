@@ -14,6 +14,7 @@ open class GameEngine(context : Context) : Engine(context) {
 
     //Actors
     override var level : Level = GameLevel()
+    override var dead = false
 
     init {
 
@@ -63,4 +64,5 @@ open class GameEngine(context : Context) : Engine(context) {
 
         //Process video
     }
+
 }
