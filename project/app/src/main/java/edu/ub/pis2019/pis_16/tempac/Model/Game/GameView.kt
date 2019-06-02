@@ -1,6 +1,7 @@
 package edu.ub.pis2019.pis_16.tempac.Model.Game
 
 import android.content.Context
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -8,17 +9,20 @@ import android.view.SurfaceView
 import androidx.navigation.Navigation
 import edu.ub.pis2019.pis_16.tempac.R
 
-class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
+class GameView(context: Context,private val engine : Engine, private val endGameFragmentId:Int? ): SurfaceView(context), SurfaceHolder.Callback{
     private var thread : GameThread
-    private var engine : GameEngine
     init {
-        holder.addCallback(this) //Llamar a level i en level crea un game engine. Game engine deberia ser un singeltone
-        engine = GameEngine(context)
+        holder.addCallback(this)
         thread = GameThread(holder, this, engine)
         isFocusable = true
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
+        if(!engine.dead) {
+            thread.pauseGame = true
+            return
+        }
+
         var retry = true
         while (retry) {
             try {
@@ -58,14 +62,19 @@ class GameView(var cntxt:Context): SurfaceView(cntxt), SurfaceHolder.Callback{
             }
             retry = false
         }
+
         var nav = Navigation.findNavController(this)
         var bundle = Bundle()
         bundle.putInt("score",score)
-        nav.navigate(R.id.gameOverFragment, bundle)
+        if(endGameFragmentId == null)
+            nav.navigate(R.id.gameOverFragment, bundle)
+        else
+            nav.navigate(endGameFragmentId, bundle)
 
     }
-    fun tooglePauseThread(){
+    fun togglePauseThread(){
         thread.pauseGame = !thread.pauseGame
     }
+
 
 }

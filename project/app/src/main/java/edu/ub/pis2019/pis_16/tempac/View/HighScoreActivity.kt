@@ -1,84 +1,39 @@
 package edu.ub.pis2019.pis_16.tempac.View
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
-import android.widget.TextView
+import edu.ub.pis2019.pis_16.tempac.Presenter.HighScorePresenter
 import edu.ub.pis2019.pis_16.tempac.R
 
 class HighScoreActivity : AppCompatActivity() {
+
+    private val presenter = HighScorePresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_highscore)
 
-        val listaHighScore:ListView= findViewById<ListView>(R.id.highscore_listView)
-
-
-        listaHighScore.adapter= ListaAdapter(this)
-
-
+        presenter.onCreate()
     }
 
-    private class ListaAdapter(contexto:Context) : BaseAdapter() {
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
 
-        private val mContext:Context
-        private lateinit var nicknameArray:ArrayList<String>
-        private lateinit var highscoreArray:ArrayList<String>
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
 
-        init {
-            mContext= contexto
-            nicknameArray= arrayListOf(
-                "Juanjo",
-                "Juanito",
-                "Julián",
-                "José",
-                "Juan Ramón"
-            )
-            highscoreArray= arrayListOf(
-                "9999999",
-                "8888888",
-                "7777777",
-                "6666666",
-                "5555555"
-            )
-        }
+    override fun onRestart() {
+        super.onRestart()
+        presenter.onRestart()
+    }
 
-        //cuantas lineas
-        override fun getCount(): Int {
-            return nicknameArray.size
-        }
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val layoutInflator=LayoutInflater.from(mContext)
-            val rowMain=layoutInflator.inflate(R.layout.row_highscore,parent,false)
-
-            val rowRanking=rowMain.findViewById<TextView>(R.id.ranking_textView)
-            val rowNickname=rowMain.findViewById<TextView>(R.id.nickname_textView)
-            val rowScore=rowMain.findViewById<TextView>(R.id.score_textView)
-
-            rowRanking.text="${position.plus(1)}"
-            rowNickname.text=nicknameArray.get(position)
-            rowScore.text=highscoreArray.get(position)
-
-
-            return rowMain
-        }
-
-
-        //ignorarlos por ahora
-        override fun getItem(position: Int): Any {
-            return "TestString"
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
     }
 }
+

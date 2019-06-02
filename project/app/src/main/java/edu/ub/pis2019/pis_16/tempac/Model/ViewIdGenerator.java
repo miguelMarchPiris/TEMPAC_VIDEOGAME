@@ -6,16 +6,16 @@ import android.os.Build;
 import android.view.View;
 
 /**
- * {@link View#generateViewId()}要求API Level >= 17,而本工具类可兼容所有API Level
+ * {@link View#generateViewId()}要求API GameLevel >= 17,而本工具类可兼容所有API GameLevel
  * <p>
- * 自动判断当前API Level,并优先调用{@link View#generateViewId()},即使本工具类与{@link View#generateViewId()}
+ * 自动判断当前API GameLevel,并优先调用{@link View#generateViewId()},即使本工具类与{@link View#generateViewId()}
  * 混用,也能保证生成的Id唯一
  * <p>
  * =============
  * <p>
- * while {@link View#generateViewId()} require API Level >= 17, this tool is compatibe with all API.
+ * while {@link View#generateViewId()} require API GameLevel >= 17, this tool is compatibe with all API.
  * <p>
- * according to current API Level, it decide weather using system API or not.<br>
+ * according to current API GameLevel, it decide weather using system API or not.<br>
  * so you can use {@link ViewIdGenerator#generateViewId()} and {@link View#generateViewId()} in the
  * same time and don't worry about getting same id
  *

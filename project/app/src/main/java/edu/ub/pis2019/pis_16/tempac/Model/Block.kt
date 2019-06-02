@@ -1,21 +1,21 @@
 package edu.ub.pis2019.pis_16.tempac.Model
 
-import android.content.res.Resources
 import android.graphics.*
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
+import edu.ub.pis2019.pis_16.tempac.Model.Game.Engine
 import edu.ub.pis2019.pis_16.tempac.Model.Game.GameEngine
-import edu.ub.pis2019.pis_16.tempac.R
 
-class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : List<Bitmap>) : Actor(imageBlockList){
+class Block(posx : Float, posy : Float, breakable : Boolean) : Actor(){
     private var paint = Paint()
     private var paintInside = Paint()
-    private val width = blockSide
-    private val height  = blockSide
-    private var w = 0f
-    private var h = 0f
-    private var rectangleInside = RectF(x-width/2f+15f,y-height/2f+15f,x+width/2f-15,y+height/2f-15)
+    private var paintShade = Paint()
+    private val width = blockSide +15f
+    private val height  = blockSide + 15f
+    private lateinit var rectangleInside: RectF
+    private lateinit var rectangleInsideBorder: RectF
     private val blockColor = Color.parseColor("#7c3cc9")
+    private val blockShadeColor = Color.parseColor("#4A148C")
+    private val breakableBlockColor = Color.RED
+    private val breakableBlockShadeColor = Color.parseColor("#990000")
     //private var image = imageBlockList[0] //when we have block images this will have to be activated
 
     var breakable : Boolean = breakable
@@ -26,40 +26,45 @@ class Block(posx : Float, posy : Float, breakable : Boolean, imageBlockList : Li
     init{
         paint.color = blockColor
         paint.style = Paint.Style.FILL
-
-        paintInside.color = Color.BLACK
+        paintShade.color = blockShadeColor
+        paintShade.style = Paint.Style.FILL
+        paintInside.color =  Color.BLACK
         super.setPosition(posx, posy)
-        rectangle = RectF(x-width/2f+10f,y-height/2f+10f,x+width/2f-10,y+height/2f-10)
+        updateRects()
+
         //h = image.height.toFloat()
         //w = image.width.toFloat()
     }
-
+    //Draws the block shade
+    fun drawShade(canvas: Canvas?){
+        canvas?.drawRect(rectangle,paintShade)
+    }
+    //Draws the blocks borders
     override fun draw(canvas: Canvas?){
-        canvas?.drawRect(rectangle,paint)
-        canvas?.drawRoundRect(rectangleInside,7f,7f,paintInside)
-
-        /*
-        if(breakable){
-            image=imageBlockList[0]
-        }else{
-            image=imageBlockList[1]
-        }
-        canvas?.draw(image,rectangle.left,rectangle.top,null)
-        */
+        canvas?.drawRect(rectangleInsideBorder,paint)
+        canvas?.drawRoundRect(rectangleInside,6f,6f,paintInside)
     }
 
     fun update(scroll: Float, temperature:Float) {
         super.update(scroll)
-        if(breakable && temperature>=GameEngine.breakableTempeature){
-            paint.color = Color.RED
+        if(breakable && temperature>=Engine.BLOCK_BREAKABLE_TEMPERATURE){
+            paint.color = breakableBlockColor
+            paintShade.color = breakableBlockShadeColor
         }
         else{
+            paintShade.color = blockShadeColor
             paint.color = blockColor
         }
-        rectangle.set(x-width/2f,y-height/2f,x+width/2f,y+height/2f)
-        rectangleInside = RectF(x-width/2f+10f,y-height/2f+10f,x+width/2f-10,y+height/2f-10)
-
-        //will be missing to actualize the rectangle to match the image if it changes.
-
+        updateRects()
     }
+    private fun updateRects(){
+        val shadowThickness = 10f
+        val borderThickness = 8f
+        rectangle.set(x-width/2f,y-height/2f,x+width/2f,y+height/2f)
+        rectangleInsideBorder = RectF(rectangle.left, rectangle.top,
+            rectangle.right-shadowThickness,rectangle.bottom-shadowThickness)
+        rectangleInside =  RectF(rectangle.left+borderThickness,rectangle.top+borderThickness,
+            rectangle.right-borderThickness - shadowThickness,rectangle.bottom-borderThickness -shadowThickness)
+    }
+
 }

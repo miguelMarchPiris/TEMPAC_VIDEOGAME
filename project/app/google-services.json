@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "620556730398",
+    "firebase_url": "https://tempac-1557940698337.firebaseio.com",
+    "project_id": "tempac-1557940698337",
+    "storage_bucket": "tempac-1557940698337.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620556730398:android:75dec9364c3b31f9",
+        "android_client_info": {
+          "package_name": "edu.ub.pis2019.pis_16.tempac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620556730398-dhp4p7997cg0om39ghh4ektgl2uhgs8o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ub.pis2019.pis_16.tempac",
+            "certificate_hash": "e2590a12aed4dc5a73f6fae92f257cc1eeda6f80"
+          }
+        },
+        {
+          "client_id": "620556730398-0rkfqb5g2f4s5vjvd2vj9croipmi1qft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ub.pis2019.pis_16.tempac",
+            "certificate_hash": "8931d98165e4fb23fc4325aea449af34d8cec602"
+          }
+        },
+        {
+          "client_id": "620556730398-7qivkru1bbtlsh9mdj8dgbuav4hk6t09.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzBgG2ntIazeIBm5bE7PqA-oEertL8lyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620556730398-7qivkru1bbtlsh9mdj8dgbuav4hk6t09.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
