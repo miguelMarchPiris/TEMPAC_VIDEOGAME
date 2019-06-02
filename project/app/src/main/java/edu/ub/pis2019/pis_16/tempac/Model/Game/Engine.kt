@@ -39,7 +39,7 @@ abstract class Engine(var context : Context): Drawable{
     protected open var baseScrollSpeed = 3f
     protected var extremeWeather = false //used to control the score. When its cold or hot it activates
     protected var screenCatchUp = false
-    var dead = false
+    open var dead = false
     var paused = false
 
 
@@ -53,7 +53,7 @@ abstract class Engine(var context : Context): Drawable{
     protected var player : Player = Player(PLAYFIELD_WIDTH/2f+35f,1000f, initPacmanImages())
     protected var ghosts : MutableList<Ghost> = mutableListOf()
     protected var dyingGhosts : MutableList<Ghost> = mutableListOf()
-    protected abstract  var level : Level
+    protected abstract var level : Level
 
     //Play zone rects
     protected val playingField = RectF(LEFT_PLAYING_FIELD, TOP_PLAYING_FIELD, RIGHT_PLAYING_FIELD, BOTTOM_PLAYING_FIELD)
@@ -81,7 +81,7 @@ abstract class Engine(var context : Context): Drawable{
     //thermometer
         temperatureBar.x = 100f
         temperatureBar.y = 100f
-        temperatureBar.temperature = 15f
+        temperatureBar.temperature = 50f
         fieldLinePaint.style = Paint.Style.STROKE
         fieldLinePaint.strokeWidth = 5f
         fieldLinePaint.color = Color.WHITE
@@ -297,6 +297,7 @@ abstract class Engine(var context : Context): Drawable{
         //Deletes the ghost if they are below the screen
         ghosts = (ghosts.filter {element -> element.y <= BOTTOM_PLAYING_FIELD.plus(Block.blockSide.times(1.5f))}).toMutableList()
     }
+
     protected fun checkCollisions(){
         //goes over the level matrix and checks the blocks collisions
         for(array in level.matrixBlocks){

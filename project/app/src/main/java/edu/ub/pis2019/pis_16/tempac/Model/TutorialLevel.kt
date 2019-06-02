@@ -43,7 +43,13 @@ class TutorialLevel() : Level(){
         var indiceDeLaLista=r.nextInt(indexOfHoles.size)
         var indice=indexOfHoles[indiceDeLaLista]
 
-        var newOrb = OrbAdd(2)
+        var newOrb :OrbAdd
+        if(temperature<=20f) {
+            newOrb = OrbAdd(4)
+        }else{
+            newOrb = OrbAdd(2)
+        }
+
         newOrb.setPosition(Block.blockSide.times(indice.plus(0.5f)),positionY)
         for (o in orbs){
             if(RectF.intersects(o.rectangle,newOrb.rectangle)){
