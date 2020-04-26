@@ -1,5 +1,4 @@
-# PIS_16
-PIS_16
+# TEMPAC VIDEOGAME: ANDROID STUDIO APP
 
 Things that are implemented but aren't obvious:
 - Cloud and Local data persistency for Highscores and if the Tutorial has been played
